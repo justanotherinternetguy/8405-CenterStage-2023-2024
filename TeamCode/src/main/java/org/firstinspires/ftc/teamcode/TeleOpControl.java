@@ -23,7 +23,9 @@ public class TeleOpControl extends LinearOpMode {
 
         while (opModeIsActive()) {
             double power = -gamepad1.left_stick_y; // remember this is reversed
-            robot.drive.moveTest(power);
+            double strafe = gamepad1.left_stick_x * 1.1; // counteract imperfect strafing
+            double turn = gamepad1.right_stick_x;
+            robot.drive.mecanumDrive(power, strafe, turn);
 
             telemetry.addData("left x: ", gamepad1.left_stick_x);
             telemetry.addData("left y: ", gamepad1.left_stick_y);
