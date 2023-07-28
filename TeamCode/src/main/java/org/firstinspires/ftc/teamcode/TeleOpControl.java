@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
 
 
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
+@TeleOp(name="Mecanum Drive", group="Linear Opmode")
 public class TeleOpControl extends LinearOpMode {
 
     // Declare OpMode members.
