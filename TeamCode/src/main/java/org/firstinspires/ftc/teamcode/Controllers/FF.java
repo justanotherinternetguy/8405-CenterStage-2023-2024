@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Control;
+package org.firstinspires.ftc.teamcode.Controllers;
 
 import com.arcrobotics.ftclib.geometry.Translation2d;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.ChassisSpeeds;

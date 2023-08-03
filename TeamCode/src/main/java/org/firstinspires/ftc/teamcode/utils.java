@@ -10,4 +10,11 @@ public class utils {
     {
         return inches/39.37;
     }
+
+    // normalize radians to be between -pi and pi
+    // for Odometry.java
+    public static double normalizeRadians(double radians){
+        double temp = (radians + Math.PI) / (2.0 * Math.PI);
+        return (temp - Math.floor(temp) - 0.5)  * 2.0 * Math.PI;
+    }
 }
