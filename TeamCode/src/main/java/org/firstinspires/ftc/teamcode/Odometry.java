@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.Motor.Encoder;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
+import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -27,34 +28,24 @@ import org.firstinspires.ftc.teamcode.Subsystems.*;
  */
 @Autonomous
 @Disabled
-public class DeadWheelsSample extends LinearOpMode {
-
-    // The lateral distance between the left and right odometers
-    // is called the trackwidth. This is very important for
-    // determining angle for turning approximations
+public class Odometry  {
     public static final double TRACKWIDTH = 13.25;
 
     // Center wheel offset is the distance between the
     // center of rotation of the robot and the center odometer.
-    // This is to correct for the error that might occur when turning.
     // A negative offset means the odometer is closer to the back,
     // while a positive offset means it is closer to the front.
-    public static final double CENTER_WHEEL_OFFSET = 0;
+    public static final double CENTER_WHEEL_OFFSET = 0.0;
 
-    public static final double WHEEL_DIAMETER = 35/25.4;
-    // if needed, one can add a gearing term here
+    public static final double WHEEL_DIAMETER = 35.0/25.4;
     public static final double TICKS_PER_REV = 8192.0;
     public static final double DISTANCE_PER_PULSE = Math.PI * WHEEL_DIAMETER / TICKS_PER_REV;
 
     private Encoder leftOdometer, rightOdometer, centerOdometer;
     private HolonomicOdometry odometry;
+    private Pose2d pose;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
-        Robot robot = new Robot(hardwareMap, gamepad1);
-
-        // Here we set the distance per pulse of the odometers.
-        // This is to keep the units consistent for the odometry.
+    public Odometry(HardwareMap hardwareMap) {
         leftOdometer = leftOdometer.setDistancePerPulse(DISTANCE_PER_PULSE);
         rightOdometer = rightOdometer.setDistancePerPulse(DISTANCE_PER_PULSE);
         centerOdometer = centerOdometer.setDistancePerPulse(DISTANCE_PER_PULSE);
@@ -67,17 +58,32 @@ public class DeadWheelsSample extends LinearOpMode {
                 centerOdometer::getDistance,
                 TRACKWIDTH, CENTER_WHEEL_OFFSET
         );
-
-        waitForStart();
-
-        while (opModeIsActive() && !isStopRequested()) {
-            odometry.updatePose(); // update the position
-            telemetry.addData("left enc ", leftOdometer.getDistance());
-            telemetry.addData("right enc ", rightOdometer.getDistance());
-            telemetry.addData("center enc ", centerOdometer.getDistance());
-
-            telemetry.update();
-        }
+        odometry.updatePose(); // update the position
+        Pose2d pose = odometry.getPose();
     }
 
+    public void update() {
+        odometry.update();
+        pose = odometry.getPose();
+    }
+    
+    public Pose2d getPose() {
+        return pose;
+    }
+
+    public double getX() {
+        return pose.getX();
+    }
+
+    public double getY() {
+        return pose.getY();
+    }
+
+    public double getHeading() {
+        return pose.getHeading();
+    }
+
+    public double[] getEncoders() {
+        return new double[]{ leftOdometer.getDistance(), rightOdometer.getDistance(), centerOdometer.getDistance() };
+    }
 }
