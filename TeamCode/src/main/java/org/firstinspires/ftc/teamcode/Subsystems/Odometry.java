@@ -2,48 +2,41 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import static org.firstinspires.ftc.teamcode.utils.normalizeRadians;
 
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import java.util.Base64;
+
 // Slimmed down version of VirtualRobot EncBot odom for temporary use
 public class Odometry {
-    private DcMotorEx[] encoders = new DcMotorEx[3];
-    private final double ENCODER_TICKS_PER_REVOLUTION = 1120;
-    private final double ENCODER_WHEEL_CIRCUMFERENCE = Math.PI * 2.0;
-    private final double ENCODER_WIDTH = 12.0;
-    private int[] prevTicks = new int[3];
+    public double x = 0.0;
+    public double y = 0.0;
+    public double heading = 0.0;
 
-    public double x;
-    public double y;
-    public double heading;
+    public double prev_left_pos = 0.0;
+    public double prev_right_pos = 0.0;
+    public double prev_perp_pos = 0.0;
 
-    public Odometry(HardwareMap hwMap) {
-        String[] encoderNames = new String[]{"enc_right", "enc_left", "enc_x"};
-        for (int i = 0; i < 3; i++) encoders[i] = hwMap.get(DcMotorEx.class, encoderNames[i]);
+    static final double TRACKWIDTH = 13.25;
+    static final double WHEEL_DIAMETER = 35.0;
+    static final double CENTER_WHEEL_OFFSET = 0;
+    static final double TICKS_PER_REVOLUTION = 8192.0;
+    static final double mm_to_inches = 0.0393700787;
+    static final double wheel_circumference_mm = 2 * Math.PI * 17.5;
+    static final double wheel_circumference_inches = (2 * Math.PI * 17.5)/25.4;
+    static final double DISTANCE_PER_PULSE = Math.PI * WHEEL_DIAMETER / TICKS_PER_REVOLUTION;
 
-        this.x = 0;
-        this.y = 0;
-        this.heading = 0;
+    public static double getCenterWheelOffset() {
+        return CENTER_WHEEL_OFFSET;
     }
 
-    public double[] update() {
-        int[] ticks = new int[3];
-        for (int i = 0; i < 3; i++) ticks[i] = encoders[i].getCurrentPosition();
-        int newRightTicks = ticks[0] - prevTicks[0];
-        int newLeftTicks = ticks[1] - prevTicks[1];
-        int newXTicks = ticks[2] - prevTicks[2];
-        prevTicks = ticks;
-        double rightDist = newRightTicks * ENCODER_WHEEL_CIRCUMFERENCE / ENCODER_TICKS_PER_REVOLUTION;
-        double leftDist = -newLeftTicks * ENCODER_WHEEL_CIRCUMFERENCE / ENCODER_TICKS_PER_REVOLUTION;
-        double dyR = 0.5 * (rightDist + leftDist);
-        double headingChangeRadians = (rightDist - leftDist) / ENCODER_WIDTH;
-        double dxR = -newXTicks * ENCODER_WHEEL_CIRCUMFERENCE / ENCODER_TICKS_PER_REVOLUTION;
-        double avgHeadingRadians = Math.toRadians(-heading) + headingChangeRadians / 2.0;
-        double cos = Math.cos(avgHeadingRadians);
-        double sin = Math.sin(avgHeadingRadians);
-        y += dxR * sin + dyR * cos;
-        x += dxR * cos - dyR * sin;
-        heading = -Math.toDegrees(normalizeRadians(Math.toRadians(-heading) + headingChangeRadians));
-        return new double[]{x, y, heading};
+    private MotorEx enc_left, enc_right, enc_perp;
+
+    public Odometry(MotorEx get_enc_left, MotorEx get_enc_right, MotorEx get_enc_perp) {
+        enc_left = get_enc_left;
+        enc_right = get_enc_right;
+        enc_perp = get_enc_perp;
+
     }
 }
