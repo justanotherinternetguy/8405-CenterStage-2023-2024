@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.teamcode.Subsystems.*;
 
 
@@ -56,7 +53,7 @@ public class TeleOpControl extends LinearOpMode {
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
 
-            robot.setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+            robot.drive.setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
 
             
             telemetry.addData("l: ", odometry.getEncoders()[0]);

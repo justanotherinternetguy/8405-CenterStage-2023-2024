@@ -37,7 +37,7 @@ public class Drive {
         setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
     }
 
-    private void setDrivePowers(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
+    public void setDrivePowers(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
         frontLeft.setPower(frontLeftPower);
         backLeft.setPower(backLeftPower);
         frontRight.setPower(frontRightPower);
