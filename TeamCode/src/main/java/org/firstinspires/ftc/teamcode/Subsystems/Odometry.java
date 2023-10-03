@@ -1,24 +1,16 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-
-import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.Motor.Encoder;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
 import com.arcrobotics.ftclib.geometry.Pose2d;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-import org.firstinspires.ftc.teamcode.Subsystems.*;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * This sample shows how to use dead wheels with external encoders
@@ -27,6 +19,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.*;
  * ports as they are not needed due to not using the drive encoders.
  * The external encoders we are using are REV through-bore.
  */
+@NonNull
 public class Odometry {
     public static final double TRACKWIDTH = 13.25;
 
@@ -43,13 +36,20 @@ public class Odometry {
     private Encoder leftOdometer, rightOdometer, centerOdometer;
     private HolonomicOdometry odometry;
     private Pose2d pose;
-
     public Odometry(HardwareMap hardwareMap) {
+//        leftOdometer = hardwareMap.get(MotorEx.class, "frontRight").encoder;
+//        rightOdometer = hardwareMap.get(MotorEx.class, "frontLeft").encoder;
+//        centerOdometer = hardwareMap.get(MotorEx.class, "backLeft").encoder;
+
+        leftOdometer = new MotorEx(hardwareMap, "frontRight").encoder;
+        rightOdometer = new MotorEx(hardwareMap, "frontLeft").encoder;
+        centerOdometer = new MotorEx(hardwareMap, "backLeft").encoder;
+
         leftOdometer = leftOdometer.setDistancePerPulse(DISTANCE_PER_PULSE);
         rightOdometer = rightOdometer.setDistancePerPulse(DISTANCE_PER_PULSE);
         centerOdometer = centerOdometer.setDistancePerPulse(DISTANCE_PER_PULSE);
 
-        rightOdometer.setDirection(Motor.Direction.REVERSE);
+//        rightOdometer.setDirection(Motor.Direction.REVERSE);
 
         odometry = new HolonomicOdometry(
                 leftOdometer::getDistance,
@@ -57,8 +57,8 @@ public class Odometry {
                 centerOdometer::getDistance,
                 TRACKWIDTH, CENTER_WHEEL_OFFSET
         );
-        odometry.updatePose(); // update the position
-        Pose2d pose = odometry.getPose();
+        odometry.updatePose(new Pose2d(0, 0, new Rotation2d(0))); // update the position
+        pose = odometry.getPose();
     }
 
     public void update() {
@@ -79,10 +79,18 @@ public class Odometry {
     }
 
     public double getHeading() {
-        return pose.getHeading();
+        return pose.getRotation().getDegrees();
     }
 
     public double[] getEncoders() {
         return new double[]{ leftOdometer.getDistance(), rightOdometer.getDistance(), centerOdometer.getDistance() };
+    }
+
+    public void reset() {
+        leftOdometer.reset();
+        rightOdometer.reset();
+        centerOdometer.reset();
+        odometry.updatePose(new Pose2d(0, 0, new Rotation2d(0))); // update the position
+        pose = odometry.getPose();
     }
 }
