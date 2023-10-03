@@ -28,35 +28,37 @@ public class TeleOpControl extends LinearOpMode {
             telemetry.addData("left y: ", gamepad1.left_stick_y);
             telemetry.addData("right x: ", gamepad1.right_stick_x);
             telemetry.addData("right y: ", gamepad1.right_stick_y);
-//            if (!fieldCentric) {
+            if (!fieldCentric) {
                 double power = -gamepad1.left_stick_y; // remember this is reversed
                 double strafe = gamepad1.left_stick_x * 1.1; // counteract imperfect strafing
                 double turn = gamepad1.right_stick_x;
                 robot.drive.mecanumDrive(power, strafe, turn);
-//                telemetry.addData("drive: ", "robotCentric");
-//                telemetry.update();
-//                continue;
-//            }
+                telemetry.addData("drive: ", "robotCentric");
+                telemetry.update();
+                continue;
+            } else {
 
-//            double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-//            double x = gamepad1.left_stick_x;
-//            double rx = gamepad1.right_stick_x;
-//
-//            double botHeading = 0;
-//
-//            // Rotate the movement direction counter to the bot's rotation
-//            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-//            double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-//
-//            rotX = rotX * 1.1;
-//
-//            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-//            double frontLeftPower = (rotY + rotX + rx) / denominator;
-//            double backLeftPower = (rotY - rotX + rx) / denominator;
-//            double frontRightPower = (rotY - rotX - rx) / denominator;
-//            double backRightPower = (rotY + rotX - rx) / denominator;
-//
-//            robot.drive.setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+                double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
+                double x = gamepad1.left_stick_x;
+                double rx = gamepad1.right_stick_x;
+
+                double botHeading = Math.toRadians(-odometry.getHeading());
+
+                // Rotate the movement direction counter to the bot's rotation
+                double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+                double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+
+                rotX = rotX * 1.1;
+
+                double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+                double frontLeftPower = (rotY + rotX + rx) / denominator;
+                double backLeftPower = (rotY - rotX + rx) / denominator;
+                double frontRightPower = (rotY - rotX - rx) / denominator;
+                double backRightPower = (rotY + rotX - rx) / denominator;
+
+                robot.drive.setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+                telemetry.addData("drive: ", "fieldCentric");
+            }
 
             odometry.update();
             telemetry.addData("l: ", odometry.getEncoders()[0]);
@@ -67,7 +69,6 @@ public class TeleOpControl extends LinearOpMode {
             telemetry.addData("y: ", odometry.getY());
             telemetry.addData("heading: ", odometry.getHeading());
 //            telemetry.addData("drive: ", "fieldCentric");
-            telemetry.addData("drive: ", "robotCentric");
             telemetry.update();
         }
     }
