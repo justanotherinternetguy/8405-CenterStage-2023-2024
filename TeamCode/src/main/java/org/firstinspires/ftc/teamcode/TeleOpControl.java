@@ -19,7 +19,7 @@ public class TeleOpControl extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         waitForStart();
 
-        boolean fieldCentric = false;
+        boolean fieldCentric = true;
 
         odometry.reset();
 

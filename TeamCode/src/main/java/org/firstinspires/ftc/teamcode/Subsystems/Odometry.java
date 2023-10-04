@@ -67,15 +67,17 @@ public class Odometry {
     }
     
     public Pose2d getPose() {
-        return pose;
+        return new Pose2d(pose.getY(), pose.getX(), pose.getRotation());
     }
 
+    // CHANGE THIS LATER~!!!!!!!!!!!
+
     public double getX() {
-        return pose.getX();
+        return pose.getY();
     }
 
     public double getY() {
-        return pose.getY();
+        return pose.getX();
     }
 
     public double getHeading() {
