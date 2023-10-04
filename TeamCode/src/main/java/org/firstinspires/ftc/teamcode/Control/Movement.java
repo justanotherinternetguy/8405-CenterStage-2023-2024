@@ -48,10 +48,10 @@ public class Movement {
     public void move(double targetX, double targetY) {
         while (opModeIsActive.get() && (Math.abs(targetX - odom.getX()) > tolerance || Math.abs(targetY - odom.getY()) > tolerance)) {
             odom.update();
-//            double x = driveXPID.getValue(targetX - odom.getX());
-//            double y = driveYPID.getValue(targetY - odom.getY());
-            double x = (targetX - odom.getX()) * 0.05;
-            double y = (targetY - odom.getY()) * 0.05;
+            double x = driveXPID.getValue(targetX - odom.getX());
+            double y = driveYPID.getValue(targetY - odom.getY());
+//            double x = (targetX - odom.getX()) * 0.05;
+//            double y = (targetY - odom.getY()) * 0.05;
             double botHeading = Math.toRadians(odom.getHeading());
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
@@ -75,7 +75,7 @@ public class Movement {
             telemetry.addData("BR ", backRightPower);
             telemetry.update();
 
-//            drive.setDrivePowers(frontLeftPower * 0.3, frontRightPower * 0.3, backLeftPower * 0.3, backRightPower * 0.3);
+            drive.setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
         }
         drive.setDrivePowers(0,0,0,0);
     }

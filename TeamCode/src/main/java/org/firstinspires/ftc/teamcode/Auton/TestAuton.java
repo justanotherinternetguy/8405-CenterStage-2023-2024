@@ -13,7 +13,7 @@ public class TestAuton extends LinearOpMode {
     public void runOpMode() {
         Robot robot = new Robot(hardwareMap, gamepad1);
         Odometry odometry = new Odometry(hardwareMap);
-        Movement movement = new Movement(robot.drive, odometry, this::opModeIsActive, 0.05, 0, 0.2, 0.3, telemetry);
+        Movement movement = new Movement(robot.drive, odometry, this::opModeIsActive, 0.04, 0, 0, 0.3, telemetry);
         waitForStart();
         odometry.reset();
         if (opModeIsActive()) {
