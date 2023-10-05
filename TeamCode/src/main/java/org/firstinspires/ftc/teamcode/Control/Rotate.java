@@ -9,12 +9,12 @@ import org.firstinspires.ftc.teamcode.Subsystems.Drive;
 import org.firstinspires.ftc.teamcode.utils;
 
 public class Rotate {
-    Drive drive;
-    Odometry odom;
-    Telemetry telemetry;
-    Supplier<Boolean> opModeIsActive;
-    PID rotatePID;
-    public double tolerance = 0.5;
+    private Drive drive;
+    private Odometry odom;
+    private Telemetry telemetry;
+    private Supplier<Boolean> opModeIsActive;
+    private PID rotatePID;
+    private double tolerance;
 
     public Rotate(Drive drive, Odometry odom, Telemetry telemetry, Supplier<Boolean> opModeIsActive, PID rotatePID, double tolerance) {
         this.drive = drive;
@@ -30,12 +30,14 @@ public class Rotate {
         rotatePID.reset();
         double error;
         odom.update();
-        while (Math.abs(utils.angleDifference(odom.getHeading(), targetHeading)) > tolerance && opModeIsActive.get()) {
+        while (Math.abs(utils.angleDifference(targetHeading, odom.getHeading())) > tolerance && opModeIsActive.get()) {
             odom.update();
-            error = utils.angleDifference(odom.getHeading(), targetHeading);
+            error = utils.angleDifference(targetHeading, odom.getHeading());
             double headingPower = rotatePID.getValue(error);
             drive.mecanumDrive(0, 0, headingPower);
-            odom.update();
+            telemetry.addData("heading ", odom.getHeading());
+            telemetry.addData("error ", error);
+            telemetry.addData("headingPower ", headingPower);
             telemetry.update();
         }
     }

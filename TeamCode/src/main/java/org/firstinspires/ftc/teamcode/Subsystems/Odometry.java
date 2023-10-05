@@ -21,6 +21,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 @NonNull
 public class Odometry {
+    // TODO: Move to bot constants
     public static final double TRACKWIDTH = 13.25;
 
     // Center wheel offset is the distance between the
@@ -32,6 +33,8 @@ public class Odometry {
     public static final double WHEEL_DIAMETER = 35.0/25.4;
     public static final double TICKS_PER_REV = 8192.0;
     public static final double DISTANCE_PER_PULSE = Math.PI * WHEEL_DIAMETER / TICKS_PER_REV;
+    public static final double MAX_ACCEL = 50;
+    public static final double MAX_VELO = 50;
 
     private Encoder leftOdometer, rightOdometer, centerOdometer;
     private HolonomicOdometry odometry;
