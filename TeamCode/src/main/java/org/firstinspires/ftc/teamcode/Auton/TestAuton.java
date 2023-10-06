@@ -17,11 +17,16 @@ public class TestAuton extends LinearOpMode {
     public void runOpMode() {
         Robot robot = new Robot(hardwareMap, gamepad1);
         Odometry odometry = new Odometry(hardwareMap);
-        Movement movement = new Movement(robot.drive, odometry, this::opModeIsActive, new PID.Config(.04, 0, 0), new PID.Config(0.02, 0, 0), 0.3, telemetry);
+        Movement movement = new Movement(robot.drive, odometry, this::opModeIsActive, new PID.Config(.04, 0, 0), new PID.Config(0.03, 0, 0), 0.15, telemetry);
         waitForStart();
         odometry.reset();
         if (opModeIsActive()) {
-            movement.move(new Pose2d(1, 20, new Rotation2d(Math.toRadians(1))));
+//            movement.move(new Pose2d(0, 24, new Rotation2d(Math.toRadians(0))));
+//            movement.move(new Pose2d(0, -24, new Rotation2d(Math.toRadians(0))));
+//            movement.move(new Pose2d(24, 24, new Rotation2d(Math.toRadians(0))));
+//            movement.move(new Pose2d(0, 0, new Rotation2d(Math.toRadians(90))));
+            movement.move(new Pose2d(0, 12, new Rotation2d(Math.toRadians(90))));
+//            movement.move(new Pose2d(24, 24, new Rotation2d(Math.toRadians(90))));
         }
         while (opModeIsActive()) {
             telemetry.addData("Pose", odometry.getPose().toString());

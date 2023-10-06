@@ -5,7 +5,6 @@ import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Controllers.FF;
 import org.firstinspires.ftc.teamcode.Controllers.MotionProfile;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive;
@@ -47,13 +46,13 @@ public class Movement {
         timer.reset();
         double elapsed_time;
 
-        while (opModeIsActive.get() && (Math.abs(target.getX() - odom.getX()) > tolerance || Math.abs(target.getY() - odom.getY()) > tolerance)) {
+        while (opModeIsActive.get() && (Math.abs(target.getX() - odom.getX()) > tolerance || Math.abs(target.getY() - odom.getY()) > tolerance || Math.abs(target.getRotation().getDegrees() - odom.getHeading()) > tolerance)) {
             //Pose2d init_pose = new Pose2d(target.getX() - odom.getX(), target.getY() - odom.getY(), new Rotation2d(Math.toRadians(target.getRotation().getDegrees() - odom.getHeading())));
             elapsed_time = timer.seconds();
             odom.update();
             double instantTargetPositionX = motionprofile.motion_profile(odom.MAX_ACCEL, odom.MAX_VELO, init_pose.getX(), elapsed_time);
             double instantTargetPositionY = motionprofile.motion_profile(odom.MAX_ACCEL, odom.MAX_VELO, init_pose.getY(), elapsed_time);
-            double instantTargetPositionH = motionprofile.motion_profile(odom.MAX_ACCEL, odom.MAX_VELO, init_pose.getRotation().getDegrees(), elapsed_time);
+            double instantTargetPositionH = motionprofile.motion_profile(odom.MAX_ACCEL * 4, odom.MAX_VELO * 4, init_pose.getRotation().getDegrees(), elapsed_time);
             double x = driveXPID.getValue(instantTargetPositionX - odom.getX());
             double y = driveYPID.getValue(instantTargetPositionY - odom.getY());
             double rx = headingPID.getValue(instantTargetPositionH - odom.getHeading());
@@ -61,19 +60,23 @@ public class Movement {
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
             rotX = rotX * 1.1;
-            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1) * 3;
             double frontLeftPower = (rotY + rotX + rx) / denominator;
             double backLeftPower = (rotY - rotX + rx) / denominator;
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
 
 
-            telemetry.addData("X motion ", instantTargetPositionX);
-            telemetry.addData("Y motion ", instantTargetPositionY);
-            telemetry.addData("H motion ", instantTargetPositionH);
+//            telemetry.addData("X motion ", instantTargetPositionX);
+//            telemetry.addData("Y motion ", instantTargetPositionY);
+            telemetry.addData("H motion ", instantTargetPositionH);;
+//            telemetry.addData("X init ", init_pose.getX());
+//            telemetry.addData("Y init ", init_pose.getY());
+            telemetry.addData("H init ", init_pose.getRotation().getDegrees());
+            telemetry.addData("Elapsed Time ", elapsed_time);
             telemetry.addData("Pose ", odom.getPose().toString());
-            telemetry.addData("x Error ", x);
-            telemetry.addData("y Error ", y);
+//            telemetry.addData("x Error ", x);
+//            telemetry.addData("y Error ", y);
             telemetry.addData("h Error ", rx);
             telemetry.addData("botHeading", Math.toDegrees(botHeading));
             telemetry.addData("rotX  ", rotX);

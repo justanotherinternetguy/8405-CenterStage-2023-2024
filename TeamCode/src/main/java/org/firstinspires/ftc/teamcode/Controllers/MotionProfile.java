@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Controllers;
 
+import com.qualcomm.robotcore.util.RobotLog;
+
 public class MotionProfile {
     public static double motion_profile(double max_acceleration, double max_velocity, double distance, double elapsed_time) {
 
@@ -10,8 +12,9 @@ public class MotionProfile {
         double halfway_distance = distance / 2.0;
         double acceleration_distance = 0.5 * max_acceleration * Math.pow(acceleration_dt, 2.0);
 
-        if (acceleration_distance > halfway_distance)
-            acceleration_dt = Math.sqrt(halfway_distance / (0.5 * max_acceleration));
+        if (acceleration_distance > halfway_distance) {
+            acceleration_dt = Math.sqrt(Math.abs(halfway_distance) / (0.5 * max_acceleration)) * halfway_distance > 0 ? 1 : -1; // prevent negative sqrt
+        }
 
         acceleration_distance = 0.5 * max_acceleration * Math.pow(acceleration_dt, 2);
 
@@ -36,17 +39,19 @@ public class MotionProfile {
             // use the kinematic equation for acceleration
             return 0.5 * max_acceleration * Math.pow(elapsed_time, 2);
         } else if (elapsed_time < deacceleration_time) { // if we're cruising
-        acceleration_distance = 0.5 * max_acceleration * Math.pow(acceleration_dt, 2);
-        double cruise_current_dt = elapsed_time - acceleration_dt;
+            acceleration_distance = 0.5 * max_acceleration * Math.pow(acceleration_dt, 2);
+            double cruise_current_dt = elapsed_time - acceleration_dt;
 
-        // use the kinematic equation for constant velocity
-        return acceleration_distance + max_velocity * cruise_current_dt;
+            // use the kinematic equation for constant velocity
+            RobotLog.d(String.format("Cruise DT: %s", cruise_current_dt));
+            return acceleration_distance + max_velocity * cruise_current_dt;
         } else { // if we're decelerating
             acceleration_distance = 0.5 * max_acceleration * Math.pow(acceleration_dt, 2);
             cruise_distance = max_velocity * cruise_dt;
             deacceleration_time = elapsed_time - deacceleration_time;
 
             // use the kinematic equations to calculate the instantaneous desired position
+            RobotLog.d(String.format("cruise_distance: %s | deacceleration_time %s", cruise_distance, deacceleration_time));
             return acceleration_distance + cruise_distance + max_velocity * deacceleration_time - 0.5 * max_acceleration * Math.pow(deacceleration_time, 2);
         }
     }
