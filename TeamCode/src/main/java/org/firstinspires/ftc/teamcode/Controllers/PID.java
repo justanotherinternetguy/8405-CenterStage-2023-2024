@@ -10,7 +10,6 @@ public class PID {
 
     private ElapsedTime timer;
 
-
     public PID(Config settings) {
         this.settings = settings;
         timer = new ElapsedTime();

@@ -17,9 +17,7 @@ public class Movement {
     private Odometry odom;
     private PID driveXPID;
     private PID driveYPID;
-    private MotionProfile motionprofile;
     private PID headingPID;
-//    private FF headingFF;
     private Supplier<Boolean> opModeIsActive;
     private double tolerance;
     private Telemetry telemetry;
@@ -27,13 +25,11 @@ public class Movement {
     private ElapsedTime timer;
 
     public Movement(Drive drive, Odometry odom, Supplier<Boolean> opModeIsActive, PID.Config drivePIDConfig, PID.Config headingPIDConfig, double tolerance, Telemetry telemetry) {
-//    public Movement(Drive drive, Odometry odom, Supplier<Boolean> opModeIsActive, PID.Config drivePIDConfig, double tolerance, Telemetry telemetry) {
         this.drive = drive;
         this.odom = odom;
         this.driveXPID = new PID(drivePIDConfig);
         this.driveYPID = new PID(drivePIDConfig);
-        this.headingPID = new PID(headingPIDConfig);
-//        this.headingFF = headingFF;
+        this.headingPID = new PID(headingPIDConfig);=
         this.opModeIsActive = opModeIsActive;
         this.tolerance = tolerance;
         this.telemetry = telemetry;
@@ -47,12 +43,11 @@ public class Movement {
         double elapsed_time;
 
         while (opModeIsActive.get() && (Math.abs(target.getX() - odom.getX()) > tolerance || Math.abs(target.getY() - odom.getY()) > tolerance || Math.abs(target.getRotation().getDegrees() - odom.getHeading()) > tolerance)) {
-            //Pose2d init_pose = new Pose2d(target.getX() - odom.getX(), target.getY() - odom.getY(), new Rotation2d(Math.toRadians(target.getRotation().getDegrees() - odom.getHeading())));
             elapsed_time = timer.seconds();
             odom.update();
-            double instantTargetPositionX = motionprofile.motion_profile(odom.MAX_ACCEL, odom.MAX_VELO, init_pose.getX(), elapsed_time);
-            double instantTargetPositionY = motionprofile.motion_profile(odom.MAX_ACCEL, odom.MAX_VELO, init_pose.getY(), elapsed_time);
-            double instantTargetPositionH = motionprofile.motion_profile(odom.MAX_ACCEL * 4, odom.MAX_VELO * 4, init_pose.getRotation().getDegrees(), elapsed_time);
+            double instantTargetPositionX = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, init_pose.getX(), elapsed_time);
+            double instantTargetPositionY = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, init_pose.getY(), elapsed_time);
+            double instantTargetPositionH = MotionProfile.motion_profile(Odometry.MAX_ACCEL * 4, Odometry.MAX_VELOCITY * 4, init_pose.getRotation().getDegrees(), elapsed_time);
             double x = driveXPID.getValue(instantTargetPositionX - odom.getX());
             double y = driveYPID.getValue(instantTargetPositionY - odom.getY());
             double rx = headingPID.getValue(instantTargetPositionH - odom.getHeading());
@@ -65,7 +60,6 @@ public class Movement {
             double backLeftPower = (rotY - rotX + rx) / denominator;
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
-
 
 //            telemetry.addData("X motion ", instantTargetPositionX);
 //            telemetry.addData("Y motion ", instantTargetPositionY);

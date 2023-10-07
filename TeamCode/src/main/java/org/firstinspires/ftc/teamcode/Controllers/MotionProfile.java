@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Controllers;
 
-import com.qualcomm.robotcore.util.RobotLog;
-
 public class MotionProfile {
     public static double motion_profile(double max_acceleration, double max_velocity, double distance, double elapsed_time) {
 
