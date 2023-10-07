@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive;
 import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
 
@@ -38,9 +39,18 @@ public class BurntAuton extends LinearOpMode {
         drive.imu.resetYaw();
         Pose2d initialOffset = new Pose2d(this.getRawX(), this.getRawY(), new Rotation2d(this.getRawHeading()));
         lastMS = timer.milliseconds();
+        double lastIMU = drive.getIMU();
 
         while (opModeIsActive() && !this.atTarget()) {
             odometry.update();
+
+            double newIMU = drive.getIMU();
+            if (newIMU == lastIMU) {
+                // imu hasn't updated yet
+                // predict the next imu value
+            } else {
+                lastIMU = newIMU;
+            }
 
             ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(initialOffset.getX(), initialOffset.getY(), initialOffset.getHeading(), odometry.getPose().getRotation());
 
@@ -61,6 +71,7 @@ public class BurntAuton extends LinearOpMode {
             telemetry.addData("Target Pose ", targetPose.toString());
             telemetry.addData("Initial Offset ", initialOffset.toString());
             telemetry.addData("Delta ", timer.milliseconds() - lastMS);
+            telemetry.addData("Angular Velocity ", drive.imu.getRobotAngularVelocity(AngleUnit.DEGREES));
             telemetry.update();
 
             drive.setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);

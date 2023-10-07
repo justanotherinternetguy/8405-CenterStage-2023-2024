@@ -29,7 +29,7 @@ public class Movement {
         this.odom = odom;
         this.driveXPID = new PID(drivePIDConfig);
         this.driveYPID = new PID(drivePIDConfig);
-        this.headingPID = new PID(headingPIDConfig);=
+        this.headingPID = new PID(headingPIDConfig);
         this.opModeIsActive = opModeIsActive;
         this.tolerance = tolerance;
         this.telemetry = telemetry;
