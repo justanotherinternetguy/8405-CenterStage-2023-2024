@@ -5,10 +5,12 @@ import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Controllers.MotionProfile;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive;
 import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
+import org.firstinspires.ftc.teamcode.utils;
 
 import java.util.function.Supplier;
 
@@ -38,20 +40,37 @@ public class Movement {
     }
 
     public void move(Pose2d target) {
+        // 0 - 24 = -24 | S = 24 T = 0
+        // 24 - 0 = 24 | S = 0 T = 24
+        Pose2d init = odom.getPose();
         Pose2d init_pose = new Pose2d(target.getX() - odom.getX(), target.getY() - odom.getY(), new Rotation2d(Math.toRadians(target.getRotation().getDegrees() - odom.getHeading())));
         timer.reset();
         double elapsed_time;
+        double lastMS = timer.milliseconds();
+        double lastIMU = drive.getIMU();
 
-        while (opModeIsActive.get() && (Math.abs(target.getX() - odom.getX()) > tolerance || Math.abs(target.getY() - odom.getY()) > tolerance || Math.abs(target.getRotation().getDegrees() - odom.getHeading()) > tolerance)) {
+        while (opModeIsActive.get() && (Math.abs(target.getX() - odom.getX()) > tolerance || Math.abs(target.getY() - odom.getY()) > tolerance || Math.abs(target.getRotation().getDegrees() - odom.getHeading()) > tolerance * 3)) {
             elapsed_time = timer.seconds();
             odom.update();
-            double instantTargetPositionX = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, init_pose.getX(), elapsed_time);
-            double instantTargetPositionY = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, init_pose.getY(), elapsed_time);
-            double instantTargetPositionH = MotionProfile.motion_profile(Odometry.MAX_ACCEL * 4, Odometry.MAX_VELOCITY * 4, init_pose.getRotation().getDegrees(), elapsed_time);
-            double x = driveXPID.getValue(instantTargetPositionX - odom.getX());
-            double y = driveYPID.getValue(instantTargetPositionY - odom.getY());
-            double rx = headingPID.getValue(instantTargetPositionH - odom.getHeading());
-            double botHeading = Math.toRadians(odom.getHeading());
+            //
+            double instantTargetPositionX = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, init_pose.getX(), elapsed_time) + init.getX();
+            double instantTargetPositionY = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, init_pose.getY(), elapsed_time) + init.getY(); // (-90 - 90) + 90 = -180 + 90 = -90
+            double instantTargetPositionH = MotionProfile.motion_profile(Odometry.MAX_ACCEL * 4, Odometry.MAX_VELOCITY * 4, init_pose.getRotation().getDegrees(), elapsed_time)  + init.getRotation().getDegrees();
+            //
+//            double x = driveXPID.getValue(instantTargetPositionX - odom.getX());
+//            double y = driveYPID.getValue(instantTargetPositionY - odom.getY());
+//            double rx = Math.toRadians(headingPID.getValue(instantTargetPositionH - odom.getHeading()));
+            double x = driveXPID.getValue(target.getX() - odom.getX());
+            double y = driveYPID.getValue(target.getY() - odom.getY());
+//            double rx = headingPID.getValue(target.getRotation().getDegrees() - odom.getHeading());
+            double rx = headingPID.getValue(utils.angleDifference(target.getRotation().getDegrees(), odom.getHeading()));
+//            double botHeading = Math.toRadians(odom.getHeading());
+            double imuValue = drive.getIMU();
+
+            double delta = timer.milliseconds() - lastMS;
+            double nextHeading = lastIMU + drive.imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate * delta / 1000;
+            double botHeading = Math.toRadians(lastIMU == imuValue ? nextHeading : imuValue);
+
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
             rotX = rotX * 1.1;

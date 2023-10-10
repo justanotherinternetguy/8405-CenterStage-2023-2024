@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.checkerframework.checker.units.qual.Angle;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive;
@@ -48,6 +49,10 @@ public class BurntAuton extends LinearOpMode {
             if (newIMU == lastIMU) {
                 // imu hasn't updated yet
                 // predict the next imu value
+                double delta = timer.milliseconds() - lastMS;
+                double nextHeading = lastIMU + drive.imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate * delta / 1000;
+                telemetry.addData("NEXT", nextHeading);
+                lastMS = timer.milliseconds();
             } else {
                 lastIMU = newIMU;
             }
