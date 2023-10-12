@@ -20,12 +20,12 @@ public class MotionProfile {
         max_velocity = max_acceleration * acceleration_dt;
 
         // we decelerate at the same rate as we accelerate
-        double deacceleration_dt = acceleration_dt * 2;
+        double deacceleration_dt = acceleration_dt;
 
         // calculate the time that we're at max velocity
         double cruise_distance = distance - 2 * acceleration_distance;
         double cruise_dt = cruise_distance / max_velocity;
-        double deacceleration_time = cruise_dt;
+        double deacceleration_time = acceleration_dt + cruise_dt;
 
         // check if we're still in the motion profile
         double entire_dt = acceleration_dt + cruise_dt + deacceleration_dt;
