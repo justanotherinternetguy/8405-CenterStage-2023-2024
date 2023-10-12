@@ -18,7 +18,7 @@ public class TestAuton extends LinearOpMode {
         Robot robot = new Robot(hardwareMap, gamepad1);
         Odometry odometry = new Odometry(hardwareMap, robot.drive.imu);
 //        Movement movement = new Movement(robot.drive, odometry, this::opModeIsActive, new PID.Config(.11, 0, 0), new PID.Config(0.05, 0, 0), 3, telemetry);
-        Movement movement = new Movement(robot.drive, odometry, this::opModeIsActive, new PID.Config(0.17, 0, 0.05), new PID.Config(0.065, 0, 0), 0.25, telemetry);
+        Movement movement = new Movement(robot.drive, odometry, this::opModeIsActive, new PID.Config(0.1, 0, 0.05), new PID.Config(0.065, 0, 0), 0.25, telemetry);
         waitForStart();
         odometry.reset();
         robot.drive.imu.resetYaw();

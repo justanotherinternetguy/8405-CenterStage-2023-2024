@@ -33,7 +33,7 @@ public class Odometry {
     public static final double WHEEL_DIAMETER = 35.0/25.4;
     public static final double TICKS_PER_REV = 8192.0;
     public static final double DISTANCE_PER_PULSE = Math.PI * WHEEL_DIAMETER / TICKS_PER_REV;
-    public static final double MAX_ACCEL = 33;
+    public static final double MAX_ACCEL = 40;
     public static final double MAX_VELOCITY = 100;
 
     private Encoder leftOdometer, rightOdometer, centerOdometer;
