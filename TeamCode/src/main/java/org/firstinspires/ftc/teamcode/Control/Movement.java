@@ -49,7 +49,7 @@ public class Movement {
         double lastMS = timer.milliseconds();
         double lastIMU = drive.getIMU();
 
-        while (opModeIsActive.get() && (Math.abs(target.getX() - odom.getX()) > tolerance || Math.abs(target.getY() - odom.getY()) > tolerance || Math.abs(target.getRotation().getDegrees() - odom.getHeading()) > tolerance * 3)) {
+        while (opModeIsActive.get() && (Math.abs(target.getX() - odom.getX()) > 1 || Math.abs(target.getY() - odom.getY()) > 1 || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), odom.getHeading())) > 3.0)) {
             elapsed_time = timer.seconds();
             odom.update();
             //
@@ -57,11 +57,11 @@ public class Movement {
             double instantTargetPositionY = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, init_pose.getY(), elapsed_time) + init.getY(); // (-90 - 90) + 90 = -180 + 90 = -90
             double instantTargetPositionH = MotionProfile.motion_profile(Odometry.MAX_ACCEL * 4, Odometry.MAX_VELOCITY * 4, init_pose.getRotation().getDegrees(), elapsed_time)  + init.getRotation().getDegrees();
             //
-//            double x = driveXPID.getValue(instantTargetPositionX - odom.getX());
-//            double y = driveYPID.getValue(instantTargetPositionY - odom.getY());
+            double x = driveXPID.getValue(instantTargetPositionX - odom.getX());
+            double y = driveYPID.getValue(instantTargetPositionY - odom.getY());
 //            double rx = Math.toRadians(headingPID.getValue(instantTargetPositionH - odom.getHeading()));
-            double x = driveXPID.getValue(target.getX() - odom.getX());
-            double y = driveYPID.getValue(target.getY() - odom.getY());
+//            double x = driveXPID.getValue(target.getX() - odom.getX());
+//            double y = driveYPID.getValue(target.getY() - odom.getY());
 //            double rx = headingPID.getValue(target.getRotation().getDegrees() - odom.getHeading());
             double rx = headingPID.getValue(utils.angleDifference(target.getRotation().getDegrees(), odom.getHeading()));
 //            double botHeading = Math.toRadians(odom.getHeading());
@@ -74,7 +74,7 @@ public class Movement {
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
             rotX = rotX * 1.1;
-            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1) * 3;
+            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
             double frontLeftPower = (rotY + rotX + rx) / denominator;
             double backLeftPower = (rotY - rotX + rx) / denominator;
             double frontRightPower = (rotY - rotX - rx) / denominator;
