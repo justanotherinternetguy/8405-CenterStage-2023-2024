@@ -57,7 +57,7 @@ public class TeleOpControl extends LinearOpMode {
 
 //                double botHeading = Math.toRadians(-odometry.getHeading());
                 double botHeading = Math.toRadians(lastIMU == imuValue ? nextHeading : imuValue);
-                telemetry.addData("WHAT: ", botHeading);
+//                double botHeading = Math.toRadians(nextHeading);
 
 //                double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
 ////              double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
@@ -81,9 +81,9 @@ public class TeleOpControl extends LinearOpMode {
             lastIMU = robot.drive.getIMU();
 
             odometry.update();
-            telemetry.addData("l: ", odometry.getEncoders()[0]);
-            telemetry.addData("r: ", odometry.getEncoders()[1]);
-            telemetry.addData("c: ", odometry.getEncoders()[2]);
+            telemetry.addData("l: ", odometry.leftOdometer.getPosition());
+            telemetry.addData("r: ", odometry.rightOdometer.getPosition());
+            telemetry.addData("c: ", odometry.centerOdometer.getPosition());
             telemetry.addData("pose: ", odometry.getPose().toString());
             telemetry.addData("x: ", odometry.getX());
             telemetry.addData("y: ", odometry.getY());

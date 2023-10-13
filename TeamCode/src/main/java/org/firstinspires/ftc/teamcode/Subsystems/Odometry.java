@@ -28,23 +28,23 @@ import org.firstinspires.ftc.robotcore.external.navigation.Rotation;
  */
 @NonNull
 public class Odometry {
-    public static final double TRACK_WIDTH = 15;
-    public static final double CENTER_WHEEL_OFFSET = 0.5;
+    public static final double TRACK_WIDTH = 14.6;
+    public static final double CENTER_WHEEL_OFFSET = -0.5;
     public static final double WHEEL_DIAMETER = 35.0/25.4;
     public static final double TICKS_PER_REV = 8192.0;
     public static final double DISTANCE_PER_PULSE = Math.PI * WHEEL_DIAMETER / TICKS_PER_REV;
-    public static final double MAX_ACCEL = 40;
-    public static final double MAX_VELOCITY = 100;
+    public static final double MAX_ACCEL = 40/2;
+    public static final double MAX_VELOCITY = 100/2;
 
-    private Encoder leftOdometer, rightOdometer, centerOdometer;
+    public Encoder leftOdometer, rightOdometer, centerOdometer;
     private HolonomicOdometry odometry;
     private Pose2d pose;
 
     public Odometry(HardwareMap hardwareMap, IMU imu) {
 
-        leftOdometer = new MotorEx(hardwareMap, "frontRight").encoder;
-        rightOdometer = new MotorEx(hardwareMap, "frontLeft").encoder;
-        centerOdometer = new MotorEx(hardwareMap, "backLeft").encoder;
+        leftOdometer = new MotorEx(hardwareMap, "backRight").encoder;
+        rightOdometer = new MotorEx(hardwareMap, "backLeft").encoder;
+        centerOdometer = new MotorEx(hardwareMap, "frontRight").encoder;
 
         leftOdometer = leftOdometer.setDistancePerPulse(DISTANCE_PER_PULSE);
         rightOdometer = rightOdometer.setDistancePerPulse(DISTANCE_PER_PULSE);
