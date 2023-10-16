@@ -63,7 +63,7 @@ public class Movement {
             double x = driveXPID.getValue(target.getX() - pose.getX());
             double y = driveYPID.getValue(target.getY() - pose.getY());
 //            double rx = headingPID.getValue(target.getRotation().getDegrees() - odom.getHeading());
-            double rx = headingPID.getValue(utils.angleDifference(target.getRotation().getDegrees(), Math.toDegrees(pose.getHeading())));
+//            double rx = headingPID.getValue(utils.angleDifference(target.getRotation().getDegrees(), Math.toDegrees(pose.getHeading())));
 //            double botHeading = Math.toRadians(odom.getHeading());
 //            double imuValue = drive.getIMU();
 
@@ -74,7 +74,7 @@ public class Movement {
 
 //            double x = target.getX() - pose.getX();
 //            double y = target.getY() - pose.getY();
-//            double rx = 0;
+            double rx = 0;
 
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
