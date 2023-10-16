@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -30,7 +30,7 @@ public class TeleOpControl extends LinearOpMode {
 
         while (opModeIsActive()) {
             drive.update();
-            Pose2d poseEstimate = drive.getPoseEstimate();
+            Pose2d poseEstimate = drive.getPose();
 
             telemetry.addData("left x: ", gamepad1.left_stick_x);
             telemetry.addData("left y: ", gamepad1.left_stick_y);

@@ -41,7 +41,7 @@ public class Movement {
     }
 
     public void move(Pose2d target) {
-        com.acmerobotics.roadrunner.geometry.Pose2d init = rrDrive.getPoseEstimate();
+        Pose2d init = rrDrive.getPose();
         Pose2d init_target_pose = new Pose2d(target.getX() - init.getX(), target.getY() - init.getY(), new Rotation2d(Math.toRadians(target.getRotation().getDegrees() - init.getHeading())));
         timer.reset();
         double elapsed_time;
@@ -51,7 +51,7 @@ public class Movement {
         while (opModeIsActive.get() && (Math.abs(target.getX() - init.getX()) > 1 || Math.abs(target.getY() - init.getY()) > 1 || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), init.getHeading())) > 3.0)) {
             elapsed_time = timer.seconds();
             rrDrive.update();
-            com.acmerobotics.roadrunner.geometry.Pose2d pose = rrDrive.getPoseEstimate();
+            Pose2d pose = rrDrive.getPose();
             //
             double instantTargetPositionX = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, init_target_pose.getX(), elapsed_time) + init.getX();
             double instantTargetPositionY = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, init_target_pose.getY(), elapsed_time) + init.getY(); // (-90 - 90) + 90 = -180 + 90 = -90
@@ -72,10 +72,14 @@ public class Movement {
 //            double botHeading = Math.toRadians(lastIMU == imuValue ? nextHeading : imuValue);
             double botHeading = pose.getHeading();
 
+//            double x = target.getX() - pose.getX();
+//            double y = target.getY() - pose.getY();
+//            double rx = 0;
+
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
             rotX = rotX * 1.1;
-            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1) * 6;
+            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1) * 3;
             double frontLeftPower = (rotY + rotX + rx) / denominator;
             double backLeftPower = (rotY - rotX + rx) / denominator;
             double frontRightPower = (rotY - rotX - rx) / denominator;
@@ -89,6 +93,8 @@ public class Movement {
             telemetry.addData("H init ", init_target_pose.getRotation().getDegrees());
             telemetry.addData("Elapsed Time ", elapsed_time);
             telemetry.addData("Pose ", pose);
+            telemetry.addData("XXXX ", x);
+            telemetry.addData("YYYY ", y);
 //            telemetry.addData("x Error ", x);
 //            telemetry.addData("y Error ", y);
             telemetry.addData("h Error ", rx);
