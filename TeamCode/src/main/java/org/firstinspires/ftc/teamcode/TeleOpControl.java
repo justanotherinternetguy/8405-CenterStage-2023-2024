@@ -1,43 +1,41 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Controllers.MotionProfile;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 
 @TeleOp(name="Mecanum Drive", group="Linear Opmode")
 public class TeleOpControl extends LinearOpMode {
+    public static boolean fieldCentric = true;
     @Override
     public void runOpMode() {
+
         Robot robot = new Robot(hardwareMap, gamepad1);
-        Odometry odometry = new Odometry(hardwareMap, robot.drive.imu);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         ElapsedTime timer = new ElapsedTime();
 
         waitForStart();
 
-        boolean fieldCentric = true;
-
-        odometry.reset();
         robot.drive.imu.resetYaw();
         timer.reset();
 
-        double lastMs = 0;
-        double lastIMU = 0;
-
         while (opModeIsActive()) {
+            drive.update();
+            Pose2d poseEstimate = drive.getPoseEstimate();
+
             telemetry.addData("left x: ", gamepad1.left_stick_x);
             telemetry.addData("left y: ", gamepad1.left_stick_y);
             telemetry.addData("right x: ", gamepad1.right_stick_x);
             telemetry.addData("right y: ", gamepad1.right_stick_y);
-            double imuValue = robot.drive.getIMU();
-
-            double delta = timer.milliseconds() - lastMs;
-            double nextHeading = lastIMU + robot.drive.imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate * delta / 1000;
-
 
             if (!fieldCentric) {
                 double power = -gamepad1.left_stick_y; // remember this is reversed
@@ -46,17 +44,18 @@ public class TeleOpControl extends LinearOpMode {
                 robot.drive.mecanumDrive(power, strafe, turn);
                 telemetry.addData("drive: ", "robotCentric");
             } else {
+                double elapsed = timer.seconds();
+
                 double y = -gamepad1.left_stick_y;
                 double x = gamepad1.left_stick_x;
                 double h = gamepad1.right_stick_x;
 
-                double elapsed = timer.seconds();
                 double profileY = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, y, elapsed);
                 double profileX = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, x, elapsed);
                 double rx = MotionProfile.motion_profile(Odometry.MAX_ACCEL * 4, Odometry.MAX_VELOCITY * 4, h, elapsed);
 
 //                double botHeading = Math.toRadians(-odometry.getHeading());
-                double botHeading = Math.toRadians(lastIMU == imuValue ? nextHeading : imuValue);
+                double botHeading = poseEstimate.getHeading();
 //                double botHeading = Math.toRadians(nextHeading);
 
 //                double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
@@ -77,19 +76,9 @@ public class TeleOpControl extends LinearOpMode {
                 telemetry.addData("drive: ", "fieldCentric");
             }
 
-            lastMs = timer.milliseconds();
-            lastIMU = robot.drive.getIMU();
-
-            odometry.update();
-            telemetry.addData("l: ", odometry.leftOdometer.getPosition());
-            telemetry.addData("r: ", odometry.rightOdometer.getPosition());
-            telemetry.addData("c: ", odometry.centerOdometer.getPosition());
-            telemetry.addData("pose: ", odometry.getPose().toString());
-            telemetry.addData("x: ", odometry.getX());
-            telemetry.addData("y: ", odometry.getY());
-            telemetry.addData("heading: ", odometry.getHeading());
-            telemetry.addData("heading IMU: ", imuValue);
-            telemetry.addData("PREDICTION IMU: ", nextHeading);
+            telemetry.addData("x", poseEstimate.getX());
+            telemetry.addData("y", poseEstimate.getY());
+            telemetry.addData("heading", poseEstimate.getHeading());
             telemetry.update();
         }
     }
