@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.Controllers;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class PID {
-    private PID.Config settings;
+    public PID.Config settings;
 
     private double integralSum = 0.0;
     private double lastError = 0.0;
@@ -68,6 +68,11 @@ public class PID {
 
         public double getKd() {
             return Kd;
+        }
+
+        @Override
+        public String toString() {
+            return "{ Kp: " + getKp() + ", Ki: " + getKi() + ", Kd: " + getKd() + " }";
         }
     }
 }
