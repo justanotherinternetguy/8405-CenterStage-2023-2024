@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Control;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -46,10 +47,12 @@ public class Movement {
         timer.reset();
         double elapsed_time;
         Pose2d pose = init;
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        Telemetry dashTelem = dashboard.getTelemetry();
 //        double lastMS = timer.milliseconds();
 //        double lastIMU = drive.getIMU();
 
-        while (opModeIsActive.get() || (Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > 3.0)) {
+        while (opModeIsActive.get() && (Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > 3.0)) {
             elapsed_time = timer.seconds();
             rrDrive.update();
             pose = rrDrive.getPose();
@@ -58,11 +61,11 @@ public class Movement {
             double instantTargetPositionY = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, init_target_pose.getY(), elapsed_time) + init.getY(); // (-90 - 90) + 90 = -180 + 90 = -90
             double instantTargetPositionH = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, init_target_pose.getRotation().getDegrees(), elapsed_time)  + Math.toDegrees(init.getHeading());
             //
-            double x = driveXPID.getValue(instantTargetPositionX - pose.getX());
-            double y = driveYPID.getValue(instantTargetPositionY - pose.getY());
+//            double x = driveXPID.getValue(instantTargetPositionX - pose.getX());
+//            double y = driveYPID.getValue(instantTargetPositionY - pose.getY());
 //            double rx = Math.toRadians(headingPID.getValue(instantTargetPositionH - odom.getHeading()));
-//            double x = driveXPID.getValue(target.getX() - pose.getX());
-//            double y = driveYPID.getValue(target.getY() - pose.getY());
+            double x = driveXPID.getValue(target.getX() - pose.getX());
+            double y = driveYPID.getValue(target.getY() - pose.getY());
 //            double rx = headingPID.getValue(target.getRotation().getDegrees() - odom.getHeading());
             double rx = headingPID.getValue(utils.angleDifference(target.getRotation().getDegrees(), Math.toDegrees(pose.getHeading())));
             // pid <- angleDiff(targ.deg, deg <- heading))
@@ -72,7 +75,7 @@ public class Movement {
 //            double delta = timer.milliseconds() - lastMS;
 //            double nextHeading = lastIMU + drive.imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate * delta / 1000;
 //            double botHeading = Math.toRadians(lastIMU == imuValue ? nextHeading : imuValue);
-            double botHeading = pose.getHeading();
+            double botHeading = pose.getRotation().getRadians();
 
 //            double x = target.getX() - pose.getX();
 //            double y = target.getY() - pose.getY();
@@ -81,31 +84,31 @@ public class Movement {
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
             rotX = rotX * 1.1;
-            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1) * 3;
             double frontLeftPower = (rotY + rotX + rx) / denominator;
             double backLeftPower = (rotY - rotX + rx) / denominator;
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
 
-//            telemetry.addData("X motion ", instantTargetPositionX);
-//            telemetry.addData("Y motion ", instantTargetPositionY);
-//            telemetry.addData("H motion ", instantTargetPositionH);;
-//            telemetry.addData("X init ", init_target_pose.getX());
+            telemetry.addData("X motion ", instantTargetPositionX);
+            telemetry.addData("Y motion ", instantTargetPositionY);
+            telemetry.addData("H motion ", instantTargetPositionH);;
+            telemetry.addData("X init ", init_target_pose.getX());
 //            telemetry.addData("Y init ", init_target_pose.getY());
 //            telemetry.addData("H init ", init_target_pose.getRotation().getDegrees());
 //            telemetry.addData("Elapsed Time ", elapsed_time);
-//            telemetry.addData("Pose ", pose);
-//            telemetry.addData("XXXX ", x);
-//            telemetry.addData("YYYY ", y);
-//            telemetry.addData("x Error ", x);
-//            telemetry.addData("y Error ", y);
-            telemetry.addData("atX ", Math.abs(target.getX() - pose.getX()) > tolerance);
-            telemetry.addData("atY ", Math.abs(target.getY() - pose.getY()) > tolerance);
-            telemetry.addData("atH ", Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > 3.0);
-            telemetry.addData("x", driveXPID.settings);
-            telemetry.addData("y", driveYPID.settings);
-            telemetry.addData("h", headingPID.settings);
-//            telemetry.addData("h Error ", rx);
+            telemetry.addData("Pose ", pose);
+            telemetry.addData("XXXX ", x);
+            telemetry.addData("YYYY ", y);
+            telemetry.addData("x Error ", x);
+            telemetry.addData("y Error ", y);
+//            telemetry.addData("atX ", Math.abs(target.getX() - pose.getX()) > tolerance);
+//            telemetry.addData("atY ", Math.abs(target.getY() - pose.getY()) > tolerance);
+//            telemetry.addData("atH ", Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > 3.0);
+//            telemetry.addData("x", driveXPID.settings);
+//            telemetry.addData("y", driveYPID.settings);
+//            telemetry.addData("h", headingPID.settings);
+            telemetry.addData("h Error ", rx);
 //            telemetry.addData("raw hE", utils.angleDifference(target.getRotation().getDegrees(), Math.toDegrees(pose.getHeading())));
 //            telemetry.addData("raw hE2", utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees()));
 //            telemetry.addData("subtract", target.getRotation().getDegrees() - Math.toDegrees(pose.getHeading()));
@@ -113,14 +116,23 @@ public class Movement {
 //            telemetry.addData("targ", target.getRotation().getDegrees());
 //            telemetry.addData("rad", pose.getHeading());
 //            telemetry.addData("botHeading", Math.toDegrees(botHeading));
-//            telemetry.addData("botHeading", pose.getRotation().getDegrees());
-//            telemetry.addData("rotX  ", rotX);
-//            telemetry.addData("rotY  ", rotY);
+            telemetry.addData("botHeading", pose.getRotation().getDegrees());
+            telemetry.addData("rotX  ", rotX);
+            telemetry.addData("rotY  ", rotY);
 //            telemetry.addData("FL ", frontLeftPower);
 //            telemetry.addData("FR ", frontRightPower);
 //            telemetry.addData("BL ", backLeftPower);
 //            telemetry.addData("BR ", backRightPower);
             telemetry.update();
+
+            dashTelem.addData("x", pose.getX());
+            dashTelem.addData("y", pose.getY());
+            dashTelem.addData("heading", pose.getRotation().getDegrees());
+            dashTelem.addData("x Error", x);
+            dashTelem.addData("y Error", y);
+            dashTelem.addData("heading Error", rx);
+            dashTelem.update();
+
 
             drive.setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
         }
