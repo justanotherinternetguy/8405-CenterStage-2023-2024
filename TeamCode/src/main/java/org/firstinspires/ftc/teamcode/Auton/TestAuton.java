@@ -34,7 +34,7 @@ public class TestAuton extends LinearOpMode {
 //                sleep(10);
 //                rrDrive.update();
 //            }
-            movement.move(new Pose2d(0, 24, new Rotation2d(Math.toRadians(0))));
+            movement.move(new Pose2d(AutonSettings.targetX, AutonSettings.targetY, new Rotation2d(Math.toRadians(AutonSettings.targetH))));
         }
         while (opModeIsActive()) {
             telemetry.addData("Pose", odometry.getPose().toString());
@@ -45,10 +45,14 @@ public class TestAuton extends LinearOpMode {
 
 @Config
 class AutonSettings {
-    public static double translationP = 0.2;
+    public static double translationP = 0.3;
     public static double translationI = 0.0;
     public static double translationD = 0.0;
     public static double rotationP = 0.03;
     public static double rotationI = 0.0;
     public static double rotationD = 0.0;
+
+    public static double targetX = 0;
+    public static double targetY = 24;
+    public static double targetH = 90;
 }

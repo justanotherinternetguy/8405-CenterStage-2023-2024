@@ -49,7 +49,7 @@ public class Movement {
 //        double lastMS = timer.milliseconds();
 //        double lastIMU = drive.getIMU();
 
-        while (opModeIsActive.get() && (Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > 3.0)) {
+        while (opModeIsActive.get() || (Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > 3.0)) {
             elapsed_time = timer.seconds();
             rrDrive.update();
             pose = rrDrive.getPose();
@@ -103,8 +103,8 @@ public class Movement {
             telemetry.addData("atY ", Math.abs(target.getY() - pose.getY()) > tolerance);
             telemetry.addData("atH ", Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > 3.0);
             telemetry.addData("x", driveXPID.settings);
-            telemetry.addData("y", driveXPID.settings);
-            telemetry.addData("h", driveXPID.settings);
+            telemetry.addData("y", driveYPID.settings);
+            telemetry.addData("h", headingPID.settings);
 //            telemetry.addData("h Error ", rx);
 //            telemetry.addData("raw hE", utils.angleDifference(target.getRotation().getDegrees(), Math.toDegrees(pose.getHeading())));
 //            telemetry.addData("raw hE2", utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees()));
