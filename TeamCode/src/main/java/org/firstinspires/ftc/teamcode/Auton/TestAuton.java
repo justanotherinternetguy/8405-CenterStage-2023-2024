@@ -29,12 +29,13 @@ public class TestAuton extends LinearOpMode {
         odometry.reset();
         robot.drive.imu.resetYaw();
         if (opModeIsActive()) {
-//            for (int i = 0; i < 200; i++) {
-//                if (!opModeIsActive()) return;
-//                sleep(10);
-//                rrDrive.update();
-//            }
-            movement.move(new Pose2d(AutonSettings.targetX, AutonSettings.targetY, new Rotation2d(Math.toRadians(AutonSettings.targetH))));
+//            movement.move(new Pose2d(AutonSettings.targetX, AutonSettings.targetY, new Rotation2d(Math.toRadians(AutonSettings.targetH))));
+            movement.move(new Pose2d(0, 24 * 2.25, new Rotation2d(Math.toRadians(90))));
+            movement.move(new Pose2d(24 * -2, 24 * 2.25, new Rotation2d(Math.toRadians(90))));
+            movement.move(new Pose2d(24 * -3.5, 24 * 1.5, new Rotation2d(Math.toRadians(-90))));
+            movement.move(new Pose2d(24 * -2, 24 * 2.25, new Rotation2d(Math.toRadians(-90))));
+            movement.move(new Pose2d(0, 24 * 2.25, new Rotation2d(Math.toRadians(-90))));
+            movement.move(new Pose2d(24 * -0.5, 24 * 1.5, new Rotation2d(Math.toRadians(90))));
         }
         while (opModeIsActive()) {
             telemetry.addData("Pose", odometry.getPose().toString());

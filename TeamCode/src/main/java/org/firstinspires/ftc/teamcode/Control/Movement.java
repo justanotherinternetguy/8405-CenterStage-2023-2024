@@ -75,7 +75,7 @@ public class Movement {
 //            double delta = timer.milliseconds() - lastMS;
 //            double nextHeading = lastIMU + drive.imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate * delta / 1000;
 //            double botHeading = Math.toRadians(lastIMU == imuValue ? nextHeading : imuValue);
-            double botHeading = pose.getRotation().getRadians();
+            double botHeading = -pose.getRotation().getRadians();
 
 //            double x = target.getX() - pose.getX();
 //            double y = target.getY() - pose.getY();
@@ -84,7 +84,7 @@ public class Movement {
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
             rotX = rotX * 1.1;
-            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1) * 3;
+            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
             double frontLeftPower = (rotY + rotX + rx) / denominator;
             double backLeftPower = (rotY - rotX + rx) / denominator;
             double frontRightPower = (rotY - rotX - rx) / denominator;
@@ -128,8 +128,13 @@ public class Movement {
             dashTelem.addData("x", pose.getX());
             dashTelem.addData("y", pose.getY());
             dashTelem.addData("heading", pose.getRotation().getDegrees());
+            dashTelem.addData("x target", target.getX());
+            dashTelem.addData("y target", target.getY());
+            dashTelem.addData("heading target", target.getRotation().getDegrees());
             dashTelem.addData("x Error", x);
             dashTelem.addData("y Error", y);
+            dashTelem.addData("rel X", rotX);
+            dashTelem.addData("rel Y", rotY);
             dashTelem.addData("heading Error", rx);
             dashTelem.update();
 
