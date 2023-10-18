@@ -29,14 +29,14 @@ public class TestAuton extends LinearOpMode {
         robot.drive.imu.resetYaw();
         if (opModeIsActive()) {
             movement.move(new Pose2d(Config.targetX, Config.targetY, new Rotation2d(Math.toRadians(Config.targetH))));
-//            for (int i = 0; i < Config.pathCount; i ++) {
-//                movement.move(new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(90))));
-//                movement.move(new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(90))));
-//                movement.move(new Pose2d(24 * -3.25, 24 * 1.125, new Rotation2d(Math.toRadians(-90))));
-//                movement.move(new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(-90))));
-//                movement.move(new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(-90))));
-//                movement.move(new Pose2d(24 * 0.75, 24 * 1.5, new Rotation2d(Math.toRadians(90))));
-//            }
+            for (int i = 0; i < Config.pathCount; i ++) {
+                movement.move(new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(90))));
+                movement.move(new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(90))));
+                movement.move(new Pose2d(24 * -3.25, 24 * 1.125, new Rotation2d(Math.toRadians(-90))));
+                movement.move(new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(-90))));
+                movement.move(new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(-90))));
+                movement.move(new Pose2d(24 * 0.75, 24 * 1.5, new Rotation2d(Math.toRadians(90))));
+            }
         }
         while (opModeIsActive()) {
             telemetry.addData("Pose", odometry.getPose().toString());
