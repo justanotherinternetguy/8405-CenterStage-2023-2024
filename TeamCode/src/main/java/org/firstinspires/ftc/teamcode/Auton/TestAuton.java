@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Auton;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.geometry.Translation2d;
@@ -22,38 +21,26 @@ public class TestAuton extends LinearOpMode {
         SampleMecanumDrive rrDrive = new SampleMecanumDrive(hardwareMap);
         Odometry odometry = new Odometry(hardwareMap, robot.drive.imu);
 //        Movement movement = new Movement(robot.drive, odometry, this::opModeIsActive, new PID.Config(.11, 0, 0), new PID.Config(0.05, 0, 0), 3, telemetry);
-        PID.Config translationConfig = new PID.Config(AutonSettings.translationP, AutonSettings.translationI, AutonSettings.translationD);
-        PID.Config rotationConfig = new PID.Config(AutonSettings.rotationP, AutonSettings.rotationI, AutonSettings.rotationD);
+        PID.Config translationConfig = new PID.Config(Config.translationP, Config.translationI, Config.translationD);
+        PID.Config rotationConfig = new PID.Config(Config.rotationP, Config.rotationI, Config.rotationD);
         Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, translationConfig, rotationConfig, 1, telemetry);
         waitForStart();
         odometry.reset();
         robot.drive.imu.resetYaw();
         if (opModeIsActive()) {
-//            movement.move(new Pose2d(AutonSettings.targetX, AutonSettings.targetY, new Rotation2d(Math.toRadians(AutonSettings.targetH))));
-            movement.move(new Pose2d(0, 24 * 2.25, new Rotation2d(Math.toRadians(90))));
-            movement.move(new Pose2d(24 * -2, 24 * 2.25, new Rotation2d(Math.toRadians(90))));
-            movement.move(new Pose2d(24 * -3.5, 24 * 1.5, new Rotation2d(Math.toRadians(-90))));
-            movement.move(new Pose2d(24 * -2, 24 * 2.25, new Rotation2d(Math.toRadians(-90))));
-            movement.move(new Pose2d(0, 24 * 2.25, new Rotation2d(Math.toRadians(-90))));
-            movement.move(new Pose2d(24 * -0.5, 24 * 1.5, new Rotation2d(Math.toRadians(90))));
+            movement.move(new Pose2d(Config.targetX, Config.targetY, new Rotation2d(Math.toRadians(Config.targetH))));
+//            for (int i = 0; i < Config.pathCount; i ++) {
+//                movement.move(new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(90))));
+//                movement.move(new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(90))));
+//                movement.move(new Pose2d(24 * -3.25, 24 * 1.125, new Rotation2d(Math.toRadians(-90))));
+//                movement.move(new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(-90))));
+//                movement.move(new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(-90))));
+//                movement.move(new Pose2d(24 * 0.75, 24 * 1.5, new Rotation2d(Math.toRadians(90))));
+//            }
         }
         while (opModeIsActive()) {
             telemetry.addData("Pose", odometry.getPose().toString());
             telemetry.update();
         }
     }
-}
-
-@Config
-class AutonSettings {
-    public static double translationP = 0.3;
-    public static double translationI = 0.0;
-    public static double translationD = 0.0;
-    public static double rotationP = 0.03;
-    public static double rotationI = 0.0;
-    public static double rotationD = 0.0;
-
-    public static double targetX = 0;
-    public static double targetY = 24;
-    public static double targetH = 90;
 }
