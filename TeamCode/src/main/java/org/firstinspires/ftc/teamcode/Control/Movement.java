@@ -51,15 +51,13 @@ public class Movement {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashTelem = dashboard.getTelemetry();
 
-        while (opModeIsActive.get() && (Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > 3.0)) {
+        while (opModeIsActive.get() && (Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > tolerance)) {
             elapsed_time = timer.seconds();
             rrDrive.update();
             pose = rrDrive.getPose();
-            //
             double instantTargetPositionX = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getX(), elapsed_time) + init.getX();
             double instantTargetPositionY = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getY(), elapsed_time) + init.getY(); // (-90 - 90) + 90 = -180 + 90 = -90
             double instantTargetPositionH = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getRotation().getDegrees(), elapsed_time)  + Math.toDegrees(init.getHeading());
-            //
 //            double x = driveXPID.getValue(instantTargetPositionX - pose.getX());
 //            double y = driveYPID.getValue(instantTargetPositionY - pose.getY());
 //            double rx = Math.toRadians(headingPID.getValue(instantTargetPositionH - odom.getHeading()));
