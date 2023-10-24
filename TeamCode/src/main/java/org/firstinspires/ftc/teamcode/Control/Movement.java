@@ -51,15 +51,13 @@ public class Movement {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashTelem = dashboard.getTelemetry();
 
-        while (opModeIsActive.get() && (Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > 3.0)) {
+        while (opModeIsActive.get() && (Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > tolerance * 3)) {
             elapsed_time = timer.seconds();
             rrDrive.update();
             pose = rrDrive.getPose();
-            //
             double instantTargetPositionX = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getX(), elapsed_time) + init.getX();
             double instantTargetPositionY = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getY(), elapsed_time) + init.getY(); // (-90 - 90) + 90 = -180 + 90 = -90
             double instantTargetPositionH = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getRotation().getDegrees(), elapsed_time)  + Math.toDegrees(init.getHeading());
-            //
 //            double x = driveXPID.getValue(instantTargetPositionX - pose.getX());
 //            double y = driveYPID.getValue(instantTargetPositionY - pose.getY());
 //            double rx = Math.toRadians(headingPID.getValue(instantTargetPositionH - odom.getHeading()));
@@ -81,20 +79,20 @@ public class Movement {
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
 
-            telemetry.addData("X motion ", instantTargetPositionX);
-            telemetry.addData("Y motion ", instantTargetPositionY);
-            telemetry.addData("H motion ", instantTargetPositionH);
-            telemetry.addData("X init ", init_target_pose.getX());
-            telemetry.addData("Pose ", pose);
-            telemetry.addData("XXXX ", x);
-            telemetry.addData("YYYY ", y);
-            telemetry.addData("x Error ", x);
-            telemetry.addData("y Error ", y);
-            telemetry.addData("h Error ", rx);
-            telemetry.addData("botHeading", pose.getRotation().getDegrees());
-            telemetry.addData("rotX  ", rotX);
-            telemetry.addData("rotY  ", rotY);
-            telemetry.update();
+//            telemetry.addData("X motion ", instantTargetPositionX);
+//            telemetry.addData("Y motion ", instantTargetPositionY);
+//            telemetry.addData("H motion ", instantTargetPositionH);
+//            telemetry.addData("X init ", init_target_pose.getX());
+//            telemetry.addData("Pose ", pose);
+//            telemetry.addData("XXXX ", x);
+//            telemetry.addData("YYYY ", y);
+//            telemetry.addData("x Error ", x);
+//            telemetry.addData("y Error ", y);
+//            telemetry.addData("h Error ", rx);
+//            telemetry.addData("botHeading", pose.getRotation().getDegrees());
+//            telemetry.addData("rotX  ", rotX);
+//            telemetry.addData("rotY  ", rotY);
+//            telemetry.update();
 
             dashTelem.addData("x", pose.getX());
             dashTelem.addData("y", pose.getY());

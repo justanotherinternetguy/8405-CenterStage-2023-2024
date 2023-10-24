@@ -1,12 +1,15 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.drive.opmodes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.AprilTags.AprilTagsInit;
 import org.firstinspires.ftc.teamcode.Controllers.MotionProfile;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -22,6 +25,11 @@ public class TeleOpControl extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         ElapsedTime timer = new ElapsedTime();
+
+        AprilTagsInit apriltags = new AprilTagsInit(hardwareMap, telemetry);
+        apriltags.initialize();
+
+        Telemetry tel = FtcDashboard.getInstance().getTelemetry();
 
         waitForStart();
 
@@ -75,6 +83,10 @@ public class TeleOpControl extends LinearOpMode {
                 robot.drive.setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
                 telemetry.addData("drive: ", "fieldCentric");
             }
+            tel.addData("drive", fieldCentric);
+            tel.addData("tags", apriltags.aprilTagDetect.getLatestDetections().toString());
+            tel.addData("pose", poseEstimate);
+            tel.update();
 
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());

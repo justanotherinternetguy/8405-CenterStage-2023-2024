@@ -23,12 +23,12 @@ public class TestAuton extends LinearOpMode {
 //        Movement movement = new Movement(robot.drive, odometry, this::opModeIsActive, new PID.Config(.11, 0, 0), new PID.Config(0.05, 0, 0), 3, telemetry);
         PID.Config translationConfig = new PID.Config(Config.translationP, Config.translationI, Config.translationD);
         PID.Config rotationConfig = new PID.Config(Config.rotationP, Config.rotationI, Config.rotationD);
-        Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, translationConfig, rotationConfig, 1, telemetry);
+        Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, translationConfig, rotationConfig, 3, telemetry);
         waitForStart();
         odometry.reset();
         robot.drive.imu.resetYaw();
         if (opModeIsActive()) {
-            movement.move(new Pose2d(Config.targetX, Config.targetY, new Rotation2d(Math.toRadians(Config.targetH))));
+//            movement.move(new Pose2d(Config.targetX, Config.targetY, new Rotation2d(Math.toRadians(Config.targetH))));
             for (int i = 0; i < Config.pathCount; i ++) {
                 movement.move(new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(90))));
                 movement.move(new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(90))));
