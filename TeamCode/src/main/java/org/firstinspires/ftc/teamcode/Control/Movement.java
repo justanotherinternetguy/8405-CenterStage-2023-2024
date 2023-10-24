@@ -51,7 +51,7 @@ public class Movement {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashTelem = dashboard.getTelemetry();
 
-        while (opModeIsActive.get() && (Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > tolerance)) {
+        while (opModeIsActive.get() && (Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > tolerance * 3)) {
             elapsed_time = timer.seconds();
             rrDrive.update();
             pose = rrDrive.getPose();
@@ -79,20 +79,20 @@ public class Movement {
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
 
-            telemetry.addData("X motion ", instantTargetPositionX);
-            telemetry.addData("Y motion ", instantTargetPositionY);
-            telemetry.addData("H motion ", instantTargetPositionH);
-            telemetry.addData("X init ", init_target_pose.getX());
-            telemetry.addData("Pose ", pose);
-            telemetry.addData("XXXX ", x);
-            telemetry.addData("YYYY ", y);
-            telemetry.addData("x Error ", x);
-            telemetry.addData("y Error ", y);
-            telemetry.addData("h Error ", rx);
-            telemetry.addData("botHeading", pose.getRotation().getDegrees());
-            telemetry.addData("rotX  ", rotX);
-            telemetry.addData("rotY  ", rotY);
-            telemetry.update();
+//            telemetry.addData("X motion ", instantTargetPositionX);
+//            telemetry.addData("Y motion ", instantTargetPositionY);
+//            telemetry.addData("H motion ", instantTargetPositionH);
+//            telemetry.addData("X init ", init_target_pose.getX());
+//            telemetry.addData("Pose ", pose);
+//            telemetry.addData("XXXX ", x);
+//            telemetry.addData("YYYY ", y);
+//            telemetry.addData("x Error ", x);
+//            telemetry.addData("y Error ", y);
+//            telemetry.addData("h Error ", rx);
+//            telemetry.addData("botHeading", pose.getRotation().getDegrees());
+//            telemetry.addData("rotX  ", rotX);
+//            telemetry.addData("rotY  ", rotY);
+//            telemetry.update();
 
             dashTelem.addData("x", pose.getX());
             dashTelem.addData("y", pose.getY());
