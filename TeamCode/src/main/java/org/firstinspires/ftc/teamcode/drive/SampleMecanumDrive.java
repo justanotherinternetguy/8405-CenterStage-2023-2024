@@ -139,7 +139,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public com.arcrobotics.ftclib.geometry.Pose2d getPose() {
         Pose2d pose = this.getPoseEstimate();
-        return new com.arcrobotics.ftclib.geometry.Pose2d(-pose.getY(), pose.getX(), new Rotation2d(-pose.getHeading()));
+        return new com.arcrobotics.ftclib.geometry.Pose2d(-pose.getY(), pose.getX(), new Rotation2d(pose.getHeading()));
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {

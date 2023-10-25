@@ -41,6 +41,10 @@ public class Movement {
 
         timer = new ElapsedTime();
     }
+
+    // we can probably turn the code in teleOp, strafeAt and move for absolute movement into a function that
+    // accepts x,y, rx, and heading(we can also add power but we can also just lower x, y, heading like how it works with pid)
+
     public void strafeAt(double power, Pose2d initial, DIRECTION direction)//attempts to perfectly strafe either left or right
     {
         Pose2d pose = rrDrive.getPose();
@@ -60,8 +64,8 @@ public class Movement {
         double frontRightPower = (rotY - rotX - rx) / denominator;
         double backRightPower = (rotY + rotX - rx) / denominator;
         drive.setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
-
     }
+
     public boolean move(Pose2d target) {
         Pose2d init = rrDrive.getPose();
         Pose2d init_target_pose = new Pose2d(target.getX() - init.getX(), target.getY() - init.getY(), new Rotation2d(Math.toRadians(utils.angleDifference(target.getRotation().getDegrees(), init.getRotation().getDegrees()))));
@@ -75,7 +79,10 @@ public class Movement {
         rrDrive.update();
         Pose2d pose = rrDrive.getPose();
 
-        //this didn't work cause we never updated elapsed time in the loop lol - be my guest if you still wanna try
+        //this didn't work cause we never updated elapsed time in the loop - be my guest if you still wanna try
+            // elapsed_time is updated at the very top of the loop, we didn't really seem to have much issues with the actual accel, decell but rather random
+            // movements(such as the bot would drive out to like 4,12 then to 0,24 rather than directly to 24
+            // that and trying to match pid and profiles enough(i think we can try using profile as a cap rather than a value for the pid)
         //but elapsed time should then be a function parameter: NO LOOPS IN HERE PLEASE
         double instantTargetPositionX = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getX(), elapsed_time) + init.getX();
         double instantTargetPositionY = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getY(), elapsed_time) + init.getY(); // (-90 - 90) + 90 = -180 + 90 = -90
@@ -84,7 +91,8 @@ public class Movement {
         double x = driveXPID.getValue(target.getX() - pose.getX());
         double y = driveYPID.getValue(target.getY() - pose.getY());
         double rx = headingPID.getValue(utils.angleDifference(target.getRotation().getDegrees(), Math.toDegrees(pose.getHeading())));
-        double botHeading = -pose.getRotation().getRadians();//i won't change it cause it seems to work but y?
+        double botHeading = pose.getRotation().getRadians();    //i won't change it cause it seems to work but y?
+                                                                    // just smt that happened when trying to get two wheel working, fixed in getPose()
 
         double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
         double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
@@ -95,7 +103,6 @@ public class Movement {
         double frontRightPower = (rotY - rotX - rx) / denominator;
         double backRightPower = (rotY + rotX - rx) / denominator;
         //dont spam telemetry on the actual driver hub, use dash if u want all this data
-
 
         dashTelem.addData("x", pose.getX());
         dashTelem.addData("y", pose.getY());
@@ -112,8 +119,8 @@ public class Movement {
 
 
         drive.setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
-        //returns if we're there for the outside loop. can easily change to "and"s(which I recommend)
-        return (Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > tolerance * 3);
-//
+        //returns if we're there for the outside loop. can easily change to &&'s(which I recommend)
+
+        return Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > tolerance * 3;
     }
 }

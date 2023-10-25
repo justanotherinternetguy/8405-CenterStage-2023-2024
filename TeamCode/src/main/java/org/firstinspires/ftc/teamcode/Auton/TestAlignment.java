@@ -39,14 +39,16 @@ public class TestAlignment extends LinearOpMode {
         waitForStart();
         odometry.reset();
         robot.drive.imu.resetYaw();
-        if (opModeIsActive()) {
-            boolean isAligned = false;
-            double[] lastPos = null;
-            while(!isAligned && opModeIsActive())
+        Pose2d initial = rrDrive.getPose();
+        boolean isAligned = false;
+        double[] lastPos = null;
+        while (opModeIsActive()) {
+
+            if(!isAligned)
             {
                 double[] pos = apriltags.searchFor(id);
-                Telemetry tel = FtcDashboard.getInstance().getTelemetry();
-                tel.addData("pos", Arrays.toString(pos));
+                //Telemetry tel = FtcDashboard.getInstance().getTelemetry();
+                telemetry.addData("pos", Arrays.toString(pos));
                 if(pos == null && lastPos != null)
                 {
                     pos = lastPos;
@@ -55,11 +57,11 @@ public class TestAlignment extends LinearOpMode {
                     telemetry.addData("X: ", pos[1]);
                     if (pos[1] - apriltag_x < -thres)
                     {
-                        movement.move(new Pose2d(rrDrive.getPose().getX() - 3, rrDrive.getPose().getY(), new Rotation2d(0)));
+                        movement.strafeAt(0.3, initial, Movement.DIRECTION.RIGHT);
                     }
                     else if(pos[1] - apriltag_x > thres)
                     {
-                        movement.move(new Pose2d(rrDrive.getPose().getX() + 3, rrDrive.getPose().getY(), new Rotation2d(0)));
+                        movement.strafeAt(0.3, initial, Movement.DIRECTION.LEFT);
                     }
                     else
                     {
@@ -71,9 +73,6 @@ public class TestAlignment extends LinearOpMode {
                 }
             }
         }
-        while (opModeIsActive()) {
-            telemetry.addData("Pose", odometry.getPose().toString());
-            telemetry.update();
-        }
+
     }
 }
