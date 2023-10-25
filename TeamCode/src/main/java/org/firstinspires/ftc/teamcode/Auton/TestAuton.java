@@ -20,25 +20,32 @@ public class TestAuton extends LinearOpMode {
         Robot robot = new Robot(hardwareMap, gamepad1);
         SampleMecanumDrive rrDrive = new SampleMecanumDrive(hardwareMap);
         Odometry odometry = new Odometry(hardwareMap, robot.drive.imu);
-//        Movement movement = new Movement(robot.drive, odometry, this::opModeIsActive, new PID.Config(.11, 0, 0), new PID.Config(0.05, 0, 0), 3, telemetry);
         PID.Config translationConfig = new PID.Config(Config.translationP, Config.translationI, Config.translationD);
         PID.Config rotationConfig = new PID.Config(Config.rotationP, Config.rotationI, Config.rotationD);
         Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, translationConfig, rotationConfig, 3, telemetry);
         waitForStart();
         odometry.reset();
         robot.drive.imu.resetYaw();
-        if (opModeIsActive()) {
-//            movement.move(new Pose2d(Config.targetX, Config.targetY, new Rotation2d(Math.toRadians(Config.targetH))));
-            for (int i = 0; i < Config.pathCount; i ++) {
-                movement.move(new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(90))));
-                movement.move(new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(90))));
-                movement.move(new Pose2d(24 * -3.25, 24 * 1.125, new Rotation2d(Math.toRadians(-90))));
-                movement.move(new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(-90))));
-                movement.move(new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(-90))));
-                movement.move(new Pose2d(24 * 0.75, 24 * 1.5, new Rotation2d(Math.toRadians(90))));
-            }
-        }
+        Pose2d[] path = new Pose2d[]
+                {
+                        new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(90))),
+                        new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(90))),
+                        new Pose2d(24 * -3.25, 24 * 1.125, new Rotation2d(Math.toRadians(-90))),
+                        new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
+                        new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
+                        new Pose2d(24 * 0.75, 24 * 1.5, new Rotation2d(Math.toRadians(90)))
+                };
+
+        int pathOn = 0;
         while (opModeIsActive()) {
+            if(pathOn != path.length)
+            {
+                if(movement.move(path[pathOn]))
+                {
+                    pathOn++;
+                }
+            }
+            robot.drive.setDrivePowers(0,0,0,0);
             telemetry.addData("Pose", odometry.getPose().toString());
             telemetry.update();
         }

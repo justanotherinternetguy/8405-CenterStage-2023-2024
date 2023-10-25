@@ -26,7 +26,7 @@ public class Movement {
     private Supplier<Boolean> opModeIsActive;
     private double tolerance;
     private Telemetry telemetry;
-
+    public enum DIRECTION{LEFT, RIGHT};
     private ElapsedTime timer;
 
     public Movement(Drive drive, SampleMecanumDrive rrDrive, Supplier<Boolean> opModeIsActive, PID.Config drivePIDConfig, PID.Config headingPIDConfig, double tolerance, Telemetry telemetry) {
@@ -41,75 +41,79 @@ public class Movement {
 
         timer = new ElapsedTime();
     }
+    public void strafeAt(double power, Pose2d initial, DIRECTION direction)//attempts to perfectly strafe either left or right
+    {
+        Pose2d pose = rrDrive.getPose();
+        double y = driveYPID.getValue(initial.getY()-pose.getY());
+        double rx = headingPID.getValue(utils.angleDifference(Math.toDegrees(initial.getHeading()), Math.toDegrees(pose.getHeading())));
+        if(direction == DIRECTION.LEFT)
+        {
+            power = -power;//reverse power to tell it to go left
+        }
+        double botHeading = -pose.getRotation().getRadians();
+        double rotX = power * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+        double rotY = power * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+        rotX = rotX * 1.1;
+        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+        double frontLeftPower = (rotY + rotX + rx) / denominator;
+        double backLeftPower = (rotY - rotX + rx) / denominator;
+        double frontRightPower = (rotY - rotX - rx) / denominator;
+        double backRightPower = (rotY + rotX - rx) / denominator;
+        drive.setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
 
-    public void move(Pose2d target) {
+    }
+    public boolean move(Pose2d target) {
         Pose2d init = rrDrive.getPose();
         Pose2d init_target_pose = new Pose2d(target.getX() - init.getX(), target.getY() - init.getY(), new Rotation2d(Math.toRadians(utils.angleDifference(target.getRotation().getDegrees(), init.getRotation().getDegrees()))));
         timer.reset();
         double elapsed_time;
-        Pose2d pose = init;
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashTelem = dashboard.getTelemetry();
 
-        while (opModeIsActive.get() && (Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > tolerance * 3)) {
-            elapsed_time = timer.seconds();
-            rrDrive.update();
-            pose = rrDrive.getPose();
-            double instantTargetPositionX = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getX(), elapsed_time) + init.getX();
-            double instantTargetPositionY = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getY(), elapsed_time) + init.getY(); // (-90 - 90) + 90 = -180 + 90 = -90
-            double instantTargetPositionH = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getRotation().getDegrees(), elapsed_time)  + Math.toDegrees(init.getHeading());
-//            double x = driveXPID.getValue(instantTargetPositionX - pose.getX());
-//            double y = driveYPID.getValue(instantTargetPositionY - pose.getY());
-//            double rx = Math.toRadians(headingPID.getValue(instantTargetPositionH - odom.getHeading()));
-            double x = driveXPID.getValue(target.getX() - pose.getX());
-            double y = driveYPID.getValue(target.getY() - pose.getY());
-            double rx = headingPID.getValue(utils.angleDifference(target.getRotation().getDegrees(), Math.toDegrees(pose.getHeading())));
+        //while (opModeIsActive.get() && (Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > tolerance * 3)) {
+        elapsed_time = timer.seconds();
+        rrDrive.update();
+        Pose2d pose = rrDrive.getPose();
 
-//            double delta = timer.milliseconds() - lastMS;
-//            double nextHeading = lastIMU + drive.imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate * delta / 1000;
-//            double botHeading = Math.toRadians(lastIMU == imuValue ? nextHeading : imuValue);
-            double botHeading = -pose.getRotation().getRadians();
+        //this didn't work cause we never updated elapsed time in the loop lol - be my guest if you still wanna try
+        //but elapsed time should then be a function parameter: NO LOOPS IN HERE PLEASE
+        double instantTargetPositionX = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getX(), elapsed_time) + init.getX();
+        double instantTargetPositionY = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getY(), elapsed_time) + init.getY(); // (-90 - 90) + 90 = -180 + 90 = -90
+        double instantTargetPositionH = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getRotation().getDegrees(), elapsed_time)  + Math.toDegrees(init.getHeading());
 
-            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-            double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-            rotX = rotX * 1.1;
-            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-            double frontLeftPower = (rotY + rotX + rx) / denominator;
-            double backLeftPower = (rotY - rotX + rx) / denominator;
-            double frontRightPower = (rotY - rotX - rx) / denominator;
-            double backRightPower = (rotY + rotX - rx) / denominator;
+        double x = driveXPID.getValue(target.getX() - pose.getX());
+        double y = driveYPID.getValue(target.getY() - pose.getY());
+        double rx = headingPID.getValue(utils.angleDifference(target.getRotation().getDegrees(), Math.toDegrees(pose.getHeading())));
+        double botHeading = -pose.getRotation().getRadians();//i won't change it cause it seems to work but y?
 
-//            telemetry.addData("X motion ", instantTargetPositionX);
-//            telemetry.addData("Y motion ", instantTargetPositionY);
-//            telemetry.addData("H motion ", instantTargetPositionH);
-//            telemetry.addData("X init ", init_target_pose.getX());
-//            telemetry.addData("Pose ", pose);
-//            telemetry.addData("XXXX ", x);
-//            telemetry.addData("YYYY ", y);
-//            telemetry.addData("x Error ", x);
-//            telemetry.addData("y Error ", y);
-//            telemetry.addData("h Error ", rx);
-//            telemetry.addData("botHeading", pose.getRotation().getDegrees());
-//            telemetry.addData("rotX  ", rotX);
-//            telemetry.addData("rotY  ", rotY);
-//            telemetry.update();
-
-            dashTelem.addData("x", pose.getX());
-            dashTelem.addData("y", pose.getY());
-            dashTelem.addData("heading", pose.getRotation().getDegrees());
-            dashTelem.addData("x target", target.getX());
-            dashTelem.addData("y target", target.getY());
-            dashTelem.addData("heading target", target.getRotation().getDegrees());
-            dashTelem.addData("x Error", x);
-            dashTelem.addData("y Error", y);
-            dashTelem.addData("rel X", rotX);
-            dashTelem.addData("rel Y", rotY);
-            dashTelem.addData("heading Error", rx);
-            dashTelem.update();
+        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+        rotX = rotX * 1.1;
+        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+        double frontLeftPower = (rotY + rotX + rx) / denominator;
+        double backLeftPower = (rotY - rotX + rx) / denominator;
+        double frontRightPower = (rotY - rotX - rx) / denominator;
+        double backRightPower = (rotY + rotX - rx) / denominator;
+        //dont spam telemetry on the actual driver hub, use dash if u want all this data
 
 
-            drive.setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
-        }
-        drive.setDrivePowers(0,0,0,0);
+        dashTelem.addData("x", pose.getX());
+        dashTelem.addData("y", pose.getY());
+        dashTelem.addData("heading", pose.getRotation().getDegrees());
+        dashTelem.addData("x target", target.getX());
+        dashTelem.addData("y target", target.getY());
+        dashTelem.addData("heading target", target.getRotation().getDegrees());
+        dashTelem.addData("x Error", x);
+        dashTelem.addData("y Error", y);
+        dashTelem.addData("rel X", rotX);
+        dashTelem.addData("rel Y", rotY);
+        dashTelem.addData("heading Error", rx);
+        dashTelem.update();
+
+
+        drive.setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+        //returns if we're there for the outside loop. can easily change to "and"s(which I recommend)
+        return (Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > tolerance * 3);
+//
     }
 }
