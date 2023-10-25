@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.Auton;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.geometry.Translation2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Control.Movement;
 import org.firstinspires.ftc.teamcode.Control.Rotate;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
@@ -22,7 +24,7 @@ public class TestAuton extends LinearOpMode {
         Odometry odometry = new Odometry(hardwareMap, robot.drive.imu);
         PID.Config translationConfig = new PID.Config(Config.translationP, Config.translationI, Config.translationD);
         PID.Config rotationConfig = new PID.Config(Config.rotationP, Config.rotationI, Config.rotationD);
-        Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, translationConfig, rotationConfig, 3, telemetry);
+        Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, translationConfig, rotationConfig, Config.tolerance, telemetry);
         waitForStart();
         odometry.reset();
         robot.drive.imu.resetYaw();
@@ -30,23 +32,29 @@ public class TestAuton extends LinearOpMode {
         Pose2d[] path = new Pose2d[] {
             new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(90))),
             new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(90))),
-            new Pose2d(24 * -3.25, 24 * 1.125, new Rotation2d(Math.toRadians(-90))),
-            new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
-            new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
-            new Pose2d(24 * 0.75, 24 * 1.5, new Rotation2d(Math.toRadians(90)))
+//            new Pose2d(24 * -3.25, 24 * 1.125, new Rotation2d(Math.toRadians(-90))),
+//            new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
+//            new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
+//            new Pose2d(24 * 0.75, 24 * 1.5, new Rotation2d(Math.toRadians(90)))
         };
+
+        Telemetry tel = FtcDashboard.getInstance().getTelemetry();
 
         int pathOn = 0;
         while (opModeIsActive()) {
+//            boolean at = movement.move(path[pathOn]);
             if (pathOn != path.length) {
-                if (movement.move(path[pathOn])) {
+                if (!movement.move(path[pathOn])) {
                     pathOn++;
+                    robot.drive.setDrivePowers(0, 0, 0, 0);
                 }
             } else {
                 robot.drive.setDrivePowers(0, 0, 0, 0);
             }
-            telemetry.addData("Pose", odometry.getPose().toString());
-            telemetry.update();
+            tel.addData("path on", pathOn);
+            tel.addData("Pose", odometry.getPose().toString());
+//            tel.addData("at", at);
+            tel.update();
         }
     }
 }

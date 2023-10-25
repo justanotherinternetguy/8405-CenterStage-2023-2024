@@ -42,34 +42,37 @@ public class TestAlignment extends LinearOpMode {
         Pose2d initial = rrDrive.getPose();
         boolean isAligned = false;
         double[] lastPos = null;
+
+        Telemetry tel = FtcDashboard.getInstance().getTelemetry();
         while (opModeIsActive()) {
 
             if(!isAligned)
             {
                 double[] pos = apriltags.searchFor(id);
                 //Telemetry tel = FtcDashboard.getInstance().getTelemetry();
-                telemetry.addData("pos", Arrays.toString(pos));
+                tel.addData("pos", Arrays.toString(pos));
+                tel.addData("diff", pos != null ? pos[1] - apriltag_x : "none");
                 if(pos == null && lastPos != null)
                 {
                     pos = lastPos;
                 }
                 if(pos != null) {
-                    telemetry.addData("X: ", pos[1]);
+                    tel.addData("X: ", pos[1]);
                     if (pos[1] - apriltag_x < -thres)
                     {
-                        movement.strafeAt(0.3, initial, Movement.DIRECTION.RIGHT);
+                        movement.strafeAt(Config.alignment, initial, Movement.DIRECTION.LEFT);
                     }
                     else if(pos[1] - apriltag_x > thres)
                     {
-                        movement.strafeAt(0.3, initial, Movement.DIRECTION.LEFT);
+                        movement.strafeAt(Config.alignment, initial, Movement.DIRECTION.RIGHT);
                     }
                     else
                     {
                         isAligned = true;
-                        telemetry.addLine("DONE!");
+                        tel.addLine("DONE!");
                     }
                     lastPos = pos;
-                    telemetry.update();
+                    tel.update();
                 }
             }
         }

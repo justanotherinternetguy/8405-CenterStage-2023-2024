@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Control;
 
+import android.app.admin.DeviceAdminService;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
@@ -15,6 +17,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utils;
 
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 public class Movement {
@@ -84,14 +87,14 @@ public class Movement {
             // movements(such as the bot would drive out to like 4,12 then to 0,24 rather than directly to 24
             // that and trying to match pid and profiles enough(i think we can try using profile as a cap rather than a value for the pid)
         //but elapsed time should then be a function parameter: NO LOOPS IN HERE PLEASE
-        double instantTargetPositionX = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getX(), elapsed_time) + init.getX();
-        double instantTargetPositionY = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getY(), elapsed_time) + init.getY(); // (-90 - 90) + 90 = -180 + 90 = -90
-        double instantTargetPositionH = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getRotation().getDegrees(), elapsed_time)  + Math.toDegrees(init.getHeading());
+//        double instantTargetPositionX = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getX(), elapsed_time) + init.getX();
+//        double instantTargetPositionY = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getY(), elapsed_time) + init.getY(); // (-90 - 90) + 90 = -180 + 90 = -90
+//        double instantTargetPositionH = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getRotation().getDegrees(), elapsed_time)  + Math.toDegrees(init.getHeading());
 
         double x = driveXPID.getValue(target.getX() - pose.getX());
         double y = driveYPID.getValue(target.getY() - pose.getY());
         double rx = headingPID.getValue(utils.angleDifference(target.getRotation().getDegrees(), Math.toDegrees(pose.getHeading())));
-        double botHeading = pose.getRotation().getRadians();    //i won't change it cause it seems to work but y?
+        double botHeading = -pose.getRotation().getRadians();    //i won't change it cause it seems to work but y?
                                                                     // just smt that happened when trying to get two wheel working, fixed in getPose()
 
         double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
@@ -104,17 +107,21 @@ public class Movement {
         double backRightPower = (rotY + rotX - rx) / denominator;
         //dont spam telemetry on the actual driver hub, use dash if u want all this data
 
-        dashTelem.addData("x", pose.getX());
-        dashTelem.addData("y", pose.getY());
-        dashTelem.addData("heading", pose.getRotation().getDegrees());
-        dashTelem.addData("x target", target.getX());
-        dashTelem.addData("y target", target.getY());
-        dashTelem.addData("heading target", target.getRotation().getDegrees());
-        dashTelem.addData("x Error", x);
-        dashTelem.addData("y Error", y);
-        dashTelem.addData("rel X", rotX);
-        dashTelem.addData("rel Y", rotY);
-        dashTelem.addData("heading Error", rx);
+//        dashTelem.addData("x", pose.getX());
+//        dashTelem.addData("y", pose.getY());
+//        dashTelem.addData("heading", pose.getRotation().getDegrees());
+//        dashTelem.addData("x target", target.getX());
+//        dashTelem.addData("y target", target.getY());
+//        dashTelem.addData("heading target", target.getRotation().getDegrees());
+//        dashTelem.addData("x Error", x);
+//        dashTelem.addData("y Error", y);
+////        dashTelem.addData("rel X", rotX);
+////        dashTelem.addData("rel Y", rotY);
+//        dashTelem.addData("heading Error", rx);
+//        dashTelem.clear();
+        dashTelem.addData("error", Arrays.toString(new Double[] {x, y, rx}));
+        dashTelem.addData("target", target);
+        dashTelem.addData("pose", pose);
         dashTelem.update();
 
 

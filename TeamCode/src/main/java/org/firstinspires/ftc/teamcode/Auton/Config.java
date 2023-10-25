@@ -7,7 +7,8 @@ public class Config {
     public static double translationD = 0.002;
     public static double rotationP = 0.03;
     public static double rotationI = 0.0;
-    public static double rotationD = 0.002;
+    public static double rotationD = 0.02;
+    public static double tolerance = 1.5;
 
     public static int pathCount = 1;
 
@@ -17,4 +18,6 @@ public class Config {
     public static double targetX = 0;
     public static double targetY = 24;
     public static double targetH = 90;
+
+    public static double alignment = 0.2;
 }
