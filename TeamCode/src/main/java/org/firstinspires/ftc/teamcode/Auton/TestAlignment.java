@@ -35,7 +35,7 @@ public class TestAlignment extends LinearOpMode {
 //        Movement movement = new Movement(robot.drive, odometry, this::opModeIsActive, new PID.Config(.11, 0, 0), new PID.Config(0.05, 0, 0), 3, telemetry);
         PID.Config translationConfig = new PID.Config(Config.translationP, Config.translationI, Config.translationD);
         PID.Config rotationConfig = new PID.Config(Config.rotationP/1.5, Config.rotationI, Config.rotationD);
-        Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, translationConfig, rotationConfig, 1, telemetry);
+        Movement movement = new Movement(robot.drive, rrDrive, translationConfig, rotationConfig, 1, telemetry);
         waitForStart();
         odometry.reset();
         robot.drive.imu.resetYaw();
@@ -60,11 +60,13 @@ public class TestAlignment extends LinearOpMode {
                     tel.addData("X: ", pos[1]);
                     if (pos[1] - apriltag_x < -thres)
                     {
-                        movement.strafeAt(Config.alignment, initial, Movement.DIRECTION.LEFT);
+//                        movement.strafeAt(Config.alignment, initial, Movement.DIRECTION.LEFT);
+                        movement.fieldCentricMove(new Pose2d(-Config.alignment, initial.getY(), initial.getRotation()), 1);
                     }
                     else if(pos[1] - apriltag_x > thres)
                     {
-                        movement.strafeAt(Config.alignment, initial, Movement.DIRECTION.RIGHT);
+//                        movement.strafeAt(Config.alignment, initial, Movement.DIRECTION.RIGHT);
+                        movement.fieldCentricMove(new Pose2d(Config.alignment, initial.getY(), initial.getRotation()), 1);
                     }
                     else
                     {
