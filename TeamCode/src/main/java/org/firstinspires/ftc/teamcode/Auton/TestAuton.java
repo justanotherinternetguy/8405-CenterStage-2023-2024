@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.geometry.Translation2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Control.Movement;
@@ -25,6 +26,7 @@ public class TestAuton extends LinearOpMode {
         PID.Config translationConfig = new PID.Config(Config.translationP, Config.translationI, Config.translationD);
         PID.Config rotationConfig = new PID.Config(Config.rotationP, Config.rotationI, Config.rotationD);
         Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, translationConfig, rotationConfig, Config.tolerance, telemetry);
+        ElapsedTime timer;
         waitForStart();
         odometry.reset();
         robot.drive.imu.resetYaw();
@@ -40,21 +42,24 @@ public class TestAuton extends LinearOpMode {
 
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
 
-        int pathOn = 0;
-        while (opModeIsActive()) {
-//            boolean at = movement.move(path[pathOn]);
-            if (pathOn != path.length) {
-                if (!movement.move(path[pathOn])) {
-                    pathOn++;
-                    robot.drive.setDrivePowers(0, 0, 0, 0);
-                }
-            } else {
-                robot.drive.setDrivePowers(0, 0, 0, 0);
+        int currentWaypoint = 0;
+
+        timer = new ElapsedTime();
+        timer.reset();
+
+        while (opModeIsActive()){
+            rrDrive.update();
+            Pose2d pose = rrDrive.getPose();
+            if (movement.goTo(path[currentWaypoint])) {
+                currentWaypoint++;
+                timer.reset();
+                if (currentWaypoint >= path.length) return;
+//                if (currentWaypoint >= path.length) currentWaypoint = 0;
             }
-            tel.addData("path on", pathOn);
+            tel.addData("time", this.time);
             tel.addData("Pose", odometry.getPose().toString());
-//            tel.addData("at", at);
-            tel.update();
+            tel.addData("at", currentWaypoint);
+            telemetry.update();
         }
     }
 }

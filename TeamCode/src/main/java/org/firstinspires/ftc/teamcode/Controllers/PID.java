@@ -3,50 +3,111 @@ package org.firstinspires.ftc.teamcode.Controllers;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class PID {
-    public PID.Config settings;
+    private double Kp;
+    private double Ki;
+    private double Kd;
+    private double maxIntegralSum;
+    private double a;
+    private boolean angleSupport;
 
-    private double integralSum = 0.0;
-    private double lastError = 0.0;
+    private Double lastTarget;
+    private double integralSum;
+    private double lastError;
+    private double previousFilterEstimate;
+    ElapsedTime timer = new ElapsedTime();
 
-    private ElapsedTime timer;
+    public PID(Config config) {
+        this(config, false);
+    }
 
-    public PID(Config settings) {
-        this.settings = settings;
-        timer = new ElapsedTime();
+    public PID(Config config, boolean angleSupport) {
+        this(config.getKp(), config.getKi(), config.getKd(), 0, angleSupport);
+    }
+
+    public PID(double Kp, double Ki, double Kd, double a) { // a = 0.8; // a can be anything from 0 < a < 1
+        this(Kp, Ki, Kd, a, 0.25 / Ki, false);
+    }
+    public PID(double Kp, double Ki, double Kd, double a, boolean angleSupport) {
+        this(Kp, Ki, Kd, a, 0.25 / Ki, angleSupport);
+    }
+    public PID(double Kp, double Ki, double Kd, double a, double maxIntegralSum) {
+        this(Kp, Ki, Kd, a, maxIntegralSum, false);
+    }
+    public PID(double Kp, double Ki, double Kd, double a, double maxIntegralSum, boolean angleSupport) {
+        this.Kp = Kp;
+        this.Ki = Ki;
+        this.Kd = Kd;
+        this.a = a;
+        this.maxIntegralSum = maxIntegralSum;
+        this.angleSupport = angleSupport;
+        this.reset();
+    }
+
+    public void reset() {
+        lastTarget = null;
+        integralSum = 0;
+        lastError = 0;
+        previousFilterEstimate = 0;
         timer.reset();
     }
 
-    public PID(double Kp, double Ki, double Kd) {
-        this.settings = new PID.Config(Kp, Ki, Kd);
-        timer = new ElapsedTime();
-        timer.reset();
-    }
+    public double getError(double target, double current, double accelMax) {
+        if (lastTarget == null) lastTarget = target;
 
-    // error is given by the user so that this class has multiple use cases
-    public double getValue(double error) {
-        double dT = timer.seconds();
-        double derivative = (error - lastError) / dT;
+        // calculate the error
+        double error = target - current;
+        if (angleSupport) {
+            error = angleWrap(error);
+        }
 
-        // sum all the error over time
-        integralSum += (error * dT);
+        double errorChange = (error - lastError);
 
-        // returns this value which can differ depending on the use case of the class
-        // eg. set motor power
-        double out = (settings.getKp() * error) + (settings.getKi() * integralSum) + (settings.getKd() * derivative);
+        // filter out height frequency noise to increase derivative performance
+        double currentFilterEstimate = (a * previousFilterEstimate) + (1 - a) * errorChange;
+        previousFilterEstimate = currentFilterEstimate;
+
+        // rate of change of the error
+        double derivative = currentFilterEstimate / timer.seconds() / accelMax;
+
+        // sum of all error over time
+        integralSum += (error * timer.seconds()) * accelMax;
+
+        // max out integral sum
+        if (integralSum > maxIntegralSum) {
+            integralSum = maxIntegralSum;
+        }
+        if (integralSum < -maxIntegralSum) {
+            integralSum = -maxIntegralSum;
+        }
+
+        // reset integral sum upon target changes
+        if (target != lastTarget) {
+            integralSum = 0;
+        }
+
+        double out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
 
         lastError = error;
+        lastTarget = target;
 
         timer.reset();
 
         return out;
     }
 
-    public void reset() {
-        lastError = 0;
-        integralSum = 0;
-        timer.reset();
-    }
+    // This function normalizes the angle so it returns a value between -180° and 180° instead of 0° to 360°.
+    public static double angleWrap(double radians) {
 
+        while (radians > Math.PI) {
+            radians -= 2 * Math.PI;
+        }
+        while (radians < -Math.PI) {
+            radians += 2 * Math.PI;
+        }
+
+        // keep in mind that the result is in radians
+        return radians;
+    }
     public static class Config {
         private double Kp;
         private double Ki;
