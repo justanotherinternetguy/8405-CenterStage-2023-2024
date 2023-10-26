@@ -59,7 +59,9 @@ public class Movement {
 
         return Math.abs(target.getX() - pose.getX()) < xTolerance && Math.abs(target.getY() - pose.getY()) < yTolerance && Math.abs(PID.angleWrap(Math.toDegrees(target.getHeading() - pose.getHeading()))) < hTolerance;
     }
-
+    public void fieldCentricMove(Pose2d dir) {
+        fieldCentricMove(dir, 1);
+    }
     public void fieldCentricMove(Pose2d dir, double maxPower) {
         fieldCentricMove(dir.getX(), dir.getY(), dir.getHeading(), maxPower);
     }

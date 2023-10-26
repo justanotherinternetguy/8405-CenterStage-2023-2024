@@ -61,12 +61,12 @@ public class TestAlignment extends LinearOpMode {
                     if (pos[1] - apriltag_x < -thres)
                     {
 //                        movement.strafeAt(Config.alignment, initial, Movement.DIRECTION.LEFT);
-                        movement.fieldCentricMove(new Pose2d(-Config.alignment, initial.getY(), initial.getRotation()), 1);
+                        movement.fieldCentricMove(new Pose2d(-Config.alignment, initial.getY(), initial.getRotation()));
                     }
                     else if(pos[1] - apriltag_x > thres)
                     {
 //                        movement.strafeAt(Config.alignment, initial, Movement.DIRECTION.RIGHT);
-                        movement.fieldCentricMove(new Pose2d(Config.alignment, initial.getY(), initial.getRotation()), 1);
+                        movement.fieldCentricMove(new Pose2d(Config.alignment, initial.getY(), initial.getRotation()));
                     }
                     else
                     {

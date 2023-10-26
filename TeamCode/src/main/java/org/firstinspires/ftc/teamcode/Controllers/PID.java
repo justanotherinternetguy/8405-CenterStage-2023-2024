@@ -51,6 +51,10 @@ public class PID {
         timer.reset();
     }
 
+    public double getError(double target, double current) {
+        return getError(target, current, 1);
+    }
+
     public double getError(double target, double current, double accelMax) {
         if (lastTarget == null) lastTarget = target;
 
