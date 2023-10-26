@@ -34,7 +34,7 @@ public class TestAlignment extends LinearOpMode {
         Odometry odometry = new Odometry(hardwareMap, robot.drive.imu);
 //        Movement movement = new Movement(robot.drive, odometry, this::opModeIsActive, new PID.Config(.11, 0, 0), new PID.Config(0.05, 0, 0), 3, telemetry);
         PID.Config translationConfig = new PID.Config(Config.translationP, Config.translationI, Config.translationD);
-        PID.Config rotationConfig = new PID.Config(Config.rotationP/1.5, Config.rotationI, Config.rotationD);
+        PID.Config rotationConfig = new PID.Config(Config.rotationP, Config.rotationI, Config.rotationD);
         Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, translationConfig, rotationConfig, 1, telemetry);
         waitForStart();
         odometry.reset();
