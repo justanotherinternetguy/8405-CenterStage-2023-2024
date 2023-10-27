@@ -30,12 +30,16 @@ public class Lift {
         rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         rightLiftEnc = new MotorEx(hardwareMap, "rightLift").encoder;
+        rightLiftEnc.setDirection(Motor.Direction.REVERSE);
     }
     public void liftTeleOp(Gamepad gamepad) {
         this.gamepad = gamepad;
         currentMode = LIFT_MODE.MANUAL;
-        if (gamepad.right_trigger > 0.3) {
+        if (gamepad.right_trigger > 0.3 && rightLiftEnc.getPosition() < Config.LIFT_MAX) {
             rightLift.setPower(gamepad.right_trigger * Config.liftMotorPowerMult);
+        }
+        else if (gamepad.left_trigger > 0.3 && rightLiftEnc.getPosition() < Config.LIFT_MAX) {
+            rightLift.setPower(gamepad.left_trigger * Config.liftMotorPowerMult * -1);
         }
         else { rightLift.setPower(0); }
     }
