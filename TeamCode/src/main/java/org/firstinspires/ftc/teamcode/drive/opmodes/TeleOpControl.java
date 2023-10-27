@@ -45,6 +45,8 @@ public class TeleOpControl extends LinearOpMode {
             telemetry.addData("right x: ", gamepad1.right_stick_x);
             telemetry.addData("right y: ", gamepad1.right_stick_y);
 
+            robot.lift.liftTeleOp(gamepad1); // LIFT
+
             if (!fieldCentric) {
                 double power = -gamepad1.left_stick_y; // remember this is reversed
                 double strafe = gamepad1.left_stick_x * 1.1; // counteract imperfect strafing
@@ -86,11 +88,15 @@ public class TeleOpControl extends LinearOpMode {
             tel.addData("drive", fieldCentric);
             tel.addData("tags", apriltags.aprilTagDetect.getLatestDetections().toString());
             tel.addData("pose", poseEstimate);
+            tel.addData("right lift motor power :", robot.lift.rightLift.getPower());
+            tel.addData("right lift motor enc pos :", robot.lift.rightLiftEnc.getPosition());
             tel.update();
 
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
+            telemetry.addData("right lift motor power :", robot.lift.rightLift.getPower());
+            telemetry.addData("right lift motor enc pos :", robot.lift.rightLiftEnc.getPosition());
             telemetry.update();
         }
     }

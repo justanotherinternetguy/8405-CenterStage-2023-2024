@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Control.Movement;
 import org.firstinspires.ftc.teamcode.Control.Rotate;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
+import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -30,12 +31,13 @@ public class TestAuton extends LinearOpMode {
         robot.drive.imu.resetYaw();
 
         Pose2d[] path = new Pose2d[] {
+//                new Pose2d(Config.targetX, Config.targetY, new Rotation2d(Math.toRadians(Config.targetH)))
             new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(90))),
-            new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(90))),
-//            new Pose2d(24 * -3.25, 24 * 1.125, new Rotation2d(Math.toRadians(-90))),
-//            new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
-//            new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
-//            new Pose2d(24 * 0.75, 24 * 1.5, new Rotation2d(Math.toRadians(90)))
+            new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(90))), // gate
+            new Pose2d(24 * -3.25, 24 * 1.125, new Rotation2d(Math.toRadians(-90))),
+            new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
+            new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
+            new Pose2d(24 * 0.75, 24 * 1.5, new Rotation2d(Math.toRadians(90)))
         };
 
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
