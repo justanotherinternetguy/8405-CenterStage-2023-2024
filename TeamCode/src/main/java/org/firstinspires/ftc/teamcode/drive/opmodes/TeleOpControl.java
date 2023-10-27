@@ -65,7 +65,7 @@ public class TeleOpControl extends LinearOpMode {
                 double rx = MotionProfile.motion_profile(Odometry.MAX_ACCEL * 4, Odometry.MAX_VELOCITY * 4, h, elapsed);
 
 //                double botHeading = Math.toRadians(-odometry.getHeading());
-                double botHeading = poseEstimate.getHeading();
+                double botHeading = -poseEstimate.getHeading();
 //                double botHeading = Math.toRadians(nextHeading);
 
 //                double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
