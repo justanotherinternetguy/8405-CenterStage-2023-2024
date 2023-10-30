@@ -25,7 +25,7 @@ public class TestAlignment extends LinearOpMode {
         Robot robot = new Robot(hardwareMap, gamepad1);
         SampleMecanumDrive rrDrive = new SampleMecanumDrive(hardwareMap);
         AprilTagsInit apriltags = new AprilTagsInit(hardwareMap, telemetry);
-        apriltags.initialize();
+        apriltags.initialize(telemetry);
         int apriltag_x = 960;
         int apriltag_y = 400;
         int id = 1;

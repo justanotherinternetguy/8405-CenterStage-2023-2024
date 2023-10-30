@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.AprilTags;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -10,6 +11,9 @@ import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+import org.openftc.easyopencv.OpenCvInternalCamera2;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.ArrayList;
 
@@ -23,16 +27,16 @@ public class AprilTagsInit {
 
     private HardwareMap hm;
     private Telemetry tm;
-    private OpenCvCamera camera;
+    public OpenCvWebcam camera;
+//    private OpenCvInternalCamera2 camera;
     public AprilTagsDetectionPipeline aprilTagDetect;
     public AprilTagsInit( HardwareMap hardwareMap, Telemetry tm)
     {
-
         this.hm = hardwareMap;
         this.tm = tm;
     }
 
-    public void initialize()
+    public void initialize(Telemetry telemetry)
     {
         int cameraMonitorViewId = hm.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hm.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hm.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -44,14 +48,16 @@ public class AprilTagsInit {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(1920, 1080, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(1920, 1080, OpenCvCameraRotation.SIDEWAYS_RIGHT);
+                camera.showFpsMeterOnViewport(true);
                 FtcDashboard.getInstance().startCameraStream(camera, 0);
             }
 
             @Override
             public void onError(int errorCode)
             {
-
+                telemetry.addData("error", errorCode);
+                telemetry.update();
             }
         });
     }

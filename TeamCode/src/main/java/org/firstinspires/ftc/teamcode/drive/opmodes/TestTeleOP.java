@@ -18,7 +18,7 @@ public class TestTeleOP extends OpMode {
     public void init()
     {
         apriltags = new AprilTagsInit(hardwareMap, telemetry);
-        apriltags.initialize();
+        apriltags.initialize(telemetry);
 
         robot = new Robot(hardwareMap, gamepad1);
     }

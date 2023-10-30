@@ -21,6 +21,6 @@ public class Config {
 
     public static double alignment = 0.2;
 
-    public static double liftMotorPowerMult = 0.75;
+    public static double liftMotorPowerMult = 1;
     public static double LIFT_MAX = 2900;
 }

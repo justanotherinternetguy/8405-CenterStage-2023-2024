@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.AprilTags.AprilTagsDetectionPipeline;
 import org.firstinspires.ftc.teamcode.AprilTags.AprilTagsInit;
 import org.firstinspires.ftc.teamcode.Controllers.MotionProfile;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
@@ -27,7 +28,7 @@ public class TeleOpControl extends LinearOpMode {
         ElapsedTime timer = new ElapsedTime();
 
         AprilTagsInit apriltags = new AprilTagsInit(hardwareMap, telemetry);
-        apriltags.initialize();
+        apriltags.initialize(telemetry);
 
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
 
@@ -92,11 +93,14 @@ public class TeleOpControl extends LinearOpMode {
             tel.addData("right lift motor enc pos :", robot.lift.rightLiftEnc.getPosition());
             tel.update();
 
-            telemetry.addData("x", poseEstimate.getX());
-            telemetry.addData("y", poseEstimate.getY());
-            telemetry.addData("heading", poseEstimate.getHeading());
-            telemetry.addData("right lift motor power :", robot.lift.rightLift.getPower());
-            telemetry.addData("right lift motor enc pos :", robot.lift.rightLiftEnc.getPosition());
+//            telemetry.addData("x", poseEstimate.getX());
+//            telemetry.addData("y", poseEstimate.getY());
+//            telemetry.addData("heading", poseEstimate.getHeading());
+//            telemetry.addData("right lift motor power :", robot.lift.rightLift.getPower());
+//            telemetry.addData("right lift motor enc pos :", robot.lift.rightLiftEnc.getPosition());
+//            telemetry.update();
+            telemetry.addData("maxfps", apriltags.camera.getCurrentPipelineMaxFps());
+            telemetry.addData("fps", apriltags.camera.getFps());
             telemetry.update();
         }
     }
