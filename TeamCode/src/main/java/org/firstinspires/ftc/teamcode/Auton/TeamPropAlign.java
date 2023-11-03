@@ -36,7 +36,7 @@ public class TeamPropAlign extends LinearOpMode {
         odometry.reset();
         robot.drive.imu.resetYaw();
 
-        Pose2d[] paths;
+        Pose2d[] paths = new Pose2d[0];
 
         int[] objectCenter = teamPropDet.search();
         int targetX = 640; // middle of camera
@@ -60,17 +60,10 @@ public class TeamPropAlign extends LinearOpMode {
             }
         }
 
-
-        Pose2d[] path = new Pose2d[] {
-        };
-
-
-
-
         int pathOn = 0;
         while (opModeIsActive()) {
-            if (pathOn != path.length) {
-                if (!movement.move(path[pathOn])) {
+            if (pathOn != paths.length) {
+                if (!movement.move(paths[pathOn])) {
                     pathOn++;
                     robot.drive.setDrivePowers(0, 0, 0, 0);
                 }
