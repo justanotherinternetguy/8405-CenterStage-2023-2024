@@ -73,20 +73,27 @@ public class ObjectDetector {
         @Override
         public Mat processFrame(Mat input) {
             Mat temp = new Mat();
+            Imgproc.cvtColor(input, temp, Imgproc.COLOR_BGR2HSV);
             Mat mask = new Mat();
+            Mat mask2 = new Mat();
             Mat res = new Mat();
 
-            Scalar lowerVal = new Scalar(0, 0, 150);
-            Scalar upperVal = new Scalar(100, 100, 255);
+            Scalar lowerVal = new Scalar(0, 100, 100);
+            Scalar upperVal = new Scalar(10, 255, 255);
 
-            input.copyTo(temp);
+            Scalar lowerVal2 = new Scalar(160, 100, 100);
+            Scalar upperVal2 = new Scalar(190, 255, 255);
 
             Core.inRange(temp, lowerVal, upperVal, mask);
+            Core.inRange(temp, lowerVal2, upperVal2, mask2);
+            Mat finalMask = new Mat();
+            Core.bitwise_or(mask, mask2, finalMask);
 
-            Imgproc.erode(mask, mask, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5, 5)));
-            Imgproc.dilate(mask, mask, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5, 5)));
+            Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(6, 6));
+            Imgproc.erode(mask, mask, kernel);
+            Imgproc.dilate(mask, mask, kernel);
 
-            input.copyTo(res, mask);
+            Core.bitwise_and(input, input, res, finalMask);
 
             ArrayList<MatOfPoint> contours = new ArrayList<>();
             Mat hierarchy = new Mat();

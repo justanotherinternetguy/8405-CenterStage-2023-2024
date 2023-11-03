@@ -60,6 +60,7 @@ public class TeamPropAlign extends LinearOpMode {
             }
         }
 
+
         int pathOn = 0;
         while (opModeIsActive()) {
             if (pathOn != paths.length) {
