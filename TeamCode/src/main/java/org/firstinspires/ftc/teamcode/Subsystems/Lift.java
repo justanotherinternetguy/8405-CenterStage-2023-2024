@@ -32,15 +32,12 @@ public class Lift {
         rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightLift.setDirection(DcMotor.Direction.FORWARD);
-<<<<<<< HEAD
         rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-=======
         rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftLift.setDirection(DcMotor.Direction.FORWARD);
         leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
->>>>>>> b107fd9a20a194b9c4983ea46de673f5eb57141c
 
         rightLiftEnc = new MotorEx(hardwareMap, "rightLift").encoder;
         rightLiftEnc.setDirection(Motor.Direction.REVERSE);

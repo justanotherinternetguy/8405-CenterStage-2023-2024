@@ -10,22 +10,9 @@ public class Config {
     public static double rotationD = 0.002;
     public static double tolerance = 1.5;
 
-    public static int pathCount = 1;
-
-    public static int MAX_ACCEL = 40;
-    public static int MAX_VELOCITY = 100;
-
-    public static double targetX = 0;
-    public static double targetY = 24;
-    public static double targetH = 90;
-
     public static double alignment = 0.2;
 
-<<<<<<< HEAD
-    public static double liftMotorPowerMult = 1;
-=======
     public static double liftMotorPowerMultTeleOp = 0.75;
     public static double liftMotorPowerMacro = 0.8;
->>>>>>> b107fd9a20a194b9c4983ea46de673f5eb57141c
     public static double LIFT_MAX = 2900;
 }
