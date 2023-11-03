@@ -42,6 +42,8 @@ public class Lift {
         rightLiftEnc.setDirection(Motor.Direction.REVERSE);
 
         leftLiftEnc = new MotorEx(hardwareMap, "leftLift").encoder;
+        holdingPosRight = -1;
+        holdingPosLeft = -1;
     }
     public void liftTeleOp(Gamepad gamepad) {
         this.gamepad = gamepad;
@@ -52,8 +54,24 @@ public class Lift {
             }
             if(gamepad.square || gamepad.circle || gamepad.left_bumper || gamepad.triangle || gamepad.right_bumper) {
                 currentMode = LIFT_MODE.MACRO;
-                liftMacro();
+                liftMacro(gamepad);
             }
+        }
+        else if (currentMode == LIFT_MODE.KILL) {
+            if (rightLift.getCurrentPosition() > 100) {
+                setLiftPower(-1);
+            }
+        }
+    }
+
+    public void liftToPos(int targetR, int targetL, double power) {
+        if (Math.abs(targetR - rightLift.getCurrentPosition()) > 15) {
+            rightLift.setTargetPosition(targetR);
+            leftLift.setTargetPosition(targetL);
+            rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightLift.setPower(power);
+            leftLift.setPower(power);
         }
     }
 
@@ -69,7 +87,7 @@ public class Lift {
         else { setLiftPower(0); }
     }
 
-    private void liftMacro() {
+    private void liftMacro(Gamepad gamepad) {
         if (gamepad.square) {
             liftToBase();
         }
@@ -78,13 +96,12 @@ public class Lift {
     private void setLiftPower(double power) {
         leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftLift.setPower(power * Config.liftMotorPowerMult);
-        rightLift.setPower(power * Config.liftMotorPowerMult);
+        leftLift.setPower(power * Config.liftMotorPowerMultTeleOp);
+        rightLift.setPower(power * Config.liftMotorPowerMultTeleOp);
     }
 
     public void liftToBase() {
-        holdingPosLeft = 100;
-        holdingPosRight = 100;
         currentMode = LIFT_MODE.MACRO;
+        liftToPos(200, 200, Config.liftMotorPowerMacro);
     }
 }
