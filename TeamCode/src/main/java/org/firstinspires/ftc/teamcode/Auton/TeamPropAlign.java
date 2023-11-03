@@ -39,22 +39,22 @@ public class TeamPropAlign extends LinearOpMode {
         Pose2d[] paths = new Pose2d[0];
 
         int[] objectCenter = teamPropDet.search();
-        int targetX = 640; // middle of camera
+        double third = 640/3; // middle of camera, change later
 
         if (objectCenter != null) {
             int centerX = objectCenter[0];
-            if (centerX < targetX) {
+            if (centerX < third) { // left
                 paths = new Pose2d[]{
                     new Pose2d(-18, 0, new Rotation2d(Math.toRadians(0))),
                 };
             }
-            else if (centerX > targetX) {
+            else if (centerX > 2 * third) { // right
                 paths = new Pose2d[]{
                         new Pose2d(18, 0, new Rotation2d(Math.toRadians(0))),
                 };
             }
             else {
-                paths = new Pose2d[]{
+                paths = new Pose2d[]{ // center
                         new Pose2d(0, 24, new Rotation2d(Math.toRadians(0))),
                 };
             }
