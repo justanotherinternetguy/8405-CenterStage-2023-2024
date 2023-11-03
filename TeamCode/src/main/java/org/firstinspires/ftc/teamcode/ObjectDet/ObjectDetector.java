@@ -90,15 +90,15 @@ public class ObjectDetector {
             Core.bitwise_or(mask, mask2, finalMask);
 
             Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(6, 6));
-            Imgproc.erode(mask, mask, kernel);
-            Imgproc.dilate(mask, mask, kernel);
+            Imgproc.erode(finalMask, finalMask, kernel);
+            Imgproc.dilate(finalMask, finalMask, kernel);
 
             Core.bitwise_and(input, input, res, finalMask);
 
             ArrayList<MatOfPoint> contours = new ArrayList<>();
             Mat hierarchy = new Mat();
 
-            Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+            Imgproc.findContours(finalMask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
             double maxArea = -1;
             int maxAreaIdx = -1;
