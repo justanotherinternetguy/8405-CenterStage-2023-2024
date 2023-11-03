@@ -12,15 +12,17 @@ import org.firstinspires.ftc.teamcode.AprilTags.AprilTagsInit;
 import org.firstinspires.ftc.teamcode.Control.Movement;
 import org.firstinspires.ftc.teamcode.Control.Rotate;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
+import org.firstinspires.ftc.teamcode.ObjectDet.ObjectDetector;
 import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
-public class TestAuton extends LinearOpMode {
+public class TeamPropAlign extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        ObjectDetector teamPropDet;
         Robot robot = new Robot(hardwareMap, gamepad1);
         SampleMecanumDrive rrDrive = new SampleMecanumDrive(hardwareMap);
         Odometry odometry = new Odometry(hardwareMap, robot.drive.imu);
@@ -28,20 +30,42 @@ public class TestAuton extends LinearOpMode {
         PID.Config translationConfig = new PID.Config(Config.translationP, Config.translationI, Config.translationD);
         PID.Config rotationConfig = new PID.Config(Config.rotationP, Config.rotationI, Config.rotationD);
         Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, translationConfig, rotationConfig, Config.tolerance, telemetry);
+        Telemetry tel = FtcDashboard.getInstance().getTelemetry();
+        teamPropDet = new ObjectDetector(hardwareMap, tel);
         waitForStart();
         odometry.reset();
         robot.drive.imu.resetYaw();
 
+        Pose2d[] paths;
+
+        int[] objectCenter = teamPropDet.search();
+        int targetX = 640; // middle of camera
+
+        if (objectCenter != null) {
+            int centerX = objectCenter[0];
+            if (centerX < targetX) {
+                paths = new Pose2d[]{
+                    new Pose2d(-18, 0, new Rotation2d(Math.toRadians(0))),
+                };
+            }
+            else if (centerX > targetX) {
+                paths = new Pose2d[]{
+                        new Pose2d(18, 0, new Rotation2d(Math.toRadians(0))),
+                };
+            }
+            else {
+                paths = new Pose2d[]{
+                        new Pose2d(0, 24, new Rotation2d(Math.toRadians(0))),
+                };
+            }
+        }
+
+
         Pose2d[] path = new Pose2d[] {
-            new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(90))),
-            new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(90))), // gate
-            new Pose2d(24 * -3.25, 24 * 1.125, new Rotation2d(Math.toRadians(-90))),
-            new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
-            new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
-            new Pose2d(24 * 0.75, 24 * 1.5, new Rotation2d(Math.toRadians(90)))
         };
 
-        Telemetry tel = FtcDashboard.getInstance().getTelemetry();
+
+
 
         int pathOn = 0;
         while (opModeIsActive()) {

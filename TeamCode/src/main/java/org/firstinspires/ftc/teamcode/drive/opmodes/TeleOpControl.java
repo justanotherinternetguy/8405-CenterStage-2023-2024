@@ -47,6 +47,7 @@ public class TeleOpControl extends LinearOpMode {
             telemetry.addData("right y: ", gamepad1.right_stick_y);
 
             robot.lift.liftTeleOp(gamepad1); // LIFT
+            robot.claw.clawTeleOp(gamepad1); // CLAW
 
             if (!fieldCentric) {
                 double power = -gamepad1.left_stick_y; // remember this is reversed
