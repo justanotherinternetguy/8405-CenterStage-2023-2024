@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.ImuOrientationOnRobot;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Auton.Config;
 
 public class Drive {
     public DcMotorEx frontLeft;
@@ -47,9 +48,9 @@ public class Drive {
 
     public void mecanumDrive(double power, double strafe, double turn) {
         double denominator = Math.max(Math.abs(power) + Math.abs(strafe) + Math.abs(turn), 1);
-        double frontLeftPower = (power + strafe + turn) / denominator;
+        double frontLeftPower = (power + strafe + turn) / denominator * Config.frontMulti;
         double backLeftPower = (power - strafe + turn) / denominator;
-        double frontRightPower = (power - strafe - turn) / denominator;
+        double frontRightPower = (power - strafe - turn) / denominator * Config.frontMulti;
         double backRightPower = (power + strafe - turn) / denominator;
 
         setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);

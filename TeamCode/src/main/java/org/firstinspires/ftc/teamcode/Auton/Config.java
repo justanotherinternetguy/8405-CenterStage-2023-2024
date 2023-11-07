@@ -17,6 +17,8 @@ public class Config {
     public static double liftMotorPowerHold = 0.3;
     public static double LIFT_MAX = 1500;
     public static double LIFT_MIN = 25;
+    public static int FLOOR = 25;
+    public static double KILLTIME = 500;
 
     public static int mask1LH = 0;
     public static int mask1LS = 100;
@@ -30,4 +32,6 @@ public class Config {
 
     public static double bottomServoClose = 0.875;
     public static double bottomServoOpen = 0.75;
+
+    public static double frontMulti = 0.9;
 }

@@ -29,7 +29,9 @@ public class Lift {
 
     private double P = 0.05;
 
-    private ElapsedTime timer = new ElapsedTime();
+    public ElapsedTime timer = new ElapsedTime();
+    public boolean hasResetKill = false;
+    public boolean startedKill = false;
 
     public Lift(HardwareMap hardwareMap, Gamepad gamepad) {
         this.gamepad = gamepad;
@@ -75,23 +77,29 @@ public class Lift {
 
         }
         else {
-            if (holdingPos != -1) {// coming from hold
-                holdingPos = -1;
+            if (!startedKill) {
                 timer.reset();
+                startedKill = true;
             }
-            if (timer.milliseconds() > 2000 && timer.milliseconds() < 2100) {
-                setLiftPower(0);
-                rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            } else if (timer.milliseconds() >= 2100) {
-                liftToPos(20, Config.liftMotorPowerMacro);
+            if (timer.milliseconds() >= Config.KILLTIME) {
+                if (!hasResetKill) {
+//                    setLiftPower(0);
+                    rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    hasResetKill = true;
+                }
+                liftToPos(Config.FLOOR, Config.liftMotorPowerMacro);
+                if (Math.abs(leftLift.getCurrentPosition() - Config.FLOOR) < 20) {
+                    currentMode = LIFT_MODE.NONE;
+                    hasResetKill = false;
+                    startedKill = false;
+                }
             } else {
+                hasResetKill = false;
                 setLiftPower(-Config.liftMotorPowerMacro);
             }
-            currentMode = LIFT_MODE.NONE;
-
         }
     }
 

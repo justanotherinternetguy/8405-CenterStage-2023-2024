@@ -50,6 +50,11 @@ public class TeleOpControl extends LinearOpMode {
             telemetry.addData("right y: ", gamepad1.right_stick_y);
 
             robot.lift.liftTeleOp(gamepad1); // LIFT
+            telemetry.addData("kill time", robot.lift.timer.milliseconds());
+            telemetry.addData("hasReset", robot.lift.hasResetKill);
+            telemetry.addData("macro", robot.lift.currentMode);
+            telemetry.addData("hold", robot.lift.holdingPos);
+            telemetry.addData("hold", robot.lift.startedKill);
             robot.claw.input(gamepad1);
 //            robot.claw.clawTeleOp(gamepad1); // CLAW
             if(gamepad1.x && !lastX)
