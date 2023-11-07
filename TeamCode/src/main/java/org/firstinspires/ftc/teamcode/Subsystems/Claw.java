@@ -29,8 +29,6 @@ public class Claw {
     {
         bottomServo.setPower(bPower);
         topServo.setPower(tPower);
-        frontServo = hardwareMap.get(CRServo.class, "frontServo");
-        backServo = hardwareMap.get(CRServo.class, "backServo");
     }
 
     public void input(Gamepad gamepad1) {
@@ -52,18 +50,5 @@ public class Claw {
         } else {
             topServo.setPower(Config.topServoOpen);
         }
-        else {
-            frontServo.setPower(0);
-            backServo.setPower(0);
-        }
-    }
-
-    private void intake() {
-        frontServo.setPower(0.2);
-        backServo.setPower(-0.2);
-    }
-    private void outtake() {
-        frontServo.setPower(-0.2);
-        backServo.setPower(0.2);
     }
 }
