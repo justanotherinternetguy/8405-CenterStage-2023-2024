@@ -13,6 +13,21 @@ public class Config {
     public static double alignment = 0.2;
 
     public static double liftMotorPowerMultTeleOp = 0.75;
-    public static double liftMotorPowerMacro = 0.8;
-    public static double LIFT_MAX = 2900;
+    public static double liftMotorPowerMacro = 0.4;
+    public static double liftMotorPowerHold = 0.3;
+    public static double LIFT_MAX = 1500;
+    public static double LIFT_MIN = 25;
+
+    public static int mask1LH = 0;
+    public static int mask1LS = 100;
+    public static int mask1LV = 100;
+    public static int mask1UH = 10;
+    public static int mask1US = 255;
+    public static int mask1UV = 255;
+
+    public static double topServoClose = -0.3;
+    public static double topServoOpen = -0.5;
+
+    public static double bottomServoClose = 0.875;
+    public static double bottomServoOpen = 0.75;
 }

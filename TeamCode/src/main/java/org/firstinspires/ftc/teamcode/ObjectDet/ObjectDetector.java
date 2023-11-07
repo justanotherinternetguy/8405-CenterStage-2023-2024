@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
@@ -41,7 +42,7 @@ public class ObjectDetector {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(1920, 1080, OpenCvCameraRotation.SIDEWAYS_RIGHT);
+                camera.startStreaming(1920, 1080, OpenCvCameraRotation.UPRIGHT);
                 camera.showFpsMeterOnViewport(true);
                 FtcDashboard.getInstance().startCameraStream(camera, 0);
             }
@@ -73,16 +74,16 @@ public class ObjectDetector {
         @Override
         public Mat processFrame(Mat input) {
             Mat temp = new Mat();
-            Imgproc.cvtColor(input, temp, Imgproc.COLOR_BGR2HSV);
+            Imgproc.cvtColor(input, temp, Imgproc.COLOR_RGB2HSV);
             Mat mask = new Mat();
             Mat mask2 = new Mat();
             Mat res = new Mat();
 
-            Scalar lowerVal = new Scalar(0, 100, 100);
-            Scalar upperVal = new Scalar(10, 255, 255);
+            Scalar lowerVal = new Scalar(Config.mask1LH, Config.mask1LS, Config.mask1LV);
+            Scalar upperVal = new Scalar(Config.mask1UH, Config.mask1US, Config.mask1UV);
 
-            Scalar lowerVal2 = new Scalar(160, 100, 100);
-            Scalar upperVal2 = new Scalar(190, 255, 255);
+            Scalar lowerVal2 = new Scalar(200, 100, 100);
+            Scalar upperVal2 = new Scalar(255, 255, 255);
 
             Core.inRange(temp, lowerVal, upperVal, mask);
             Core.inRange(temp, lowerVal2, upperVal2, mask2);

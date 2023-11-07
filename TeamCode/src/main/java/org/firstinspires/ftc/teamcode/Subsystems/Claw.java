@@ -3,38 +3,50 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.internal.system.CloseableOnFinalize;
+import org.firstinspires.ftc.teamcode.Auton.Config;
 
 public class Claw {
-    public CRServo servo1;
-    public CRServo servo2;
+    public CRServo bottomServo;
+    public CRServo topServo;
     public Gamepad gamepad;
+
+    public boolean bottomClaw = false; // is closed?
+    public boolean topClaw = false; // is closed?
+    public boolean lastLeftBumper = false;
+    public boolean lastRightBumper = false;
 
     public Claw(HardwareMap hardwareMap, Gamepad gamepad) {
         this.gamepad = gamepad;
-        servo1 = hardwareMap.get(CRServo.class, "servo1");
-        servo2 = hardwareMap.get(CRServo.class, "servo2");
+        topServo = hardwareMap.get(CRServo.class, "frontservo");
+        bottomServo = hardwareMap.get(CRServo.class, "backservo");
+    }
+    public void setPower(double bPower, double tPower)
+    {
+        bottomServo.setPower(bPower);
+        topServo.setPower(tPower);
     }
 
-    public void clawTeleOp(Gamepad gamepad) {
-        this.gamepad = gamepad;
-        if (gamepad.left_bumper) {
-            intake();
+    public void input(Gamepad gamepad1) {
+        if (gamepad1.left_bumper && !lastLeftBumper) {
+            topClaw = !topClaw;
         }
-        if (gamepad.right_bumper) {
-            outtake();
+        if (gamepad1.right_bumper && !lastRightBumper) {
+            bottomClaw = !bottomClaw;
         }
-        else {
-            servo1.setPower(0);
-            servo2.setPower(0);
+        lastRightBumper = gamepad1.right_bumper;
+        lastLeftBumper = gamepad1.left_bumper;
+        if (bottomClaw) {
+            bottomServo.setPower(Config.bottomServoClose);
+        } else {
+            bottomServo.setPower(Config.bottomServoOpen);
         }
-    }
-
-    private void intake() {
-        servo1.setPower(0.2);
-        servo2.setPower(-0.2);
-    }
-    private void outtake() {
-        servo1.setPower(-0.2);
-        servo2.setPower(0.2);
+        if (topClaw) {
+            topServo.setPower(Config.topServoClose);
+        } else {
+            topServo.setPower(Config.topServoOpen);
+        }
     }
 }

@@ -18,7 +18,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @TeleOp(name="Mecanum Drive", group="Linear Opmode")
 public class TeleOpControl extends LinearOpMode {
-    public static boolean fieldCentric = true;
+    public static boolean fieldCentric = false;
+    public static boolean slowMode = false;
     @Override
     public void runOpMode() {
 
@@ -31,6 +32,8 @@ public class TeleOpControl extends LinearOpMode {
         apriltags.initialize(telemetry);
 
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
+
+        boolean lastX = false;
 
         waitForStart();
 
@@ -47,13 +50,21 @@ public class TeleOpControl extends LinearOpMode {
             telemetry.addData("right y: ", gamepad1.right_stick_y);
 
             robot.lift.liftTeleOp(gamepad1); // LIFT
-            robot.claw.clawTeleOp(gamepad1); // CLAW
+            robot.claw.input(gamepad1);
+//            robot.claw.clawTeleOp(gamepad1); // CLAW
+            if(gamepad1.x && !lastX)
+            {
+                slowMode = !slowMode;
+            }
+            lastX = gamepad1.x;
 
             if (!fieldCentric) {
                 double power = -gamepad1.left_stick_y; // remember this is reversed
-                double strafe = gamepad1.left_stick_x * 1.1; // counteract imperfect strafing
+                double strafe = gamepad1.left_stick_x * 1.5; // counteract imperfect strafing
                 double turn = gamepad1.right_stick_x;
-                robot.drive.mecanumDrive(power, strafe, turn);
+                double multiplier = slowMode ? 0.3 : 1;
+                robot.drive.mecanumDrive(power * multiplier, strafe * multiplier, turn * multiplier);
+//                robot.drive.mecanumDrive(power, strafe, turn);
                 telemetry.addData("drive: ", "robotCentric");
             } else {
                 double elapsed = timer.seconds();
@@ -66,13 +77,7 @@ public class TeleOpControl extends LinearOpMode {
                 double profileX = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, x, elapsed);
                 double rx = MotionProfile.motion_profile(Odometry.MAX_ACCEL * 4, Odometry.MAX_VELOCITY * 4, h, elapsed);
 
-//                double botHeading = Math.toRadians(-odometry.getHeading());
                 double botHeading = -poseEstimate.getHeading();
-//                double botHeading = Math.toRadians(nextHeading);
-
-//                double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-////              double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-
                 double rotX = profileX * Math.cos(-botHeading) - profileY * Math.sin(-botHeading);
                 double rotY = profileX * Math.sin(-botHeading) + profileY * Math.cos(-botHeading);
 
@@ -84,24 +89,23 @@ public class TeleOpControl extends LinearOpMode {
                 double frontRightPower = (rotY - rotX - rx) / denominator;
                 double backRightPower = (rotY + rotX - rx) / denominator;
 
-                robot.drive.setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+                double multiplier = slowMode ? 0.3 : 1;
+                robot.drive.setDrivePowers(frontLeftPower * multiplier, frontRightPower * multiplier, backLeftPower * multiplier, backRightPower * multiplier);
                 telemetry.addData("drive: ", "fieldCentric");
+
             }
             tel.addData("drive", fieldCentric);
             tel.addData("tags", apriltags.aprilTagDetect.getLatestDetections().toString());
             tel.addData("pose", poseEstimate);
             tel.addData("right lift motor power :", robot.lift.rightLift.getPower());
-            tel.addData("right lift motor enc pos :", robot.lift.rightLiftEnc.getPosition());
+            tel.addData("right lift motor enc pos :", robot.lift.rightLift.getCurrentPosition());
             tel.update();
 
-//            telemetry.addData("x", poseEstimate.getX());
-//            telemetry.addData("y", poseEstimate.getY());
-//            telemetry.addData("heading", poseEstimate.getHeading());
-//            telemetry.addData("right lift motor power :", robot.lift.rightLift.getPower());
-//            telemetry.addData("right lift motor enc pos :", robot.lift.rightLiftEnc.getPosition());
-//            telemetry.update();
             telemetry.addData("maxfps", apriltags.camera.getCurrentPipelineMaxFps());
             telemetry.addData("fps", apriltags.camera.getFps());
+            telemetry.addData("SlowMode: ", slowMode);
+            telemetry.addData("RightEnc: ", robot.lift.rightLift.getCurrentPosition());
+            telemetry.addData("LeftEnc: ", robot.lift.leftLift.getCurrentPosition());
             telemetry.update();
         }
     }

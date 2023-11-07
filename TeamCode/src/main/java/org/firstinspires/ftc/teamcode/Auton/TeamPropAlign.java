@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Control.Rotate;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
 import org.firstinspires.ftc.teamcode.ObjectDet.ObjectDetector;
 import org.firstinspires.ftc.teamcode.R;
+import org.firstinspires.ftc.teamcode.Subsystems.Lift;
 import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -26,7 +27,7 @@ public class TeamPropAlign extends LinearOpMode {
         Robot robot = new Robot(hardwareMap, gamepad1);
         SampleMecanumDrive rrDrive = new SampleMecanumDrive(hardwareMap);
         Odometry odometry = new Odometry(hardwareMap, robot.drive.imu);
-        AprilTagsInit init;
+//        AprilTagsInit init;
         PID.Config translationConfig = new PID.Config(Config.translationP, Config.translationI, Config.translationD);
         PID.Config rotationConfig = new PID.Config(Config.rotationP, Config.rotationI, Config.rotationD);
         Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, translationConfig, rotationConfig, Config.tolerance, telemetry);
@@ -39,18 +40,18 @@ public class TeamPropAlign extends LinearOpMode {
         Pose2d[] paths = new Pose2d[0];
 
         int[] objectCenter = teamPropDet.search();
-        double third = 640/3; // middle of camera, change later
+        double third = 1920.0/3-100; // middle of camera, change later
 
         if (objectCenter != null) {
             int centerX = objectCenter[0];
             if (centerX < third) { // left
                 paths = new Pose2d[]{
-                    new Pose2d(-18, 0, new Rotation2d(Math.toRadians(0))),
+                        new Pose2d(0, 24, new Rotation2d(Math.toRadians(-90)))
                 };
             }
             else if (centerX > 2 * third) { // right
                 paths = new Pose2d[]{
-                        new Pose2d(18, 0, new Rotation2d(Math.toRadians(0))),
+                        new Pose2d(0, 24, new Rotation2d(Math.toRadians(90)))
                 };
             }
             else {
@@ -63,6 +64,9 @@ public class TeamPropAlign extends LinearOpMode {
 
         int pathOn = 0;
         while (opModeIsActive()) {
+            robot.lift.liftToPos(50, Config.liftMotorPowerMacro); 
+//            objectCenter = teamPropDet.search();
+//            telemetry.update();
             if (pathOn != paths.length) {
                 if (!movement.move(paths[pathOn])) {
                     pathOn++;
@@ -71,6 +75,7 @@ public class TeamPropAlign extends LinearOpMode {
             } else {
                 robot.drive.setDrivePowers(0, 0, 0, 0);
             }
+            tel.addData("objectcenter: ", objectCenter[0]);
             tel.addData("path on", pathOn);
             tel.addData("Pose", odometry.getPose().toString());
             tel.update();
