@@ -9,13 +9,10 @@ import org.firstinspires.ftc.robotcore.internal.system.CloseableOnFinalize;
 import org.firstinspires.ftc.teamcode.Auton.Config;
 
 public class Claw {
-<<<<<<< HEAD
     public CRServo bottomServo;
     public CRServo topServo;
-=======
     public CRServo frontServo;
     public CRServo backServo;
->>>>>>> 03ecc7ad511930f7b0f4a6b214f55224422b2285
     public Gamepad gamepad;
 
     public boolean bottomClaw = false; // is closed?
@@ -25,7 +22,6 @@ public class Claw {
 
     public Claw(HardwareMap hardwareMap, Gamepad gamepad) {
         this.gamepad = gamepad;
-<<<<<<< HEAD
         topServo = hardwareMap.get(CRServo.class, "frontservo");
         bottomServo = hardwareMap.get(CRServo.class, "backservo");
     }
@@ -33,10 +29,8 @@ public class Claw {
     {
         bottomServo.setPower(bPower);
         topServo.setPower(tPower);
-=======
         frontServo = hardwareMap.get(CRServo.class, "frontServo");
         backServo = hardwareMap.get(CRServo.class, "backServo");
->>>>>>> 03ecc7ad511930f7b0f4a6b214f55224422b2285
     }
 
     public void input(Gamepad gamepad1) {
@@ -46,7 +40,6 @@ public class Claw {
         if (gamepad1.right_bumper && !lastRightBumper) {
             bottomClaw = !bottomClaw;
         }
-<<<<<<< HEAD
         lastRightBumper = gamepad1.right_bumper;
         lastLeftBumper = gamepad1.left_bumper;
         if (bottomClaw) {
@@ -59,7 +52,6 @@ public class Claw {
         } else {
             topServo.setPower(Config.topServoOpen);
         }
-=======
         else {
             frontServo.setPower(0);
             backServo.setPower(0);
@@ -73,6 +65,5 @@ public class Claw {
     private void outtake() {
         frontServo.setPower(-0.2);
         backServo.setPower(0.2);
->>>>>>> 03ecc7ad511930f7b0f4a6b214f55224422b2285
     }
 }
