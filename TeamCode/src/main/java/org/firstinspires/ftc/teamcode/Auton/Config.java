@@ -9,7 +9,7 @@ public class Config {
     public static double rotationI = 0.0;
     public static double rotationD = 0.002;
     public static double tolerance = 1.5;
-    public static double powerMultiplier = 0.4;
+    public static double powerMultiplier = 0.8;
 
     public static double alignment = 0.2;
 
@@ -28,6 +28,13 @@ public class Config {
     public static int mask1UH = 10;
     public static int mask1US = 255;
     public static int mask1UV = 255;
+
+    public static int mask2LH = 100;
+    public static int mask2LS = 100;
+    public static int mask2LV = 100;
+    public static int mask2UH = 255;
+    public static int mask2US = 255;
+    public static int mask2UV = 255;
 
     public static double topServoClose = -0.3;
     public static double topServoOpen = -0.5;

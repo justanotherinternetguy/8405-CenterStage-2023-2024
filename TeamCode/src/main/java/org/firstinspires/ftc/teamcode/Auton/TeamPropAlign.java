@@ -50,21 +50,21 @@ public class TeamPropAlign extends LinearOpMode {
             if (centerX < third) { // left
                 direction = 0;
                 paths = new Pose2d[]{
-                        new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))),
-                        new Pose2d(-4, 28, new Rotation2d(Math.toRadians(-90)))
+                        new Pose2d(0, 26, new Rotation2d(Math.toRadians(0))),
+                        new Pose2d(-2, 26, new Rotation2d(Math.toRadians(-90)))
                 };
             }
             else if (centerX > 2 * third) { // right
                 direction = 1;
                 paths = new Pose2d[]{
-                        new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))),
-                        new Pose2d(4, 28, new Rotation2d(Math.toRadians(90)))
+                        new Pose2d(0, 26, new Rotation2d(Math.toRadians(0))),
+                        new Pose2d(2, 26, new Rotation2d(Math.toRadians(90)))
                 };
             }
             else {
                 direction = 2;
                 paths = new Pose2d[]{ // center
-                        new Pose2d(0, 24, new Rotation2d(Math.toRadians(0))),
+                        new Pose2d(0, 27, new Rotation2d(Math.toRadians(0))),
                 };
             }
         }
@@ -95,5 +95,56 @@ public class TeamPropAlign extends LinearOpMode {
             tel.update();
         }
     }
-
+    public static class Point {
+        public Pose2d pose = null;
+        public Integer lift = null;
+        public Boolean bottomClaw = null;
+        public Boolean topClaw = null;
+        public Point(Pose2d pose, int lift, boolean bottom, boolean top) {
+            this.pose = pose;
+            this.lift = lift;
+            this.bottomClaw = bottom;
+            this.topClaw = top;
+        }
+        public Point(Pose2d pose) {
+            this.pose = pose;
+        }
+        public Point(int lift) {
+            this.lift = lift;
+        }
+        public Point(boolean bottomClaw, boolean topClaw) {
+            this.bottomClaw = bottomClaw;
+            this.topClaw = topClaw;
+        }
+        public Point(Pose2d pose, int lift) {
+            this.pose = pose;
+            this.lift = lift;
+        }
+        public Point(Pose2d pose, boolean bottomClaw, boolean topClaw) {
+            this.pose = pose;
+            this.bottomClaw = bottomClaw;
+            this.topClaw = topClaw;
+        }
+        public Point(int lift, boolean bottomClaw, boolean topClaw) {
+            this.lift = lift;
+            this.bottomClaw = bottomClaw;
+            this.topClaw = topClaw;
+        }
+        public boolean move(Robot robot, Movement movement) {
+            boolean atPose = true;
+            if (this.pose != null) {
+                atPose = movement.move(this.pose);
+            }
+            boolean atLift = true;
+            if (this.lift != null) {
+                atLift = movement.move(this.pose);
+            }
+            if (this.bottomClaw != null) {
+                double bottomPower = this.bottomClaw ? Config.bottomServoClose : Config.bottomServoOpen;
+                double topPower = this.topClaw ? Config.topServoClose : Config.topServoOpen;
+                robot.claw.setPower(bottomPower, topPower);
+            }
+            return atPose && atLift;
+        }
+    }
 }

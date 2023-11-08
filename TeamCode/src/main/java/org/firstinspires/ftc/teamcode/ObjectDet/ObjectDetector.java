@@ -82,8 +82,8 @@ public class ObjectDetector {
             Scalar lowerVal = new Scalar(Config.mask1LH, Config.mask1LS, Config.mask1LV);
             Scalar upperVal = new Scalar(Config.mask1UH, Config.mask1US, Config.mask1UV);
 
-            Scalar lowerVal2 = new Scalar(200, 100, 100);
-            Scalar upperVal2 = new Scalar(255, 255, 255);
+            Scalar lowerVal2 = new Scalar(Config.mask2LH, Config.mask2LS, Config.mask2LV);
+            Scalar upperVal2 = new Scalar(Config.mask2UH, Config.mask2US, Config.mask2UV);
 
             Core.inRange(temp, lowerVal, upperVal, mask);
             Core.inRange(temp, lowerVal2, upperVal2, mask2);
