@@ -11,8 +11,7 @@ import org.firstinspires.ftc.teamcode.Auton.Config;
 public class Claw {
     public CRServo bottomServo;
     public CRServo topServo;
-    public CRServo frontServo;
-    public CRServo backServo;
+
     public Gamepad gamepad;
 
     public boolean bottomClaw = false; // is closed?

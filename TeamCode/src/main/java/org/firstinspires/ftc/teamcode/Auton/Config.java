@@ -9,6 +9,7 @@ public class Config {
     public static double rotationI = 0.0;
     public static double rotationD = 0.002;
     public static double tolerance = 1.5;
+    public static double powerMultiplier = 0.4;
 
     public static double alignment = 0.2;
 
@@ -19,6 +20,7 @@ public class Config {
     public static double LIFT_MIN = 25;
     public static int FLOOR = 25;
     public static double KILLTIME = 500;
+
 
     public static int mask1LH = 0;
     public static int mask1LS = 100;
