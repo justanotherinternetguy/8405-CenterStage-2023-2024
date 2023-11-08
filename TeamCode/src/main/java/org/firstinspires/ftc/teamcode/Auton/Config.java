@@ -42,5 +42,7 @@ public class Config {
     public static double bottomServoClose = 0.875;
     public static double bottomServoOpen = 0.75;
 
+    public static int burstDelay = 500;
+
     public static double frontMulti = 0.9;
 }

@@ -56,7 +56,7 @@ public class TeleOpControl extends LinearOpMode {
             telemetry.addData("hold", robot.lift.holdingPos);
             telemetry.addData("hold", robot.lift.startedKill);
             robot.claw.input(gamepad1);
-//            robot.claw.clawTeleOp(gamepad1); // CLAW
+//            robot.claw.setPower(-1, -1);
             if(gamepad1.x && !lastX)
             {
                 slowMode = !slowMode;
@@ -106,11 +106,13 @@ public class TeleOpControl extends LinearOpMode {
             tel.addData("right lift motor enc pos :", robot.lift.rightLift.getCurrentPosition());
             tel.update();
 
-            telemetry.addData("maxfps", apriltags.camera.getCurrentPipelineMaxFps());
-            telemetry.addData("fps", apriltags.camera.getFps());
+//            telemetry.addData("maxfps", apriltags.camera.getCurrentPipelineMaxFps());
+//            telemetry.addData("fps", apriltags.camera.getFps());
             telemetry.addData("SlowMode: ", slowMode);
             telemetry.addData("RightEnc: ", robot.lift.rightLift.getCurrentPosition());
             telemetry.addData("LeftEnc: ", robot.lift.leftLift.getCurrentPosition());
+            telemetry.addData("top claw", robot.claw.timer.milliseconds());
+
             telemetry.update();
         }
     }

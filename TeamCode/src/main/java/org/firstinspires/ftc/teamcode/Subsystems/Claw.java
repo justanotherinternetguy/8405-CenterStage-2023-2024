@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.internal.system.CloseableOnFinalize;
 import org.firstinspires.ftc.teamcode.Auton.Config;
@@ -18,6 +19,9 @@ public class Claw {
     public boolean topClaw = false; // is closed?
     public boolean lastLeftBumper = false;
     public boolean lastRightBumper = false;
+    public boolean lastBurstButtom = false;
+    public ElapsedTime timer = new ElapsedTime();
+    public boolean inBurst = false;
 
     public Claw(HardwareMap hardwareMap, Gamepad gamepad) {
         this.gamepad = gamepad;
@@ -31,14 +35,31 @@ public class Claw {
     }
 
     public void input(Gamepad gamepad1) {
+        //true = closed
         if (gamepad1.left_bumper && !lastLeftBumper) {
             topClaw = !topClaw;
         }
         if (gamepad1.right_bumper && !lastRightBumper) {
             bottomClaw = !bottomClaw;
         }
+        if (gamepad1.y && !lastBurstButtom) {
+            if (topClaw == true && bottomClaw == true) {
+                bottomClaw = !bottomClaw;
+                timer.reset();
+                inBurst = true;
+            }
+            else if (topClaw == false && bottomClaw == false) {
+                topClaw = !topClaw;
+                bottomClaw = !bottomClaw;
+            }
+        }
+        if (inBurst && timer.milliseconds() > Config.burstDelay && topClaw == true && bottomClaw == false) {
+            topClaw = !topClaw;
+            inBurst = false;
+        }
         lastRightBumper = gamepad1.right_bumper;
         lastLeftBumper = gamepad1.left_bumper;
+        lastBurstButtom = gamepad1.y;
         if (bottomClaw) {
             bottomServo.setPower(Config.bottomServoClose);
         } else {
