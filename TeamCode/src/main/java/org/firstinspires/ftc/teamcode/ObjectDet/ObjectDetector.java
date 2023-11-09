@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBalanceControl;
 import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -42,6 +43,7 @@ public class ObjectDetector {
             @Override
             public void onOpened()
             {
+                camera.getWhiteBalanceControl().setMode(WhiteBalanceControl.Mode.AUTO);
                 camera.startStreaming(1920, 1080, OpenCvCameraRotation.UPRIGHT);
                 camera.showFpsMeterOnViewport(true);
                 FtcDashboard.getInstance().startCameraStream(camera, 0);

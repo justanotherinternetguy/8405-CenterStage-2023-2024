@@ -27,7 +27,7 @@ public class Lift {
 
     public LAST_KEY_PRESSED last_key_pressed = LAST_KEY_PRESSED.NONE;
 
-    private double P = 0.05;
+    private double P = 0.05 ;
 
     public ElapsedTime timer = new ElapsedTime();
     public boolean hasResetKill = false;
@@ -70,7 +70,7 @@ public class Lift {
                 currentMode = LIFT_MODE.HOLD;
                 if(holdingPos == -1)
                 {
-                    holdingPos = leftLift.getCurrentPosition();
+                    holdingPos = Math.min(leftLift.getCurrentPosition(), Config.LIFT_MAX);
                 }
                 liftToPos(holdingPos,  Config.liftMotorPowerHold);
             }
@@ -103,7 +103,7 @@ public class Lift {
         }
     }
 
-    public void liftToPos(int target, double power) {
+    public double liftToPos(int target, double power) {
 
         double multiplier = (target - leftLift.getCurrentPosition()) * P;
         if(Math.abs(multiplier) > 1)
@@ -113,13 +113,14 @@ public class Lift {
         rightLift.setPower(-power*multiplier);//max power at which the lift can run at
         leftLift.setPower(-power*multiplier);//max power at which the lift can run at
 
+        return leftLift.getCurrentPosition() - target;
     }
 
     public void liftManual(Gamepad gamepad) {
         if (gamepad.right_trigger > 0.3 && leftLift.getCurrentPosition() < Config.LIFT_MAX) {
             setLiftPower(gamepad.right_trigger);
         }
-        else if (gamepad.left_trigger > 0.3 && leftLift.getCurrentPosition() < Config.LIFT_MAX) {
+        else if (gamepad.left_trigger > 0.3) {
             setLiftPower(-gamepad.left_trigger);
         }
 //        else

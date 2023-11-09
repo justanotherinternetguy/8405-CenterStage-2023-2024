@@ -6,7 +6,9 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBalanceControl;
 import org.firstinspires.ftc.teamcode.AprilTags.AprilTagsDetectionPipeline;
+import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -48,7 +50,9 @@ public class AprilTagsInit {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(1920, 1080, OpenCvCameraRotation.SIDEWAYS_RIGHT);
+                camera.getWhiteBalanceControl().setMode(WhiteBalanceControl.Mode.MANUAL);
+                camera.getWhiteBalanceControl().setWhiteBalanceTemperature(Config.temp);
+                camera.startStreaming(1920, 1080, OpenCvCameraRotation.UPRIGHT);
                 camera.showFpsMeterOnViewport(true);
                 FtcDashboard.getInstance().startCameraStream(camera, 0);
             }
