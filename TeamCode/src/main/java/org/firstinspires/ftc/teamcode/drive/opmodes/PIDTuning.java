@@ -21,9 +21,11 @@ public class PIDTuning extends LinearOpMode {
     public void runOpMode() {
         Robot robot = new Robot(hardwareMap, gamepad1);
         SampleMecanumDrive rrDrive = new SampleMecanumDrive(hardwareMap);
-        Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, new PID.Config(Config.translationP, Config.translationI, Config.translationD), new PID.Config(Config.rotationP, Config.rotationI, Config.rotationD), Config.tolerance, telemetry);
+        Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, new PID.Config(Config.translationP, Config.translationI, Config.translationD), new PID.Config(Config.rotationP, Config.rotationI, Config.rotationD), Config.tolerance, Config.toleranceH, telemetry);
         Pose2d[] path = null;
+        waitForStart();
         while (opModeIsActive() && !isStopRequested()) {
+            robot.lift.liftToPos(100, Config.liftMotorPowerMacro);
             if (path == null) {
                 if (gamepad1.x) {
                     path = new Pose2d[]{
@@ -63,6 +65,7 @@ public class PIDTuning extends LinearOpMode {
             telemetry.addData("pose", rrDrive.getPose().toString());
             telemetry.update();
             if (!movement.move(path[0])) {
+                robot.drive.setDrivePowers(0,0,0,0);
                 telemetry.addData("Done", "done");
                 telemetry.update();
                 path = null;

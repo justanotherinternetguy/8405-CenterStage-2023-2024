@@ -2,16 +2,18 @@ package org.firstinspires.ftc.teamcode.Auton;
 
 @com.acmerobotics.dashboard.config.Config
 public class Config {
+    public static double XMULTI = 1.5;
     public static boolean manualWhite = false;
     public static int temp = 3334;
-    public static double translationP = 0.08;
+    public static double translationP = 0.3;
     public static double translationI = 0.0;
-    public static double translationD = 0.006;
-    public static double rotationP = 0.03;
+    public static double translationD = 0.04;
+    public static double rotationP = 0.07;
     public static double rotationI = 0.0;
-    public static double rotationD = 0.002;
+    public static double rotationD = 0.005;
     public static double tolerance = 1;
-    public static double powerMultiplier = 0.8;
+    public static double toleranceH = 3;
+    public static double powerMultiplier = 1;
 
     public static double alignment = 0.2;
 
@@ -48,5 +50,5 @@ public class Config {
 
     public static int burstDelay = 500;
 
-    public static double frontMulti = 0.8;
+    public static double frontMulti = 1;
 }

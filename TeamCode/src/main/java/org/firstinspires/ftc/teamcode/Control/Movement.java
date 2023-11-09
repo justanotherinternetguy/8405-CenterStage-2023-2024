@@ -28,13 +28,14 @@ public class Movement {
     private PID headingPID;
     private Supplier<Boolean> opModeIsActive;
     private double tolerance;
+    private double toleranceH;
     private Telemetry telemetry;
     public enum DIRECTION{LEFT, RIGHT};
     private ElapsedTime timer;
     private double powerMultiplier = Config.powerMultiplier;
 
 
-    public Movement(Drive drive, SampleMecanumDrive rrDrive, Supplier<Boolean> opModeIsActive, PID.Config drivePIDConfig, PID.Config headingPIDConfig, double tolerance, Telemetry telemetry) {
+    public Movement(Drive drive, SampleMecanumDrive rrDrive, Supplier<Boolean> opModeIsActive, PID.Config drivePIDConfig, PID.Config headingPIDConfig, double tolerance, double toleranceH, Telemetry telemetry) {
         this.drive = drive;
         this.rrDrive = rrDrive;
         this.driveXPID = new PID(drivePIDConfig);
@@ -42,6 +43,7 @@ public class Movement {
         this.headingPID = new PID(headingPIDConfig);
         this.opModeIsActive = opModeIsActive;
         this.tolerance = tolerance;
+        this.toleranceH = toleranceH;
         this.telemetry = telemetry;
 
         timer = new ElapsedTime();
@@ -101,7 +103,7 @@ public class Movement {
 
         double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
         double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-        rotX = rotX * 1.1;
+        rotX = rotX * Config.XMULTI;
         double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
         double frontLeftPower = (rotY + rotX + rx) / denominator;
         double backLeftPower = (rotY - rotX + rx) / denominator;
@@ -133,6 +135,6 @@ public class Movement {
         drive.setDrivePowers(frontLeftPower*powerMultiplier, frontRightPower*powerMultiplier, backLeftPower*powerMultiplier, backRightPower*powerMultiplier);
         //returns if we're there for the outside loop. can easily change to &&'s(which I recommend)
 
-        return Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > tolerance * 3;
+        return Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > toleranceH;
     }
 }

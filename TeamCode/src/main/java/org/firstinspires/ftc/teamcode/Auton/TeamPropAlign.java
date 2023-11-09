@@ -32,7 +32,7 @@ public class TeamPropAlign extends LinearOpMode {
 //        AprilTagsInit init;
         PID.Config translationConfig = new PID.Config(Config.translationP, Config.translationI, Config.translationD);
         PID.Config rotationConfig = new PID.Config(Config.rotationP, Config.rotationI, Config.rotationD);
-        Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, translationConfig, rotationConfig, Config.tolerance, telemetry);
+        Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, translationConfig, rotationConfig, Config.tolerance, Config.toleranceH, telemetry);
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
         teamPropDet = new ObjectDetector(hardwareMap, tel);
 //        robot.claw.setPower(Config.bottomServoClose, Config.topServoClose);
