@@ -51,20 +51,24 @@ public class TeamPropAlign extends LinearOpMode {
                 direction = 0;
                 paths = new Pose2d[]{
                         new Pose2d(0, 26, new Rotation2d(Math.toRadians(0))),
-                        new Pose2d(-2, 26, new Rotation2d(Math.toRadians(-90)))
+                        new Pose2d(-2.5, 26, new Rotation2d(Math.toRadians(-90))),
+                        new Pose2d(24*1.25, 26, new Rotation2d(Math.toRadians(90)))
                 };
             }
             else if (centerX > 2 * third) { // right
                 direction = 1;
                 paths = new Pose2d[]{
                         new Pose2d(0, 26, new Rotation2d(Math.toRadians(0))),
-                        new Pose2d(2, 26, new Rotation2d(Math.toRadians(90)))
+                        new Pose2d(2.5, 26, new Rotation2d(Math.toRadians(90))),
+                        new Pose2d(0, 24 * 0.5, new Rotation2d(Math.toRadians(90))),
+                        new Pose2d(24*1.25, 26, new Rotation2d(Math.toRadians(90)))
                 };
             }
             else {
                 direction = 2;
                 paths = new Pose2d[]{ // center
                         new Pose2d(0, 27, new Rotation2d(Math.toRadians(0))),
+                        new Pose2d(24*1.25, 26, new Rotation2d(Math.toRadians(90)))
                 };
             }
         }

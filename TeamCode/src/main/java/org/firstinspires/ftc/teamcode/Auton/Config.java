@@ -24,7 +24,7 @@ public class Config {
 
     public static int mask1LH = 0;
     public static int mask1LS = 100;
-    public static int mask1LV = 100;
+    public static int mask1LV = 80;
     public static int mask1UH = 10;
     public static int mask1US = 255;
     public static int mask1UV = 255;
