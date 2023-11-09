@@ -68,16 +68,21 @@ public class TeamPropAlign extends LinearOpMode {
             else {
                 direction = 2;
                 paths = new Point[]{ // center
-                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorPowerAuton)),
+                        new Point(1),
+                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorPowerMacro)),
                         new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
-//                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), false, true),
-//                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), new LiftPoint(200, Config.liftMotorPowerAuton)),
-//                        new Point(new Pose2d(24, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(400, Config.liftMotorPowerAuton)),
-//                        new Point(new Pose2d(24, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, Config.liftMotorPowerAuton)),
-//                        new Point(new Pose2d(37.25, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, Config.liftMotorPowerAuton)),
-//                        new Point(new Pose2d(37.25, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, Config.liftMotorPowerAuton)),
-//                        new Point(new Pose2d(37.25, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK - 50, Config.liftMotorPowerAuton)),
-//                        new Point(new Pose2d(37.25, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK - 100, Config.liftMotorPowerAuton), false, false),
+                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), false, true),
+                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), new LiftPoint(200, Config.liftMotorPowerAuton)),
+                        new Point(new Pose2d(24, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(400, Config.liftMotorPowerAuton)),
+                        new Point(new Pose2d(24, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, Config.liftMotorPowerAuton)),
+                        new Point(Config.BOARDSPEED),
+                        new Point(new Pose2d(37.125, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, Config.liftMotorPowerAuton)),
+                        new Point(new Pose2d(37.125, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, Config.liftMotorPowerMacro)),
+                        new Point(new Pose2d(37.125, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK - 25, Config.liftMotorPowerDown)),
+                        new Point(new Pose2d(37.125, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK - 50, Config.liftMotorPowerDown), false, false),
+                        new Point(1),
+                        new Point(new Pose2d(24, 3, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR, Config.liftMotorPowerDown)),
+                        new Point(new Pose2d(48, 3, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR, Config.liftMotorPowerDown)),
                 };
             }
         }
@@ -125,6 +130,10 @@ public class TeamPropAlign extends LinearOpMode {
         public Boolean bottomClaw = null;
         public Boolean topClaw = null;
         public static int lastLiftHeight;
+        public Double speed = null;
+        public Point(double speed) {
+            this.speed = speed;
+        }
         public Point(Pose2d pose, LiftPoint lift, boolean bottom, boolean top) {
             this.pose = pose;
             this.lift = lift;
@@ -156,6 +165,10 @@ public class TeamPropAlign extends LinearOpMode {
             this.topClaw = topClaw;
         }
         public boolean move(Robot robot, Movement movement) {
+            if (this.speed != null) {
+                Config.powerMultiplier = this.speed;
+            }
+
             boolean atPose = true;
             if (this.pose != null) {
                 atPose = !movement.move(this.pose);

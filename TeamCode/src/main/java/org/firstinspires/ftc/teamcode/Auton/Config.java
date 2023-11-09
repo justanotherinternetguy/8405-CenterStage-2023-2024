@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Auton;
 
 @com.acmerobotics.dashboard.config.Config
 public class Config {
+    public static boolean fieldCentric = false;
     public static double XMULTI = 1.5;
     public static boolean manualWhite = false;
     public static int temp = 3334;
@@ -15,13 +16,16 @@ public class Config {
     public static double toleranceH = 3;
     public static double powerMultiplier = 1;
 
+    public static double BOARDSPEED = 0.375;
+
     public static double alignment = 0.2;
 
     public static double liftMotorPowerMultTeleOp = 0.75;
     public static double liftMotorPowerMacro = 0.4;
-    public static double liftMotorPowerHold = 0.3;
-    public static double liftMotorPowerAuton = 0.5;
-    public static int LIFT_MAX = 1500;
+    public static double liftMotorPowerHold = 0.275;
+    public static double liftMotorPowerAuton = 0.55;
+    public static double liftMotorPowerDown = 0.3;
+    public static int LIFT_MAX = Integer.MAX_VALUE;
     public static int LIFT_MIN = 25;
     public static int LIFT_BACK = 1250;
     public static int FLOOR = 45;

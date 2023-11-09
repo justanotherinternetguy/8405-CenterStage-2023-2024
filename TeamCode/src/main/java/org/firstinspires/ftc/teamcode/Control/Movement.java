@@ -32,8 +32,6 @@ public class Movement {
     private Telemetry telemetry;
     public enum DIRECTION{LEFT, RIGHT};
     private ElapsedTime timer;
-    private double powerMultiplier = Config.powerMultiplier;
-
 
     public Movement(Drive drive, SampleMecanumDrive rrDrive, Supplier<Boolean> opModeIsActive, PID.Config drivePIDConfig, PID.Config headingPIDConfig, double tolerance, double toleranceH, Telemetry telemetry) {
         this.drive = drive;
@@ -132,7 +130,7 @@ public class Movement {
         dashTelem.update();
 
 
-        drive.setDrivePowers(frontLeftPower*powerMultiplier, frontRightPower*powerMultiplier, backLeftPower*powerMultiplier, backRightPower*powerMultiplier);
+        drive.setDrivePowers(frontLeftPower*Config.powerMultiplier, frontRightPower*Config.powerMultiplier, backLeftPower*Config.powerMultiplier, backRightPower*Config.powerMultiplier);
         //returns if we're there for the outside loop. can easily change to &&'s(which I recommend)
 
         return Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > toleranceH;
