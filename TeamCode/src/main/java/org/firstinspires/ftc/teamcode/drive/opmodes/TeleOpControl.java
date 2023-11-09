@@ -100,7 +100,7 @@ public class TeleOpControl extends LinearOpMode {
 
             }
             tel.addData("drive", fieldCentric);
-            tel.addData("TEMP", apriltags.camera.getWhiteBalanceControl().getWhiteBalanceTemperature());
+//            tel.addData("TEMP", apriltags.camera.getWhiteBalanceControl().getWhiteBalanceTemperature());
             tel.addData("tags", apriltags.aprilTagDetect.getLatestDetections().toString());
             tel.addData("pose", poseEstimate);
             tel.addData("right lift motor power :", robot.lift.rightLift.getPower());

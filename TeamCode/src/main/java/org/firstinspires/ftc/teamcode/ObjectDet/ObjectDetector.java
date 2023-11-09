@@ -43,7 +43,12 @@ public class ObjectDetector {
             @Override
             public void onOpened()
             {
-                camera.getWhiteBalanceControl().setMode(WhiteBalanceControl.Mode.AUTO);
+                if (Config.manualWhite) {
+                    camera.getWhiteBalanceControl().setMode(WhiteBalanceControl.Mode.MANUAL);
+                    camera.getWhiteBalanceControl().setWhiteBalanceTemperature(Config.temp);
+                } else {
+                    camera.getWhiteBalanceControl().setMode(WhiteBalanceControl.Mode.AUTO);
+                }
                 camera.startStreaming(1920, 1080, OpenCvCameraRotation.UPRIGHT);
                 camera.showFpsMeterOnViewport(true);
                 FtcDashboard.getInstance().startCameraStream(camera, 0);

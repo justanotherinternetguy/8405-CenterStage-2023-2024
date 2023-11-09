@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.AprilTags;
 
+import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.opencv.calib3d.Calib3d;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfDouble;
@@ -113,7 +115,6 @@ public class AprilTagsDetectionPipeline extends OpenCvPipeline
             drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
             draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
         }
-
         return input;
     }
 

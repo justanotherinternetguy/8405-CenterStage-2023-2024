@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Auton;
 
 @com.acmerobotics.dashboard.config.Config
 public class Config {
+    public static boolean manualWhite = false;
     public static int temp = 3334;
     public static double translationP = 0.08;
     public static double translationI = 0.0;

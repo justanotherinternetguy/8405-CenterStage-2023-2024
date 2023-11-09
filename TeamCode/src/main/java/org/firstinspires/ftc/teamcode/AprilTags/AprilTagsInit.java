@@ -2,19 +2,15 @@ package org.firstinspires.ftc.teamcode.AprilTags;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBalanceControl;
-import org.firstinspires.ftc.teamcode.AprilTags.AprilTagsDetectionPipeline;
 import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
-import org.openftc.easyopencv.OpenCvInternalCamera2;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.ArrayList;
@@ -30,7 +26,7 @@ public class AprilTagsInit {
     private HardwareMap hm;
     private Telemetry tm;
     public OpenCvWebcam camera;
-//    private OpenCvInternalCamera2 camera;
+//    public OpenCvInternalCamera2 camera;
     public AprilTagsDetectionPipeline aprilTagDetect;
     public AprilTagsInit( HardwareMap hardwareMap, Telemetry tm)
     {
@@ -42,6 +38,7 @@ public class AprilTagsInit {
     {
         int cameraMonitorViewId = hm.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hm.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hm.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+//        camera = OpenCvCameraFactory.getInstance().createInternalCamera2(OpenCvInternalCamera2.CameraDirection.FRONT, cameraMonitorViewId);
         aprilTagDetect = new AprilTagsDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         camera.setPipeline(aprilTagDetect);
@@ -50,8 +47,12 @@ public class AprilTagsInit {
             @Override
             public void onOpened()
             {
-                camera.getWhiteBalanceControl().setMode(WhiteBalanceControl.Mode.MANUAL);
-                camera.getWhiteBalanceControl().setWhiteBalanceTemperature(Config.temp);
+                if (Config.manualWhite) {
+                    camera.getWhiteBalanceControl().setMode(WhiteBalanceControl.Mode.MANUAL);
+                    camera.getWhiteBalanceControl().setWhiteBalanceTemperature(Config.temp);
+                } else {
+                    camera.getWhiteBalanceControl().setMode(WhiteBalanceControl.Mode.AUTO);
+                }
                 camera.startStreaming(1920, 1080, OpenCvCameraRotation.UPRIGHT);
                 camera.showFpsMeterOnViewport(true);
                 FtcDashboard.getInstance().startCameraStream(camera, 0);

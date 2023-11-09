@@ -121,7 +121,10 @@ public class Movement {
 ////        dashTelem.addData("rel Y", rotY);
 //        dashTelem.addData("heading Error", rx);
 //        dashTelem.clear();
-        dashTelem.addData("error", Arrays.toString(new Double[] {x, y, rx}));
+        dashTelem.addData("power", Arrays.toString(new Double[] {x, y, rx}));
+        dashTelem.addData("error Heading", utils.angleDifference(target.getRotation().getDegrees(), Math.toDegrees(pose.getHeading())));
+        dashTelem.addData("error X", target.getX() - pose.getX());
+        dashTelem.addData("error Y", target.getY() - pose.getY());
         dashTelem.addData("target", target);
         dashTelem.addData("pose", pose);
         dashTelem.update();

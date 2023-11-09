@@ -69,13 +69,15 @@ public class TeamPropAlign extends LinearOpMode {
                 direction = 2;
                 paths = new Point[]{ // center
                         new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorPowerAuton)),
-                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), true, true),
-                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), false, true),
-                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), new LiftPoint(200, Config.liftMotorPowerAuton)),
-                        new Point(new Pose2d(24*1.25, 24, new Rotation2d(Math.toRadians(90))), new LiftPoint(400, Config.liftMotorPowerAuton)),
-                        new Point(new Pose2d(24*1.5, 27, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, Config.liftMotorPowerAuton)),
-                        new Point(new Pose2d(24*1.55, 27, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, Config.liftMotorPowerAuton), true, true),
-                        new Point(new Pose2d(24*1.55, 27, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, Config.liftMotorPowerAuton), false, false),
+                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
+//                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), false, true),
+//                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), new LiftPoint(200, Config.liftMotorPowerAuton)),
+//                        new Point(new Pose2d(24, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(400, Config.liftMotorPowerAuton)),
+//                        new Point(new Pose2d(24, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, Config.liftMotorPowerAuton)),
+//                        new Point(new Pose2d(37.25, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, Config.liftMotorPowerAuton)),
+//                        new Point(new Pose2d(37.25, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, Config.liftMotorPowerAuton)),
+//                        new Point(new Pose2d(37.25, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK - 50, Config.liftMotorPowerAuton)),
+//                        new Point(new Pose2d(37.25, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK - 100, Config.liftMotorPowerAuton), false, false),
                 };
             }
         }
