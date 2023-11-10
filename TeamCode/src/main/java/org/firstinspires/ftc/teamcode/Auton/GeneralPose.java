@@ -101,7 +101,7 @@ public class GeneralPose {
             PID.Config rotationConfig = new PID.Config(Config.rotationP, Config.rotationI, Config.rotationD);
             SampleMecanumDrive rrDrive = new SampleMecanumDrive(hardwareMap);
             this.dest = dest;
-            movement = new Movement(robot.drive, rrDrive, opModeIsActive, translationConfig, rotationConfig, Config.tolerance, telemetry);
+            movement = new Movement(robot.drive, rrDrive, opModeIsActive, translationConfig, rotationConfig, Config.tolerance, Config.toleranceH, telemetry);
         }
         public boolean act()
         {

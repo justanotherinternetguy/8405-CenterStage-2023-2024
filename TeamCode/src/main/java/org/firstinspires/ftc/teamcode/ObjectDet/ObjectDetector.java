@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBalanceControl;
 import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -42,6 +43,12 @@ public class ObjectDetector {
             @Override
             public void onOpened()
             {
+                if (Config.manualWhite) {
+                    camera.getWhiteBalanceControl().setMode(WhiteBalanceControl.Mode.MANUAL);
+                    camera.getWhiteBalanceControl().setWhiteBalanceTemperature(Config.temp);
+                } else {
+                    camera.getWhiteBalanceControl().setMode(WhiteBalanceControl.Mode.AUTO);
+                }
                 camera.startStreaming(1920, 1080, OpenCvCameraRotation.UPRIGHT);
                 camera.showFpsMeterOnViewport(true);
                 FtcDashboard.getInstance().startCameraStream(camera, 0);
@@ -71,13 +78,17 @@ public class ObjectDetector {
         {
             return new int[]{this.latest_x, this.latest_y};
         }
+
+
+
         @Override
-        public Mat processFrame(Mat input) {
-            Mat temp = new Mat();
-            Imgproc.cvtColor(input, temp, Imgproc.COLOR_RGB2HSV);
+        public Mat processFrame(Mat input) {Mat temp = new Mat();
             Mat mask = new Mat();
             Mat mask2 = new Mat();
             Mat res = new Mat();
+            Mat finalMask = new Mat();
+            Mat hierarchy = new Mat();
+            Imgproc.cvtColor(input, temp, Imgproc.COLOR_RGB2HSV);
 
             Scalar lowerVal = new Scalar(Config.mask1LH, Config.mask1LS, Config.mask1LV);
             Scalar upperVal = new Scalar(Config.mask1UH, Config.mask1US, Config.mask1UV);
@@ -87,7 +98,6 @@ public class ObjectDetector {
 
             Core.inRange(temp, lowerVal, upperVal, mask);
             Core.inRange(temp, lowerVal2, upperVal2, mask2);
-            Mat finalMask = new Mat();
             Core.bitwise_or(mask, mask2, finalMask);
 
             Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(6, 6));
@@ -97,7 +107,6 @@ public class ObjectDetector {
             Core.bitwise_and(input, input, res, finalMask);
 
             ArrayList<MatOfPoint> contours = new ArrayList<>();
-            Mat hierarchy = new Mat();
 
             Imgproc.findContours(finalMask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 

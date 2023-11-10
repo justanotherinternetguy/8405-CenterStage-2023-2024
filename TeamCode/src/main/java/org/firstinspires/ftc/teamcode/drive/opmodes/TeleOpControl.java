@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.AprilTags.AprilTagsDetectionPipeline;
 import org.firstinspires.ftc.teamcode.AprilTags.AprilTagsInit;
+import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.firstinspires.ftc.teamcode.Controllers.MotionProfile;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -18,7 +19,6 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @TeleOp(name="Mecanum Drive", group="Linear Opmode")
 public class TeleOpControl extends LinearOpMode {
-    public static boolean fieldCentric = false;
     public static boolean slowMode = false;
     @Override
     public void runOpMode() {
@@ -54,7 +54,7 @@ public class TeleOpControl extends LinearOpMode {
             telemetry.addData("hasReset", robot.lift.hasResetKill);
             telemetry.addData("macro", robot.lift.currentMode);
             telemetry.addData("hold", robot.lift.holdingPos);
-            telemetry.addData("hold", robot.lift.startedKill);
+            telemetry.addData("kill", robot.lift.startedKill);
             robot.claw.input(gamepad1);
 //            robot.claw.setPower(-1, -1);
             if(gamepad1.x && !lastX)
@@ -63,7 +63,7 @@ public class TeleOpControl extends LinearOpMode {
             }
             lastX = gamepad1.x;
 
-            if (!fieldCentric) {
+            if (!Config.fieldCentric) {
                 double power = -gamepad1.left_stick_y; // remember this is reversed
                 double strafe = gamepad1.left_stick_x * 1.5; // counteract imperfect strafing
                 double turn = gamepad1.right_stick_x;
@@ -99,7 +99,8 @@ public class TeleOpControl extends LinearOpMode {
                 telemetry.addData("drive: ", "fieldCentric");
 
             }
-            tel.addData("drive", fieldCentric);
+            tel.addData("drive", Config.fieldCentric);
+//            tel.addData("TEMP", apriltags.camera.getWhiteBalanceControl().getWhiteBalanceTemperature());
             tel.addData("tags", apriltags.aprilTagDetect.getLatestDetections().toString());
             tel.addData("pose", poseEstimate);
             tel.addData("right lift motor power :", robot.lift.rightLift.getPower());
