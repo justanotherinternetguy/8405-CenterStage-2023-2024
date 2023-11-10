@@ -7,7 +7,7 @@ public class Config {
     public static double liftD = 0;
     public static double BACKSPOT = 35.5;
     public static int liftTolerance = 10;
-    public static double liftMotorFloor = 0.25;
+    public static double liftMotorFloor = 0.33;
     public static double gravity = 0.15;
     public static boolean fieldCentric = false;
     public static double XMULTI = 1.5;
@@ -21,7 +21,7 @@ public class Config {
     public static double rotationD = 0.005;
     public static double tolerance = 1;
     public static double toleranceH = 3;
-    public static double powerMultiplier = 0.8;
+    public static double powerMultiplier = 0.9;
 
     public static double BOARDSPEED = 0.425;
 
@@ -30,11 +30,11 @@ public class Config {
     public static double liftMotorPowerMultTeleOp = 0.75;
     public static double liftMotorPowerMacro = 0.5;
     public static double liftMotorPowerHold = 0.275;
-    public static double liftMotorPowerAuton = 0.4;
-    public static double liftMotorPowerDown = 0.45;
+    public static double liftMotorPowerAuton = 0.38;
+    public static double liftMotorPowerDown = 0.47;
     public static int LIFT_MAX = Integer.MAX_VALUE;
     public static int LIFT_BACK = 1250;
-    public static int FLOOR = 29;
+    public static int FLOOR = 30;
     public static double KILLTIME = 500;
 
 
