@@ -72,6 +72,10 @@ public class Movement {
     }
 
     public boolean move(Pose2d target) {
+        return this.move(target, Config.powerMultiplier);
+    }
+
+    public boolean move(Pose2d target, double power) {
         Pose2d init = rrDrive.getPose();
         Pose2d init_target_pose = new Pose2d(target.getX() - init.getX(), target.getY() - init.getY(), new Rotation2d(Math.toRadians(utils.angleDifference(target.getRotation().getDegrees(), init.getRotation().getDegrees()))));
         timer.reset();
@@ -130,7 +134,7 @@ public class Movement {
         dashTelem.update();
 
 
-        drive.setDrivePowers(frontLeftPower*Config.powerMultiplier, frontRightPower*Config.powerMultiplier, backLeftPower*Config.powerMultiplier, backRightPower*Config.powerMultiplier);
+        drive.setDrivePowers(frontLeftPower*power, frontRightPower*power, backLeftPower*power, backRightPower*power);
         //returns if we're there for the outside loop. can easily change to &&'s(which I recommend)
 
         return Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > toleranceH;

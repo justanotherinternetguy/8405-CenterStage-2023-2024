@@ -5,12 +5,15 @@ import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Control.Movement;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
 import org.firstinspires.ftc.teamcode.ObjectDet.ObjectDetector;
+import org.firstinspires.ftc.teamcode.Subsystems.Lift;
 import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -45,47 +48,91 @@ public class TeamPropAlign extends LinearOpMode {
             if (centerX < third) { // left
                 direction = 0;
                 paths = new Point[]{
-                        new Point(new Pose2d(0, 26, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR)),
-                        new Point(new Pose2d(-2.5, 26, new Rotation2d(Math.toRadians(-90))), false, true),
-                        new Point(new Pose2d(24*1.25, 26, new Rotation2d(Math.toRadians(90))))
+                        new Point(Config.powerMultiplier * 0.8),
+                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity)),
+                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
+                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0)))),
+                        new Point(new Pose2d(-4, 28, new Rotation2d(Math.toRadians(-90))), false, true),
+//                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(300, Config.liftMotorPowerAuton + Config.gravity)),
+                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(-90)))),
+                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(90)))),
+                        new Point(Config.powerMultiplier * 0.8),
+                        new Point(new Pose2d(24, 34.5, new Rotation2d(Math.toRadians(90))), new LiftPoint(500, Config.liftMotorPowerAuton + Config.gravity)),
+                        new Point(new Pose2d(24, 34.5, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, (Config.liftMotorPowerAuton * 1.1) + Config.gravity)),
+                        new Point(Config.BOARDSPEED * 1.25),
+                        new Point(new Pose2d(Config.BACKSPOT, 34.5, new Rotation2d(Math.toRadians(90)))),
+                        new Point(new double[]{Config.BOARDSPEED, 0.0, 0.0}, 2500.0),
+//                        new Point(new LiftPoint(Config.LIFT_BACK - 75, Config.liftMotorPowerDown)),
+                        new Point(new LiftPoint(Config.LIFT_BACK - 100, Config.liftMotorPowerDown * 1.5)),
+                        new Point(false, false),
+                        new Point(Config.powerMultiplier),
+                        new Point(new Pose2d(24, 34.5, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR, Config.liftMotorPowerDown)),
+                        new Point(new Pose2d(24, 3, new Rotation2d(Math.toRadians(90)))),
+                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
                 };
             }
             else if (centerX > 2 * third) { // right
                 direction = 1;
                 paths = new Point[]{
-                        new Point(new Pose2d(0, 26, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR)),
-                        new Point(new Pose2d(2.5, 26, new Rotation2d(Math.toRadians(90))), false, true),
-                        new Point(new Pose2d(0, 24 * 0.5, new Rotation2d(Math.toRadians(90)))),
-                        new Point(new Pose2d(24*1.25, 26, new Rotation2d(Math.toRadians(90))))
+                        new Point(Config.powerMultiplier * 0.8),
+                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity)),
+                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
+                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0)))),
+                        new Point(new Pose2d(4, 28, new Rotation2d(Math.toRadians(90))), false, true),
+//                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(300, Config.liftMotorPowerAuton + Config.gravity)),
+                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(90)))),
+                        new Point(new Pose2d(0, 14, new Rotation2d(Math.toRadians(90)))),
+                        new Point(new Pose2d(12, 14, new Rotation2d(Math.toRadians(90)))),
+                        new Point(Config.powerMultiplier * 0.8),
+                        new Point(new Pose2d(24, 22, new Rotation2d(Math.toRadians(90))), new LiftPoint(500, Config.liftMotorPowerAuton + Config.gravity)),
+                        new Point(new Pose2d(24, 22, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, (Config.liftMotorPowerAuton * 1.1) + Config.gravity)),
+                        new Point(Config.BOARDSPEED * 1.25),
+                        new Point(new Pose2d(Config.BACKSPOT, 34.5, new Rotation2d(Math.toRadians(90)))),
+                        new Point(new double[]{Config.BOARDSPEED, 0.0, 0.0}, 2500.0),
+//                        new Point(new LiftPoint(Config.LIFT_BACK - 75, Config.liftMotorPowerDown)),
+                        new Point(new LiftPoint(Config.LIFT_BACK - 100, Config.liftMotorPowerDown * 1.5)),
+                        new Point(false, false),
+                        new Point(Config.powerMultiplier),
+                        new Point(new Pose2d(24, 22, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR, Config.liftMotorPowerDown)),
+                        new Point(new Pose2d(24, 3, new Rotation2d(Math.toRadians(90)))),
+                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
                 };
             }
             else {
                 direction = 2;
                 paths = new Point[]{ // center
-                        new Point(1),
+                        new Point(Config.powerMultiplier),
                         new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity)),
                         new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
                         new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), false, true),
                         new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), new LiftPoint(300, Config.liftMotorPowerAuton + Config.gravity)),
-                        new Point(new Pose2d(24, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(500, Config.liftMotorPowerAuton + Config.gravity)),
-                        new Point(new Pose2d(24, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, Config.liftMotorPowerAuton + Config.gravity)),
+                        new Point(new Pose2d(0, 26, new Rotation2d(Math.toRadians(0)))),
+                        new Point(new Pose2d(24, 27, new Rotation2d(Math.toRadians(90))), new LiftPoint(500, Config.liftMotorPowerAuton + Config.gravity)),
+                        new Point(new Pose2d(24, 27, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, (Config.liftMotorPowerAuton * 1.1) + Config.gravity)),
                         new Point(Config.BOARDSPEED),
-                        new Point(new Pose2d(37.2, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, Config.liftMotorPowerAuton + Config.gravity)),
-                        new Point(new Pose2d(37.2, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK - 50, Config.liftMotorPowerDown)),
-                        new Point(new Pose2d(37.2, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK - 100, Config.liftMotorPowerDown), false, false),
-                        new Point(1),
-                        new Point(new Pose2d(24, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK/2+Config.FLOOR, Config.liftMotorPowerDown)),
-                        new Point(new Pose2d(24, 3, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR * 2, Config.liftMotorPowerDown)),
-                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR, Config.liftMotorPowerDown)),
+                        new Point(new Pose2d(Config.BACKSPOT, 28, new Rotation2d(Math.toRadians(90)))),
+                        new Point(new double[]{Config.BOARDSPEED, 0.0, 0.0}, 1500.0),
+//                        new Point(new LiftPoint(Config.LIFT_BACK - 75, Config.liftMotorPowerDown)),
+                        new Point(new LiftPoint(Config.LIFT_BACK - 100, Config.liftMotorPowerDown * 1.5)),
+                        new Point(false, false),
+                        new Point(Config.powerMultiplier),
+                        new Point(new Pose2d(24, 27, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR, Config.liftMotorPowerDown)),
+                        new Point(new Pose2d(24, 3, new Rotation2d(Math.toRadians(90)))),
+                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
                 };
             }
         }
 
         int pathOn = 0;
         ElapsedTime timer = new ElapsedTime();
+
+        tel.addData("lift", 0);
+        tel.addData("liftPower", 0);
+        tel.addData("liftTarget", 0);
+        tel.update();
         while (opModeIsActive()) {
             if (pathOn != paths.length) {
-                if (paths[pathOn].move(robot, movement)) {
+                if (paths[pathOn].move(robot, movement, tel)) {
                     pathOn++;
                     timer = new ElapsedTime();
                     robot.drive.setDrivePowers(0, 0, 0, 0);
@@ -98,7 +145,7 @@ public class TeamPropAlign extends LinearOpMode {
             tel.addData("objectcenter: ", objectCenter[0]);
             tel.addData("direction", direction);
             tel.addData("path on", pathOn);
-            tel.addData("lift", robot.lift.leftLift.getCurrentPosition());
+            tel.addData("lift", robot.lift.encoder.getCurrentPosition());
             tel.addData("holdPoint", Point.lastLiftHeight);
             tel.addData("Pose", odometry.getPose().toString());
             tel.update();
@@ -197,10 +244,18 @@ public class TeamPropAlign extends LinearOpMode {
         public Boolean bottomClaw = null;
         public Boolean topClaw = null;
         public static int lastLiftHeight;
+        public static double drivePower = Config.powerMultiplier;
         public Double speed = null;
         public CAFPid liftPID = new CAFPid(new PID.Config(Config.liftP, Config.liftI, Config.liftD));
+        public double[] powers;
+        public Double duration = null;
+        public ElapsedTime timer = null;
         public Point(double speed) {
             this.speed = speed;
+        }
+        public Point(double[] powers, Double duration) {
+            this.powers = powers;
+            this.duration = duration;
         }
         public Point(Pose2d pose, LiftPoint lift, boolean bottom, boolean top) {
             this.pose = pose;
@@ -232,24 +287,53 @@ public class TeamPropAlign extends LinearOpMode {
             this.bottomClaw = bottomClaw;
             this.topClaw = topClaw;
         }
-        public boolean move(Robot robot, Movement movement) {
+        public boolean move(Robot robot, Movement movement, Telemetry tel) {
+            if (this.duration != null) {
+                if (this.timer == null) {
+                    timer = new ElapsedTime();
+                }
+                if (timer.milliseconds() > this.duration) {
+                    robot.drive.setDrivePowers(0,0,0,0);
+                    return true;
+                } else {
+                    robot.drive.mecanumDrive(this.powers[0], this.powers[1], this.powers[2]);
+                    return false;
+                }
+            }
+
+            timer = null;
+
             if (this.speed != null) {
-                Config.powerMultiplier = this.speed;
+                drivePower = this.speed;
             }
 
             boolean atPose = true;
             if (this.pose != null) {
-                atPose = !movement.move(this.pose);
+                atPose = !movement.move(this.pose, drivePower);
             }
             boolean atLift = true;
             if (this.lift != null) {
                 lastLiftHeight = lift.height;
-//                atLift = Math.abs(robot.lift.liftToPos(lift.height, lift.power)) < Config.liftTolerance;
-                double power = liftPID.calc(lift.height, robot.lift.encoder.getCurrentPosition()) * lift.power;
+                atLift = Math.abs(robot.lift.liftToPos(lift.height, lift.power)) < Config.liftTolerance;
+                double power = Range.clip(liftPID.calc(lift.height, robot.lift.encoder.getCurrentPosition()) * lift.power, -lift.power, lift.power);
+                tel.addData("liftPower", power);
+                tel.addData("liftTarget", lift.height);
+                robot.lift.leftLift.setPower(power);
+                robot.lift.rightLift.setPower(power);
+//                robot.lift.leftLift.setPower(lift.power);
+//                robot.lift.rightLift.setPower(lift.power);
+//                robot.lift.leftLift.setTargetPosition(-lift.height);
+//                robot.lift.rightLift.setTargetPosition(lift.height);
+//                robot.lift.leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                robot.lift.rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 return Math.abs(robot.lift.encoder.getCurrentPosition() - lift.height) < Config.liftTolerance;
             } else {
+                robot.lift.leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.lift.rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 robot.lift.leftLift.setPower(Config.gravity);
                 robot.lift.rightLift.setPower(Config.gravity);
+                tel.addData("liftPower", Config.gravity);
+                tel.addData("liftTarget", lastLiftHeight);
             }
             if (this.bottomClaw != null) {
                 double bottomPower = this.bottomClaw ? Config.bottomServoClose : Config.bottomServoOpen;

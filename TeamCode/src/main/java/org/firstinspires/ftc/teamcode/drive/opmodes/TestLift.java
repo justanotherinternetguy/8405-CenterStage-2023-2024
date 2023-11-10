@@ -37,7 +37,9 @@ public class TestLift extends LinearOpMode {
                 robot.lift.leftLift.setPower(Config.gravity);
                 robot.lift.rightLift.setPower(Config.gravity);
             }
-            tel.addData("pos", leftEnc.getCurrentPosition());
+            tel.addData("real", leftEnc.getCurrentPosition());
+            tel.addData("left lift", robot.lift.leftLift.getCurrentPosition());
+            tel.addData("right lift", robot.lift.rightLift.getCurrentPosition());
             tel.addData("velo", leftEnc.getCorrectedVelocity());
             tel.addData("left", gamepad1.left_trigger);
             tel.addData("right", gamepad1.right_trigger);
