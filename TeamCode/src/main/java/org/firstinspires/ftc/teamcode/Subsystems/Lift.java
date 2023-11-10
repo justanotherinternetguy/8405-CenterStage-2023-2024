@@ -19,6 +19,7 @@ public class Lift {
     public enum LIFT_MODE {MANUAL, MACRO, HOLD, RESET, KILL, POWEROFF, NONE}
     public DcMotorEx leftLift;
     public DcMotorEx rightLift;
+    public Encoder encoder;
     public LIFT_MODE currentMode;
 
     public int holdingPos;
@@ -38,16 +39,18 @@ public class Lift {
         currentMode = LIFT_MODE.NONE;
         rightLift = hardwareMap.get(DcMotorEx.class, "rightLift");
         leftLift = hardwareMap.get(DcMotorEx.class, "leftLift");
+        encoder = new Encoder(leftLift);
 
-        rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightLift.setDirection(DcMotor.Direction.REVERSE);
-        rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftLift.setDirection(DcMotor.Direction.FORWARD);
+        leftLift.setDirection(DcMotor.Direction.REVERSE);
         leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightLift.setDirection(DcMotor.Direction.FORWARD);
+        rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
+        encoder.setDirection(Encoder.Direction.FORWARD);
 
         holdingPos = -1;
     }
@@ -74,12 +77,13 @@ public class Lift {
             }
             else
             {
-                currentMode = LIFT_MODE.HOLD;
-                if(holdingPos == -1)
-                {
-                    holdingPos = Math.min(leftLift.getCurrentPosition(), Config.LIFT_MAX);
-                }
-                liftToPos(holdingPos,  Config.liftMotorPowerHold);
+//                currentMode = LIFT_MODE.HOLD;
+//                if(holdingPos == -1)
+//                {
+//                    holdingPos = Math.min(encoder.getCurrentPosition(), Config.LIFT_MAX);
+//                }
+//                liftToPos(holdingPos,  Config.liftMotorPowerHold);
+                setLiftPower(Config.gravity);
             }
 
         }
@@ -98,7 +102,7 @@ public class Lift {
                     hasResetKill = true;
                 }
                 liftToPos(Config.FLOOR, Config.liftMotorPowerMacro);
-                if (Math.abs(leftLift.getCurrentPosition() - Config.FLOOR) < 20) {
+                if (Math.abs(encoder.getCurrentPosition() - Config.FLOOR) < 20) {
                     currentMode = LIFT_MODE.NONE;
                     hasResetKill = false;
                     startedKill = false;
@@ -111,19 +115,19 @@ public class Lift {
     }
 
     public double liftToPos(int target, double power) {
-        double multiplier = (target - leftLift.getCurrentPosition()) * P;
+        double multiplier = (target - encoder.getCurrentPosition()) * P;
         if(Math.abs(multiplier) > 1)
         {
             multiplier = multiplier/Math.abs(multiplier);//sets to either -1 or 1
         }
         setLiftPower(power*multiplier);
 
-        return leftLift.getCurrentPosition() - target;
+        return encoder.getCurrentPosition() - target;
     }
 
     public void liftManual(Gamepad gamepad) {
-        if (gamepad.right_trigger > 0.3 && leftLift.getCurrentPosition() < Config.LIFT_MAX) {
-            setLiftPower(gamepad.right_trigger);
+        if (gamepad.right_trigger > 0.3 && encoder.getCurrentPosition() < Config.LIFT_MAX) {
+            setLiftPower(gamepad.right_trigger + Config.gravity);
         }
         else if (gamepad.left_trigger > 0.3) {
             setLiftPower(-gamepad.left_trigger);
@@ -156,12 +160,12 @@ public class Lift {
     public void setLiftPower(double power) {
         leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftLift.setPower(-power * Config.liftMotorPowerMultTeleOp);
-        rightLift.setPower(-power * Config.liftMotorPowerMultTeleOp);
+        leftLift.setPower(power * Config.liftMotorPowerMultTeleOp);
+        rightLift.setPower(power * Config.liftMotorPowerMultTeleOp);
     }
 
     public void liftToBase() {
         currentMode = LIFT_MODE.MACRO;
-        liftToPos(200, Config.liftMotorPowerMacro);
+        liftToPos(200, Config.liftMotorPowerMacro + Config.gravity);
     }
 }

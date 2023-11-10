@@ -2,6 +2,12 @@ package org.firstinspires.ftc.teamcode.Auton;
 
 @com.acmerobotics.dashboard.config.Config
 public class Config {
+    public static double liftP = 0;
+    public static double liftI = 0;
+    public static double liftD = 0;
+    public static int liftTolerance = 10;
+    public static double liftMotorFloor = 0.5;
+    public static double gravity = 0;
     public static boolean fieldCentric = false;
     public static double XMULTI = 1.5;
     public static boolean manualWhite = false;
