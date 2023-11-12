@@ -127,9 +127,16 @@ public class ObjectDetector {
                 int centerY = (int) (mu.get_m01() / mu.get_m00());
                 this.latest_x = centerX;
                 this.latest_y = centerY;
-                Imgproc.circle(res, new Point(centerX, centerY), 5, new Scalar(0, 0, 255), -1);
+//                Imgproc.circle(res, new Point(centerX, centerY), 5, new Scalar(0, 0, 255), -1);
             }
-            return res;
+
+            mask.release();
+            mask2.release();
+            res.release();
+            finalMask.release();
+            hierarchy.release();
+            kernel.release();
+            return input;
         }
 
     }

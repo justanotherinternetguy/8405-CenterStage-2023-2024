@@ -167,7 +167,7 @@ public class AUTON_BLUE_NEAR extends LinearOpMode {
                     pathOn++;
                     robot.drive.setDrivePowers(0, 0, 0, 0);
                     timer.reset();
-                } else if (timer.milliseconds() > 3500) {
+                } else if (timer.milliseconds() > 2500) {
                     pathOn++;
                     robot.drive.setDrivePowers(0, 0, 0, 0);
                     timer.reset();
