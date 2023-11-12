@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
-public class TeamPropAlignBlue extends LinearOpMode {
+public class AUTON_BLUE_NEAR extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         ObjectDetector teamPropDet;
@@ -167,7 +167,7 @@ public class TeamPropAlignBlue extends LinearOpMode {
                     pathOn++;
                     robot.drive.setDrivePowers(0, 0, 0, 0);
                     timer.reset();
-                } else if (timer.milliseconds() > 5000) {
+                } else if (timer.milliseconds() > 3500) {
                     pathOn++;
                     robot.drive.setDrivePowers(0, 0, 0, 0);
                     timer.reset();

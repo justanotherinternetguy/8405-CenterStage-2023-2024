@@ -13,13 +13,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Control.Movement;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
 import org.firstinspires.ftc.teamcode.ObjectDet.ObjectDetector;
-import org.firstinspires.ftc.teamcode.Subsystems.Lift;
 import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
-public class TeamPropAlign extends LinearOpMode {
+public class AUTON_RED_NEAR extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         ObjectDetector teamPropDet;
@@ -138,6 +137,10 @@ public class TeamPropAlign extends LinearOpMode {
                     pathOn++;
                     timer = new ElapsedTime();
                     robot.drive.setDrivePowers(0, 0, 0, 0);
+                } else if (timer.milliseconds() > 3500) {
+                    pathOn++;
+                    robot.drive.setDrivePowers(0, 0, 0, 0);
+                    timer.reset();
                 }
 
             } else {

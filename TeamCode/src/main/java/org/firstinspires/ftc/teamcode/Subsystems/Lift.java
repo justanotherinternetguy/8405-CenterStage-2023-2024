@@ -166,6 +166,6 @@ public class Lift {
 
     public void liftToBase() {
         currentMode = LIFT_MODE.MACRO;
-        liftToPos(200, Config.liftMotorPowerMacro + Config.gravity);
+        liftToPos(400, (Config.liftMotorPowerMacro * 1.1) + Config.gravity);
     }
 }
