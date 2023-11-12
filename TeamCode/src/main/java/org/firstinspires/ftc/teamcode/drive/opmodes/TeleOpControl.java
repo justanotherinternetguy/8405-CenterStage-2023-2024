@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.firstinspires.ftc.teamcode.Controllers.MotionProfile;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 
 
 @TeleOp(name="Mecanum Drive", group="Linear Opmode")
@@ -30,6 +31,8 @@ public class TeleOpControl extends LinearOpMode {
 
         AprilTagsInit apriltags = new AprilTagsInit(hardwareMap, telemetry);
         apriltags.initialize(telemetry);
+
+        TwoWheelTrackingLocalizer tw = new TwoWheelTrackingLocalizer(hardwareMap, drive);
 
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
 
@@ -101,11 +104,12 @@ public class TeleOpControl extends LinearOpMode {
             }
             tel.addData("drive", Config.fieldCentric);
 //            tel.addData("TEMP", apriltags.camera.getWhiteBalanceControl().getWhiteBalanceTemperature());
-            tel.addData("tags", apriltags.aprilTagDetect.getLatestDetections().toString());
             tel.addData("pose", poseEstimate);
-            tel.addData("right lift motor power :", robot.lift.rightLift.getPower());
-            tel.addData("right lift motor enc pos :", robot.lift.rightLift.getCurrentPosition());
-            tel.update();
+            tel.addData("!LEFT ENCODER: ", robot.odom.getEncoders()[0]);
+            tel.addData("!RIGHT ENCODER: ", robot.odom.getEncoders()[1]);
+            tel.addData("!CENTER ENCODER: ", robot.odom.getEncoders()[2]);
+
+             tel.update();
 
 //            telemetry.addData("maxfps", apriltags.camera.getCurrentPipelineMaxFps());
 //            telemetry.addData("fps", apriltags.camera.getFps());

@@ -83,7 +83,7 @@ public class Odometry {
 
 
     public double[] getEncoders() {
-        return new double[]{ leftOdometer.getDistance(), rightOdometer.getDistance(), centerOdometer.getDistance() };
+        return new double[]{ leftOdometer.getPosition(), rightOdometer.getPosition(), centerOdometer.getPosition() };
     }
 
     public void reset() {
