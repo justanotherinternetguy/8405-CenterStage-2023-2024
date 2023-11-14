@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
@@ -28,6 +29,7 @@ public class Lift {
 
     public LAST_KEY_PRESSED last_key_pressed = LAST_KEY_PRESSED.NONE;
 
+    private PID pid;
     private double P = 0.05 ;
 
     public ElapsedTime timer = new ElapsedTime();
@@ -52,6 +54,8 @@ public class Lift {
 
         encoder.setDirection(Encoder.Direction.FORWARD);
 
+        pid = new PID(Config.liftP, Config.liftI, Config.liftD);
+        
         holdingPos = -1;
     }
     public void liftTeleOp(Gamepad gamepad) {
@@ -115,13 +119,8 @@ public class Lift {
     }
 
     public double liftToPos(int target, double power) {
-        double multiplier = (target - encoder.getCurrentPosition()) * P;
-        if(Math.abs(multiplier) > 1)
-        {
-            multiplier = multiplier/Math.abs(multiplier);//sets to either -1 or 1
-        }
-        setLiftPower(power*multiplier);
-
+        double p = Range.clip(pid.getValue(target-encoder.getCurrentPosition()),-power, power);
+        setLiftPower(p);
         return encoder.getCurrentPosition() - target;
     }
 

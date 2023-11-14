@@ -48,7 +48,7 @@ public class Actor {
         this.rrDrive = rrDrive;
         this.maxTime = maxTimePerAction;
     }
-    public void add(ActionInput a, boolean inParallel)
+    public void add(ActionInput a, boolean inParallel)//inParallel = in parallel with the last listed action. don't use inparallel if its the first action
     {
         if(!inParallel)
         {
@@ -65,10 +65,10 @@ public class Actor {
         }
         else if(a.type == ActionInput.inputType.MOVEMENT)
         {
-            x = new MovementAction(new Pose2d(new Translation2d(a.args[0], a.args[1]), new Rotation2d(a.args[3])),
+            x = new MovementAction(new Pose2d(new Translation2d(a.args[0], a.args[1]), new Rotation2d(a.args[2])),
                     robot,
                     rrDrive,
-                    a.args[4]/100);
+                    a.args[3]/100.0);
         }
         this.actions.get(actions.size()-1).add(x);
     }

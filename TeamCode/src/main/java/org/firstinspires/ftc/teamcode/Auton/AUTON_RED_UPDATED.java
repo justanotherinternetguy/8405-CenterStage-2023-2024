@@ -47,8 +47,8 @@ public class AUTON_RED_UPDATED extends LinearOpMode {
             int centerX = objectCenter[0];
             if (centerX < third) { // left
                 direction = 0;
-                actor.add(new ActionInput(inputType.MOVEMENT, new int[] {0, 28, 0, 80}), true);
-                actor.add(new ActionInput(inputType.CLAW, new int[] {0}), true);
+                actor.add(new ActionInput(Mvmt, new int[] {0, 28, 0, 80}), false);
+                actor.add(new ActionInput(Claw, new int[] {0}), true);
             }
             else if (centerX > 2 * third) { // right
                 direction = 1;
@@ -56,8 +56,8 @@ public class AUTON_RED_UPDATED extends LinearOpMode {
             }
             else {
                 direction = 2;
-                actor.add(new ActionInput(inputType.MOVEMENT, new int[] {0, 28, 0, 80}), true);
-                actor.add(new ActionInput(inputType.CLAW, new int[] {0}), true);
+                actor.add(new ActionInput(Mvmt, new int[] {0, 28, 0, 80}), false);
+                actor.add(new ActionInput(Claw, new int[] {0}), true);
 
             }
         }
