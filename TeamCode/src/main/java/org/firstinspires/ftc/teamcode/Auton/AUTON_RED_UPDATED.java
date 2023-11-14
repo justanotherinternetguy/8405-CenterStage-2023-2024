@@ -1,19 +1,16 @@
 package org.firstinspires.ftc.teamcode.Auton;
 
+import androidx.appcompat.widget.AppCompatCheckedTextView;
+
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.arcrobotics.ftclib.geometry.Pose2d;
-import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Control.Movement;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
 import org.firstinspires.ftc.teamcode.ObjectDet.ObjectDetector;
-import org.firstinspires.ftc.teamcode.Subsystems.Lift;
 import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -21,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Auton.Actor.ActionInput;
 import org.firstinspires.ftc.teamcode.Auton.Actor.ActionInput.inputType;
 
 @Autonomous
-public class TeamPropAlignCopy extends LinearOpMode {
+public class AUTON_RED_UPDATED extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         ObjectDetector teamPropDet;
@@ -50,8 +47,8 @@ public class TeamPropAlignCopy extends LinearOpMode {
             int centerX = objectCenter[0];
             if (centerX < third) { // left
                 direction = 0;
-
-                actor.add(new ActionInput(inputType.MOVEMENT, new int[] {0, 24, 0, 80}), false);
+                actor.add(new ActionInput(inputType.MOVEMENT, new int[] {0, 28, 0, 80}), true);
+                actor.add(new ActionInput(inputType.CLAW, new int[] {0}), true);
             }
             else if (centerX > 2 * third) { // right
                 direction = 1;
@@ -59,12 +56,12 @@ public class TeamPropAlignCopy extends LinearOpMode {
             }
             else {
                 direction = 2;
+                actor.add(new ActionInput(inputType.MOVEMENT, new int[] {0, 28, 0, 80}), true);
+                actor.add(new ActionInput(inputType.CLAW, new int[] {0}), true);
 
             }
         }
 
-        int pathOn = 0;
-        ElapsedTime timer = new ElapsedTime();
 
         tel.addData("lift", 0);
         tel.addData("liftPower", 0);
@@ -74,7 +71,6 @@ public class TeamPropAlignCopy extends LinearOpMode {
             actor.act();
             tel.addData("objectcenter: ", objectCenter[0]);
             tel.addData("direction", direction);
-            tel.addData("path on", pathOn);
             tel.addData("lift", robot.lift.encoder.getCurrentPosition());
             tel.addData("Pose", odometry.getPose().toString());
             tel.update();
