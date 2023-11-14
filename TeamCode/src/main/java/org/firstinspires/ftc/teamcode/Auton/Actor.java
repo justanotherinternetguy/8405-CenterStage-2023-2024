@@ -68,7 +68,7 @@ public class Actor {
             x = new MovementAction(new Pose2d(new Translation2d(a.args[0], a.args[1]), new Rotation2d(a.args[3])),
                     robot,
                     rrDrive,
-                    a.args[4]);
+                    a.args[4]/100);
         }
         this.actions.get(actions.size()-1).add(x);
     }
@@ -100,7 +100,7 @@ public class Actor {
         }
         for(Action a : this.actions.get(indexOn))
         {
-            finished = finished & a.act();
+            finished = finished && a.act(); // before was &
             if(timer == null)
             {
                 timer = new ElapsedTime();

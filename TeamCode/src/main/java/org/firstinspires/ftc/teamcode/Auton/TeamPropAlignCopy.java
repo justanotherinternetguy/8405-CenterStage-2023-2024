@@ -50,8 +50,8 @@ public class TeamPropAlignCopy extends LinearOpMode {
             int centerX = objectCenter[0];
             if (centerX < third) { // left
                 direction = 0;
-                
 
+                actor.add(new ActionInput(inputType.MOVEMENT, new int[] {0, 24, 0, 80}), false);
             }
             else if (centerX > 2 * third) { // right
                 direction = 1;
