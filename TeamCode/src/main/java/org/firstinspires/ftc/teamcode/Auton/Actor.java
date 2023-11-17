@@ -37,6 +37,7 @@ public class Actor {
     SampleMecanumDrive rrDrive;
 
     ArrayList<ArrayList<Action>> actions = new ArrayList<>();
+    ArrayList<Action> perpetualActions = new ArrayList<>();
     ElapsedTime timer = null;
     int indexOn = 0;
     double maxTime;
@@ -48,12 +49,22 @@ public class Actor {
         this.rrDrive = rrDrive;
         this.maxTime = maxTimePerAction;
     }
-    public void add(ActionInput a, boolean inParallel)//inParallel = in parallel with the last listed action. don't use inparallel if its the first action
+    public void add(ActionInput a)
     {
-        if(!inParallel)
+        this.add(a, false, false);
+    }
+    public void add(ActionInput a, boolean inParallel)
+    {
+        this.add(a, inParallel, false);
+    }
+    public void add(ActionInput a, boolean inParallel, boolean perpetual)//inParallel = in parallel with the last listed action. don't use inparallel if its the first action
+    {
+        if(!inParallel) // if separate steps
         {
-            this.actions.add(new ArrayList<>());
+            this.actions.add(new ArrayList<>()); // add completely new step to actions
         }
+
+
         Action x = null;
         if(a.type == ActionInput.inputType.LIFT)
         {
@@ -70,7 +81,40 @@ public class Actor {
                     rrDrive,
                     a.args[3]/100.0);
         }
+
+
+
+        if(x != null)
+        {
+            ArrayList<Action> temp = new ArrayList<>();//creates new arraylist to update perpetualactions
+            for(int i = 0; i<this.perpetualActions.size(); i++)
+            {
+                if(!perpetualActions.get(i).getClass().getName().equals(x.getClass().getName())) {
+                    temp.add(perpetualActions.get(i));//add already perpetual actions and does overriding
+                }
+            }
+            if(perpetual)
+            {
+                temp.add(x);//will add this as a new perpetual action if necessary
+            }
+            this.perpetualActions = temp;
+        }
+
+        if(!inParallel)
+        {
+            for(Action b : perpetualActions)
+            {
+                if(b != x)
+                {
+                    this.actions.get(actions.size()-1).add(b);
+                }
+            }
+        }
         this.actions.get(actions.size()-1).add(x);
+    }
+    public void clearPerpetual()
+    {
+        this.perpetualActions = new ArrayList<>();
     }
     public void add(ConfigChange c, boolean inParallel)
     {

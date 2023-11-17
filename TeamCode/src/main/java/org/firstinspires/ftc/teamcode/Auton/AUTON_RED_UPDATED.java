@@ -52,6 +52,8 @@ public class AUTON_RED_UPDATED extends LinearOpMode {
             }
             else if (centerX > 2 * third) { // right
                 direction = 1;
+                actor.add(new ActionInput(Mvmt, new int[] {0, 28, 0, 80}), false);
+                actor.add(new ActionInput(Mvmt, new int[] {0, -28, 0, 80}), true);
 
             }
             else {

@@ -115,8 +115,8 @@ Note: Some names start with "Team" and others start with "team".  This is intent
 
 1)  Using your operating system file management tools, copy the whole "TeamCode"
     folder to a sibling folder with a corresponding new name, eg: "Team0417".
-
-2)  In the new Team0417 folder, delete the TeamCode.iml file.
+1
+2)  In the new Team047 folder, delete the TeamCode.iml file.
 
 3)  the new Team0417 folder, rename the "src/main/java/org/firstinspires/ftc/teamcode" folder
     to a matching name with a lowercase 'team' eg:  "team0417".
