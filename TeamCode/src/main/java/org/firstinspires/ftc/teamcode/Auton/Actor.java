@@ -72,7 +72,7 @@ public class Actor {
         }
         else if(a.type == ActionInput.inputType.CLAW)
         {
-            x = new ClawAction(robot.claw, a.args[0]);
+            x = new ClawAction(robot.claw, a.args[0], a.args[1]);
         }
         else if(a.type == ActionInput.inputType.MOVEMENT)
         {
@@ -213,22 +213,19 @@ class LiftAction extends Action{
 class ClawAction extends Action
 {
     Claw claw;
-    int arg;
-    public ClawAction(Claw claw, int arg)
+    int bottom, top;
+    public ClawAction(Claw claw, int bottom, int top)
     {
         this.claw = claw;
-        this.arg = arg;
+        this.bottom = bottom;
+        this.top = top;
     }
 
     @Override
     public boolean act() {
-        if(arg == 0)
-        {
-            this.claw.setPower(Config.bottomServoClose, Config.topServoClose);
-        }
-        else if(arg == 1){
-            this.claw.setPower(Config.bottomServoOpen, Config.topServoOpen);
-        }
+        double bottomPower = this.bottom==0 ? Config.bottomServoClose : Config.bottomServoOpen;
+        double topPower = this.top==0 ? Config.topServoClose : Config.topServoOpen;
+        claw.setPower(bottomPower, topPower);
         return true;
     }
 }

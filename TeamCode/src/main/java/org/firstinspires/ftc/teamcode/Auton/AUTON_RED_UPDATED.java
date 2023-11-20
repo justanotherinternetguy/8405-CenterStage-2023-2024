@@ -47,20 +47,22 @@ public class AUTON_RED_UPDATED extends LinearOpMode {
             int centerX = objectCenter[0];
             if (centerX < third) { // left
                 direction = 0;
-                actor.add(new ActionInput(Mvmt, new int[] {0, 28, 0, 80}), false);
-                actor.add(new ActionInput(Claw, new int[] {0}), true);
             }
             else if (centerX > 2 * third) { // right
                 direction = 1;
-                actor.add(new ActionInput(Mvmt, new int[] {0, 28, 0, 80}), false);
-                actor.add(new ActionInput(Mvmt, new int[] {0, -28, 0, 80}), true);
-
             }
             else {
                 direction = 2;
                 actor.add(new ActionInput(Mvmt, new int[] {0, 28, 0, 80}), false);
-                actor.add(new ActionInput(Claw, new int[] {0}), true);
-
+                actor.add(new ActionInput(Mvmt, new int[] {0, 0, 0, 80}), true);
+                actor.add(new ActionInput(Mvmt, new int[] {0, 0, 0, 80}), false);
+                actor.add(new ActionInput(Claw, new int[] {1, 1}), true);
+                actor.add(new ActionInput(Claw, new int[] {0, 1}), false);
+                actor.add(new ActionInput(Lift, new int[] {300, (int) ((Config.liftMotorPowerAuton + Config.gravity)*100)}), false);
+                actor.add(new ActionInput(Mvmt, new int[] {0, 26, 0, 80}), true);
+                actor.add(new ActionInput(Mvmt, new int[] {24, 27, 90, 80}), false);
+                actor.add(new ActionInput(Lift, new int[] {500, (int) ((Config.liftMotorPowerAuton + Config.gravity)*100)}), false);
+                actor.add(new ActionInput(Lift, new int[] {Config.LIFT_MAX, (int) ((Config.liftMotorPowerAuton + Config.gravity)*100)}), false);
             }
         }
 
