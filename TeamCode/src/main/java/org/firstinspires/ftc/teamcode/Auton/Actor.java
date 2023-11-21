@@ -25,8 +25,7 @@ public class Actor {
 
     private final ElapsedTime timer = new ElapsedTime();
 
-    public Actor(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement, double defaultTimeout)
-    {
+    public Actor(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement, double defaultTimeout) {
         this.hw = hw;
         this.tm = tm;
         this.robot = robot;
@@ -36,9 +35,11 @@ public class Actor {
     }
 
     private ArrayList<ArrayList<Action>> actions = new ArrayList<>();
-    public void add(Action action, boolean parallel, boolean perpetual) {
+
+    public void add(Action action, Double timeout, boolean parallel, boolean perpetual) {
         // TODO: add per action timeout(no need for per step timeout, as per step timeout would just be Math.max(...actionTimeouts)
         action.perpetual = perpetual; // this way both are in the add params not the action params
+        action.timeout = timeout;
         if (parallel) {
             actions.get(actions.size() - 1).add(action);
         } else {
@@ -55,19 +56,20 @@ public class Actor {
     public void run() {
         ArrayList<Action> step = actions.get(0);
         boolean stepDone = true;
-        if (timer.seconds() < defaultTimeout) { // while we are within the time limit
-            for (Action action : step) {
-                // if the action is not done we run it and set stepDone to false so we don't move onto the next step until all actions are completed
-                if (action.perpetual) {
-                    action.run(hw, tm, robot, rrDrive, movement);
-                    continue; // if its perpetual we don't need to check if its done or have to override stepDone
-                }
-                if (!action.isDone(hw, tm, robot, rrDrive, movement)) {
-                    stepDone = false;
-                    action.run(hw, tm, robot, rrDrive, movement);
-                }
+        for (Action action : step) {
+            if (action.timeout != null && timer.seconds() > action.timeout) {
+                continue; // per action timeout(null is no timeout)
             }
-        } // else we just don't run the loop and hence stepDone is still true no matter what and we move onto the next step
+            // if the action is not done we run it and set stepDone to false so we don't move onto the next step until all actions are completed
+            if (action.perpetual) {
+                action.run(hw, tm, robot, rrDrive, movement);
+                continue; // if its perpetual we don't need to check if its done or have to override stepDone
+            }
+            if (!action.isDone(hw, tm, robot, rrDrive, movement)) {
+                stepDone = false;
+                action.run(hw, tm, robot, rrDrive, movement);
+            }
+        }
         if (stepDone) {
             timer.reset();
             actions.remove(0);
@@ -77,12 +79,15 @@ public class Actor {
 
 abstract class Action {
     public boolean perpetual = false;
+    public Double timeout = null;
+
     public abstract void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement);
+
     public abstract boolean isDone(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement);
 }
 
 class ClawAction extends Action {
-    enum ClawStates{
+    enum ClawStates {
         topOpen,
         topClosed,
         bottomOpen,
@@ -90,9 +95,11 @@ class ClawAction extends Action {
     }
 
     private final ClawStates[] states;
+
     public ClawAction(ClawStates[] states) {
         this.states = states;
     }
+
     @Override
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         for (ClawStates state : states) {
@@ -104,6 +111,7 @@ class ClawAction extends Action {
             }
         }
     }
+
     @Override
     public boolean isDone(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         // Claw is a bit scuffed, because of the way I setup parallel actions, since isDone is always true(as we don't know the servo positon since we aren't using axons)
@@ -127,7 +135,7 @@ class LiftAction extends Action {
     @Override
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         // not gonna use liftToPos so this way we can allow for custom pid per section in the future
-        double p = Range.clip(pid.calc(height, height - robot.lift.leftLift.getCurrentPosition()),-power, power);
+        double p = Range.clip(pid.calc(height, height - robot.lift.leftLift.getCurrentPosition()), -power, power);
         robot.lift.setLiftPower(p + Config.gravity); // gravity is F in a traditional PIDF controller
     }
 
@@ -141,6 +149,7 @@ class LiftAction extends Action {
 class MvntAction extends Action {
     private final Pose2d target;
     private final double maxPower;
+
     public MvntAction(Pose2d target, double maxPower) {
         this.target = target;
         this.maxPower = maxPower;
