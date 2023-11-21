@@ -102,29 +102,10 @@ public class Movement {
         double rx = headingPID.getValue(utils.angleDifference(target.getRotation().getDegrees(), Math.toDegrees(pose.getHeading())));
         double botHeading = -pose.getRotation().getRadians();    //i won't change it cause it seems to work but y?
                                                                     // just smt that happened when trying to get two wheel working, fixed in getPose()
+        double[] powers = absMovement(x, y, rx, botHeading);
 
-        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-        rotX = rotX * Config.XMULTI;
-        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-        double frontLeftPower = (rotY + rotX + rx) / denominator;
-        double backLeftPower = (rotY - rotX + rx) / denominator;
-        double frontRightPower = (rotY - rotX - rx) / denominator;
-        double backRightPower = (rotY + rotX - rx) / denominator;
         //dont spam telemetry on the actual driver hub, use dash if u want all this data
 
-//        dashTelem.addData("x", pose.getX());
-//        dashTelem.addData("y", pose.getY());
-//        dashTelem.addData("heading", pose.getRotation().getDegrees());
-//        dashTelem.addData("x target", target.getX());
-//        dashTelem.addData("y target", target.getY());
-//        dashTelem.addData("heading target", target.getRotation().getDegrees());
-//        dashTelem.addData("x Error", x);
-//        dashTelem.addData("y Error", y);
-////        dashTelem.addData("rel X", rotX);
-////        dashTelem.addData("rel Y", rotY);
-//        dashTelem.addData("heading Error", rx);
-//        dashTelem.clear();
         dashTelem.addData("power", Arrays.toString(new Double[] {x, y, rx}));
         dashTelem.addData("error Heading", utils.angleDifference(target.getRotation().getDegrees(), Math.toDegrees(pose.getHeading())));
         dashTelem.addData("error X", target.getX() - pose.getX());
@@ -134,9 +115,22 @@ public class Movement {
         dashTelem.update();
 
 
-        drive.setDrivePowers(frontLeftPower*power, frontRightPower*power, backLeftPower*power, backRightPower*power);
+        drive.setDrivePowers(powers[0]*power, powers[1]*power, powers[2]*power, powers[3]*power);
         //returns if we're there for the outside loop. can easily change to &&'s(which I recommend)
 
         return Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > toleranceH;
+    }
+
+    public static double[] absMovement(double x, double y, double rx, double botHeading) {
+        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+        rotX = rotX * Config.XMULTI;
+        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+        double frontLeftPower = (rotY + rotX + rx) / denominator;
+        double backLeftPower = (rotY - rotX + rx) / denominator;
+        double frontRightPower = (rotY - rotX - rx) / denominator;
+        double backRightPower = (rotY + rotX - rx) / denominator;
+
+        return new double[] { frontLeftPower, frontRightPower, backLeftPower, backRightPower };
     }
 }
