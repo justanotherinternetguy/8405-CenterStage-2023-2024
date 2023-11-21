@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Auton;
 
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -22,6 +23,7 @@ public class Actor {
     private final Movement movement;
     private final double defaultTimeout;
 
+    private final ElapsedTime timer = new ElapsedTime();
 
     public Actor(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement, double defaultTimeout)
     {
@@ -34,7 +36,9 @@ public class Actor {
     }
 
     private ArrayList<ArrayList<Action>> actions = new ArrayList<>();
-    public void add(Action action, boolean parallel) {
+    public void add(Action action, boolean parallel, boolean perpetual) {
+        // TODO: add per action timeout(no need for per step timeout, as per step timeout would just be Math.max(...actionTimeouts)
+        action.perpetual = perpetual; // this way both are in the add params not the action params
         if (parallel) {
             actions.get(actions.size() - 1).add(action);
         } else {
@@ -43,23 +47,36 @@ public class Actor {
         }
     }
 
+    public void resetTimer() {
+        // just resets the timer when we start following the paths for the first time(or if like pause for some reason)
+        timer.reset();
+    }
+
     public void run() {
         ArrayList<Action> step = actions.get(0);
         boolean stepDone = true;
-        for (Action action : step) {
-            // if the action is not done we run it and set stepDone to false so we don't move onto the next step until all actions are completed
-            if (!action.isDone(hw, tm, robot, rrDrive, movement)) {
-                stepDone = false;
-                action.run(hw, tm, robot, rrDrive, movement);
+        if (timer.seconds() < defaultTimeout) { // while we are within the time limit
+            for (Action action : step) {
+                // if the action is not done we run it and set stepDone to false so we don't move onto the next step until all actions are completed
+                if (action.perpetual) {
+                    action.run(hw, tm, robot, rrDrive, movement);
+                    continue; // if its perpetual we don't need to check if its done or have to override stepDone
+                }
+                if (!action.isDone(hw, tm, robot, rrDrive, movement)) {
+                    stepDone = false;
+                    action.run(hw, tm, robot, rrDrive, movement);
+                }
             }
-        }
+        } // else we just don't run the loop and hence stepDone is still true no matter what and we move onto the next step
         if (stepDone) {
+            timer.reset();
             actions.remove(0);
         } // we move onto the next step
     }
 }
 
 abstract class Action {
+    public boolean perpetual = false;
     public abstract void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement);
     public abstract boolean isDone(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement);
 }
