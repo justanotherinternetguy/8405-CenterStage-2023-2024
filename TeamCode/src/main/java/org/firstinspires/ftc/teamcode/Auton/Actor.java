@@ -145,6 +145,7 @@ class MvntAction extends Action {
     public boolean isDone(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         // same as in movement.move, just inverted to be isDone instead of continueNextLoop
         double tolerance = Config.tolerance;
+        double toleranceH = Config.toleranceH;
         Pose2d pose = rrDrive.getPose();
         return !(Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > toleranceH);
     }
