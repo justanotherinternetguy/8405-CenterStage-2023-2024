@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utils;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Actor {
@@ -35,7 +34,6 @@ public class Actor {
     private ArrayList<ArrayList<Action>> actions = new ArrayList<>();
 
     public void add(Action action, Double timeout, boolean parallel, boolean perpetual) {
-        // TODO: add per action timeout(no need for per step timeout, as per step timeout would just be Math.max(...actionTimeouts)
         action.perpetual = perpetual; // this way both are in the add params not the action params
         action.timeout = timeout;
         if (parallel) {
@@ -145,11 +143,20 @@ class LiftAction extends Action {
 
 // Movement Action, called MvntAction to persevere the same 10 letter length to make it more readable
 class MvntAction extends Action {
-    private final Pose2d target;
+    private Pose2d target = null;
+    private Pose2d direction = null;
     private final double maxPower;
 
     public MvntAction(Pose2d target, double maxPower) {
-        this.target = target;
+        this(target, maxPower, false);
+    }
+
+    public MvntAction(Pose2d direction, double maxPower, boolean isDirection) {
+        if (!isDirection) {
+            this.target = direction;
+        } else {
+            this.direction = direction;
+        }
         this.maxPower = maxPower;
     }
 
@@ -158,11 +165,13 @@ class MvntAction extends Action {
         this.maxPower = Config.powerMultiplier;
     }
 
-    // TODO add an option for just driving for time(for example into the wall)
-    // TODO add a correct way for setting maxPower(maybe we do it similar to how lift will have its own pid)
     @Override
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
-        movement.move(target, maxPower);
+        if (target == null) {
+            movement.move(target, maxPower);
+        }
+        Pose2d pose = rrDrive.getPose();
+        double[] powers = Movement.absMovement(direction.getX(), direction.getY(), direction.getHeading(), pose.getHeading());
     }
 
     @Override
