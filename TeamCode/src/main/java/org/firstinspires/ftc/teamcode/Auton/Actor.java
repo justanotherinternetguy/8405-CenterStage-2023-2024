@@ -21,17 +21,15 @@ public class Actor {
     private final Robot robot;
     private final SampleMecanumDrive rrDrive;
     private final Movement movement;
-    private final double defaultTimeout;
 
     private final ElapsedTime timer = new ElapsedTime();
 
-    public Actor(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement, double defaultTimeout) {
+    public Actor(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         this.hw = hw;
         this.tm = tm;
         this.robot = robot;
         this.rrDrive = rrDrive;
         this.movement = movement;
-        this.defaultTimeout = defaultTimeout;
     }
 
     private ArrayList<ArrayList<Action>> actions = new ArrayList<>();
