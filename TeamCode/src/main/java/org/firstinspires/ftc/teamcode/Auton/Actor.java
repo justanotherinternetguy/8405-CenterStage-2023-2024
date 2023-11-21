@@ -23,25 +23,49 @@ public class Actor {
 
     private final ElapsedTime timer = new ElapsedTime();
 
-    public Actor(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
+    private final double defaultTimeout;
+
+    public Actor(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement, double defaultTimeout) {
         this.hw = hw;
         this.tm = tm;
         this.robot = robot;
         this.rrDrive = rrDrive;
         this.movement = movement;
+        this.defaultTimeout = defaultTimeout;
     }
 
-    private ArrayList<ArrayList<Action>> actions = new ArrayList<>();
+    public ArrayList<ArrayList<Action>> actions = new ArrayList<>();
 
-    public void add(Action action, Double timeout, boolean parallel, boolean perpetual) {
+    public Actor add(Action action, Double timeout, boolean parallel, boolean perpetual) {
         action.perpetual = perpetual; // this way both are in the add params not the action params
-        action.timeout = timeout;
+        action.timeout = timeout != null ? timeout : defaultTimeout;
         if (parallel) {
             actions.get(actions.size() - 1).add(action);
         } else {
             actions.add(new ArrayList<>());
             actions.get(actions.size() - 1).add(action);
         }
+        return this;
+    }
+
+    public Actor add(Action action, boolean parallel, boolean perpetual) {
+        return this.add(action, null, parallel, perpetual);
+    }
+
+    public Actor add(Action action, boolean parallel) {
+        return this.add(action, parallel);
+    }
+
+    public Actor add(Action action, double timeout, boolean parallel) {
+        return this.add(action, timeout, parallel, false);
+    }
+
+    public Actor add(Action action, double timeout) {
+        return this.add(action, timeout, false, false);
+    }
+
+    public Actor add(Action action) {
+        return this.add(action);
     }
 
     public void resetTimer() {
@@ -49,7 +73,7 @@ public class Actor {
         timer.reset();
     }
 
-    public void run() {
+    public boolean run() {
         ArrayList<Action> step = actions.get(0);
         boolean stepDone = true;
         for (Action action : step) {
@@ -70,6 +94,8 @@ public class Actor {
             timer.reset();
             actions.remove(0);
         } // we move onto the next step
+
+        return actions.size() == 0;
     }
 }
 
@@ -92,7 +118,7 @@ class ClawAction extends Action {
 
     private final ClawStates[] states;
 
-    public ClawAction(ClawStates[] states) {
+    public ClawAction(ClawStates... states) {
         this.states = states;
     }
 
@@ -121,7 +147,7 @@ class LiftAction extends Action {
 
     private final int height;
     private final double power;
-    private final AUTON_RED_NEAR.CAFPid pid = new AUTON_RED_NEAR.CAFPid(new PID.Config(Config.liftP, Config.liftI, Config.liftD));
+    private final AUTON_BLUE_NEAR.CAFPid pid = new AUTON_BLUE_NEAR.CAFPid(new PID.Config(Config.liftP, Config.liftI, Config.liftD));
 
     public LiftAction(int height, double power) {
         this.height = height;
@@ -144,19 +170,11 @@ class LiftAction extends Action {
 // Movement Action, called MvntAction to persevere the same 10 letter length to make it more readable
 class MvntAction extends Action {
     private Pose2d target = null;
-    private Pose2d direction = null;
-    private final double maxPower;
+    private double[] direction = null;
+    private Double maxPower = null;
 
     public MvntAction(Pose2d target, double maxPower) {
-        this(target, maxPower, false);
-    }
-
-    public MvntAction(Pose2d direction, double maxPower, boolean isDirection) {
-        if (!isDirection) {
-            this.target = direction;
-        } else {
-            this.direction = direction;
-        }
+        this.target = target;
         this.maxPower = maxPower;
     }
 
@@ -165,17 +183,25 @@ class MvntAction extends Action {
         this.maxPower = Config.powerMultiplier;
     }
 
+    public MvntAction(double[] direction) {
+        this.direction = direction;
+    }
+
     @Override
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         if (target == null) {
             movement.move(target, maxPower);
         }
         Pose2d pose = rrDrive.getPose();
-        double[] powers = Movement.absMovement(direction.getX(), direction.getY(), direction.getHeading(), pose.getHeading());
+        double[] powers = Movement.absMovement(direction[0], direction[1], direction[2], pose.getHeading());
+        robot.drive.setDrivePowers(powers[0], powers[1], powers[2], powers[3]);
     }
 
     @Override
     public boolean isDone(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
+        if (direction != null) {
+            return false;
+        }
         // same as in movement.move, just inverted to be isDone instead of continueNextLoop
         double tolerance = Config.tolerance;
         double toleranceH = Config.toleranceH;
