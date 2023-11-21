@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode.Auton;
 
-import androidx.appcompat.widget.AppCompatCheckedTextView;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Control.Movement;
@@ -14,8 +11,8 @@ import org.firstinspires.ftc.teamcode.ObjectDet.ObjectDetector;
 import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.Auton.Actor.ActionInput;
-import org.firstinspires.ftc.teamcode.Auton.Actor.ActionInput.inputType;
+import org.firstinspires.ftc.teamcode.Auton.OldActor.ActionInput;
+import org.firstinspires.ftc.teamcode.Auton.OldActor.ActionInput.inputType;
 
 @Autonomous
 public class AUTON_RED_UPDATED extends LinearOpMode {
@@ -42,7 +39,7 @@ public class AUTON_RED_UPDATED extends LinearOpMode {
         inputType Lift = inputType.LIFT;
         inputType Claw = inputType.CLAW;
         inputType Mvmt = inputType.MOVEMENT;
-        Actor actor = new Actor(hardwareMap, telemetry, robot, rrDrive, 5000);
+        OldActor actor = new OldActor(hardwareMap, telemetry, robot, rrDrive, 5000);
         if (objectCenter != null) {
             int centerX = objectCenter[0];
             if (centerX < third) { // left
