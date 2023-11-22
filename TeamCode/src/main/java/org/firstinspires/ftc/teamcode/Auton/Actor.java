@@ -183,8 +183,8 @@ class MvntAction extends Action {
         this.maxPower = Config.powerMultiplier;
     }
 
-    public MvntAction(double[] direction) {
-        this.direction = direction;
+    public MvntAction(double x, double y, double rx) {
+        this.direction = new double[] {x, y, rx};
     }
 
     @Override
