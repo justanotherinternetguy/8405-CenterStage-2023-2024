@@ -63,37 +63,30 @@ public class AUTON_RED_NEAR extends LinearOpMode {
                         .add(new MvntAction(new Pose2d(24, 34.5, new Rotation2d(Math.toRadians(90)))))          // move back from the board and lower lift
                         .add(new LiftAction(Config.FLOOR + 40, Config.liftMotorPowerDown * 0.8), true)
                         .add(new MvntAction(new Pose2d(24, 3, new Rotation2d(90))))                     // move to the wall
-                        .add(new MvntAction(new Pose2d(45, 3, new Rotation2d(90))));
-//                };
+                        .add(new MvntAction(new Pose2d(45, 3, new Rotation2d(90))));                    // park
             }
             else if (centerX > 2 * third) { // right
                 direction = 1;
-//                paths = new Point[]{
-//                        new Point(Config.powerMultiplier * 0.8),
-//                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity), true, true),
-//                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
-//                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0)))),
-//                        new Point(new Pose2d(3, 30, new Rotation2d(Math.toRadians(90))), false, true),
-//                        new Point(new Pose2d(3, 30, new Rotation2d(Math.toRadians(90))), new LiftPoint(100, Config.liftMotorPowerAuton + Config.gravity),false, true),
-////                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(300, Config.liftMotorPowerAuton + Config.gravity)),
-//                        new Point(new Pose2d(-1, 30, new Rotation2d(Math.toRadians(90)))),
-//                        new Point(new Pose2d(-1, 14, new Rotation2d(Math.toRadians(90)))),
-//                        new Point(new Pose2d(12, 14, new Rotation2d(Math.toRadians(90)))),
-//                        new Point(Config.powerMultiplier * 0.9),
-////                        new Point(new Pose2d(24, 22, new Rotation2d(Math.toRadians(90))), new LiftPoint(500, Config.liftMotorPowerAuton + Config.gravity)),
-//                        new Point(new Pose2d(24, 22, new Rotation2d(Math.toRadians(90)))),
-//                        new Point(new Pose2d(24, 22, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, (Config.liftMotorPowerAuton * 1.1) + Config.gravity)),
-//                        new Point(Config.BOARDSPEED * 1.4),
-//                        new Point(new Pose2d(Config.BACKSPOT, 24, new Rotation2d(Math.toRadians(90)))),
-//                        new Point(new double[]{Config.BOARDSPEED, 0.0, 0.0}, 1900.0),
-////                        new Point(new LiftPoint(Config.LIFT_BACK - 75, Config.liftMotorPowerDown)),
-//                        new Point(new LiftPoint(Config.LIFT_BACK - 100, Config.liftMotorPowerDown * 0.8)),
-//                        new Point(false, false),
-//                        new Point(Config.powerMultiplier),
-//                        new Point(new Pose2d(24, 22, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR+30, Config.liftMotorPowerDown * 0.8)),
-//                        new Point(new Pose2d(24, 3, new Rotation2d(Math.toRadians(90)))),
-//                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
-//                };
+                path.add(new MvntAction(new Pose2d(0, 30, new Rotation2d(0))))                 // drive to tape
+                        .add(new MvntAction(new Pose2d(3, 30, new Rotation2d(Math.toRadians(90)))))   // face tape
+                        .add(new ClawAction(ClawAction.ClawStates.bottomOpen))                               // drop purple pixel
+                        .add(new MvntAction(new Pose2d(0, 30, new Rotation2d(Math.toRadians(90)))))   // center and raise lift
+                        .add(new LiftAction(100, Config.liftMotorPowerAuton), true)
+                        .add(new MvntAction(new Pose2d(12, 14, new Rotation2d(90))))           // move back a tile and start raising lift
+                        .add(new LiftAction(Config.LIFT_BACK, Config.liftMotorPowerAuton * 1.1), true, true)
+                        .add(new MvntAction(new Pose2d(24, 14, new Rotation2d(90))))           // move forward and continue raising lift
+                        .add(new LiftAction(Config.LIFT_BACK, Config.liftMotorPowerAuton * 1.1), true, true)
+                        .add(new MvntAction(new Pose2d(Config.BACKSPOT, 22, new Rotation2d(90)))) // move to the board and continue raising lift
+                        .add(new LiftAction(Config.LIFT_BACK, Config.liftMotorPowerAuton * 1.1), true, true)
+                        .add(new MvntAction(new double[] {Config.BOARDSPEED, 0, 0}), 800)           // drive into the wall
+                        .add(new MvntAction(new double[] {Config.BOARDSPEED, 0, 0}), 400)           // continue driving into the wall and move lift down(to tilt the pixel)
+                        .add(new LiftAction(Config.LIFT_BACK - 100, Config.liftMotorPowerDown), true)
+                        .add(new MvntAction(new double[] {Config.BOARDSPEED, 0, 0}), 200)           // continue driving and drop the yellow pixel
+                        .add(new ClawAction(ClawAction.ClawStates.topOpen), true)
+                        .add(new MvntAction(new Pose2d(24, 22, new Rotation2d(Math.toRadians(90)))))  // move back from the board and lower lift
+                        .add(new LiftAction(Config.FLOOR + 40, Config.liftMotorPowerDown * 0.8), true)
+                        .add(new MvntAction(new Pose2d(24, 3, new Rotation2d(90))))           // move to the wall
+                        .add(new MvntAction(new Pose2d(45, 3, new Rotation2d(90))));          // park
             }
             else {
                 direction = 2;
