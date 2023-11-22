@@ -18,6 +18,7 @@ public class Lift {
     private Gamepad gamepad;
 
     public enum LIFT_MODE {MANUAL, MACRO, HOLD, RESET, KILL, POWEROFF, NONE}
+
     public DcMotorEx leftLift;
     public DcMotorEx rightLift;
     public Encoder encoder;
@@ -25,12 +26,12 @@ public class Lift {
 
     public int holdingPos;
 
-    public enum LAST_KEY_PRESSED{NONE, A, B, X, Y}
+    public enum LAST_KEY_PRESSED {NONE, A, B, X, Y}
 
     public LAST_KEY_PRESSED last_key_pressed = LAST_KEY_PRESSED.NONE;
 
     private PID pid;
-    private double P = 0.05 ;
+    private double P = 0.05;
 
     public ElapsedTime timer = new ElapsedTime();
     public boolean hasResetKill = false;
@@ -55,9 +56,10 @@ public class Lift {
         encoder.setDirection(Encoder.Direction.FORWARD);
 
         pid = new PID(Config.liftP, Config.liftI, Config.liftD);
-        
+
         holdingPos = -1;
     }
+
     public void liftTeleOp(Gamepad gamepad) {
         this.gamepad = gamepad;
 
@@ -66,8 +68,7 @@ public class Lift {
                 currentMode = LIFT_MODE.MANUAL;
                 holdingPos = -1;
                 liftManual(gamepad);
-            }
-            else if(gamepad.a || currentMode == LIFT_MODE.MACRO) {
+            } else if (gamepad.a || currentMode == LIFT_MODE.MACRO) {
                 currentMode = LIFT_MODE.MACRO;
                 holdingPos = -1;
                 liftMacro(gamepad);
@@ -78,9 +79,7 @@ public class Lift {
                 rightLift.setPower(0);
                 leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            }
-            else
-            {
+            } else {
 //                currentMode = LIFT_MODE.HOLD;
 //                if(holdingPos == -1)
 //                {
@@ -90,8 +89,7 @@ public class Lift {
                 setLiftPower(Config.gravity);
             }
 
-        }
-        else {
+        } else {
             if (!startedKill) {
                 timer.reset();
                 startedKill = true;
@@ -119,7 +117,7 @@ public class Lift {
     }
 
     public double liftToPos(int target, double power) {
-        double p = Range.clip(pid.getValue(target-encoder.getCurrentPosition()),-power, power);
+        double p = Range.clip(pid.getValue(target - encoder.getCurrentPosition()), -power, power);
         setLiftPower(p);
         return encoder.getCurrentPosition() - target;
     }
@@ -127,8 +125,7 @@ public class Lift {
     public void liftManual(Gamepad gamepad) {
         if (gamepad.right_trigger > 0.3 && encoder.getCurrentPosition() < Config.LIFT_MAX) {
             setLiftPower(gamepad.right_trigger + Config.gravity);
-        }
-        else if (gamepad.left_trigger > 0.3) {
+        } else if (gamepad.left_trigger > 0.3) {
             setLiftPower(-gamepad.left_trigger);
         }
 //        else
@@ -150,8 +147,7 @@ public class Lift {
 //            last_key_pressed = LAST_KEY_PRESSED.B;
 //            this.currentMode = LIFT_MODE.KILL;
 //        }
-        else if(last_key_pressed == LAST_KEY_PRESSED.A)
-        {
+        else if (last_key_pressed == LAST_KEY_PRESSED.A) {
             liftToBase();
         }
     }

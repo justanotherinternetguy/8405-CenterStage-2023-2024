@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
-@TeleOp(name="Lift Test", group="Linear Opmode")
+@TeleOp(name = "Lift Test", group = "Linear Opmode")
 public class TestLift extends LinearOpMode {
 
     @Override
@@ -25,8 +25,7 @@ public class TestLift extends LinearOpMode {
         robot.lift.rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         Encoder leftEnc = new Encoder(robot.lift.leftLift);
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
-        while(opModeIsActive())
-        {
+        while (opModeIsActive()) {
             if (gamepad1.left_trigger > 0.1) {
                 robot.lift.leftLift.setPower(-gamepad1.left_trigger);
                 robot.lift.rightLift.setPower(-gamepad1.left_trigger);

@@ -32,13 +32,13 @@ public class TestAuton extends LinearOpMode {
         odometry.reset();
         robot.drive.imu.resetYaw();
 
-        Pose2d[] path = new Pose2d[] {
-            new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(90))),
-            new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(90))), // gate
-            new Pose2d(24 * -3.25, 24 * 1.125, new Rotation2d(Math.toRadians(-90))),
-            new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
-            new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
-            new Pose2d(24 * 0.75, 24 * 1.5, new Rotation2d(Math.toRadians(90)))
+        Pose2d[] path = new Pose2d[]{
+                new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(90))),
+                new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(90))), // gate
+                new Pose2d(24 * -3.25, 24 * 1.125, new Rotation2d(Math.toRadians(-90))),
+                new Pose2d(24 * -2, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
+                new Pose2d(0, 24 * 2.125, new Rotation2d(Math.toRadians(-90))),
+                new Pose2d(24 * 0.75, 24 * 1.5, new Rotation2d(Math.toRadians(90)))
         };
 
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();

@@ -184,7 +184,7 @@ class MvntAction extends Action {
     }
 
     public MvntAction(double x, double y, double rx) {
-        this.direction = new double[] {x, y, rx};
+        this.direction = new double[]{x, y, rx};
     }
 
     @Override

@@ -30,7 +30,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Rotation;
 public class Odometry {
     public static final double TRACK_WIDTH = 14.6;
     public static final double CENTER_WHEEL_OFFSET = -0.5;
-    public static final double WHEEL_DIAMETER = 35.0/25.4;
+    public static final double WHEEL_DIAMETER = 35.0 / 25.4;
     public static final double TICKS_PER_REV = 8192.0;
     public static final double DISTANCE_PER_PULSE = Math.PI * WHEEL_DIAMETER / TICKS_PER_REV;
     public static final double MAX_ACCEL = 40;
@@ -64,7 +64,7 @@ public class Odometry {
         odometry.updatePose();
         pose = odometry.getPose();
     }
-    
+
     public Pose2d getPose() {
         return new Pose2d(pose.getY(), pose.getX(), pose.getRotation());
     }
@@ -83,7 +83,7 @@ public class Odometry {
 
 
     public double[] getEncoders() {
-        return new double[]{ leftOdometer.getPosition(), rightOdometer.getPosition(), centerOdometer.getPosition() };
+        return new double[]{leftOdometer.getPosition(), rightOdometer.getPosition(), centerOdometer.getPosition()};
     }
 
     public void reset() {

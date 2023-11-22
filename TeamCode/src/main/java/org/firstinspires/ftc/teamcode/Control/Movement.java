@@ -30,7 +30,10 @@ public class Movement {
     private double tolerance;
     private double toleranceH;
     private Telemetry telemetry;
-    public enum DIRECTION{LEFT, RIGHT};
+
+    public enum DIRECTION {LEFT, RIGHT}
+
+    ;
     private ElapsedTime timer;
 
     public Movement(Drive drive, SampleMecanumDrive rrDrive, Supplier<Boolean> opModeIsActive, PID.Config drivePIDConfig, PID.Config headingPIDConfig, double tolerance, double toleranceH, Telemetry telemetry) {
@@ -53,10 +56,9 @@ public class Movement {
     public void strafeAt(double power, Pose2d initial, DIRECTION direction)//attempts to perfectly strafe either left or right
     {
         Pose2d pose = rrDrive.getPose();
-        double y = driveYPID.getValue(initial.getY()-pose.getY());
+        double y = driveYPID.getValue(initial.getY() - pose.getY());
         double rx = headingPID.getValue(utils.angleDifference(Math.toDegrees(initial.getHeading()), Math.toDegrees(pose.getHeading())));
-        if(direction == DIRECTION.LEFT)
-        {
+        if (direction == DIRECTION.LEFT) {
             power = -power;//reverse power to tell it to go left
         }
         double botHeading = -pose.getRotation().getRadians();
@@ -89,9 +91,9 @@ public class Movement {
         Pose2d pose = rrDrive.getPose();
 
         //this didn't work cause we never updated elapsed time in the loop - be my guest if you still wanna try
-            // elapsed_time is updated at the very top of the loop, we didn't really seem to have much issues with the actual accel, decell but rather random
-            // movements(such as the bot would drive out to like 4,12 then to 0,24 rather than directly to 24
-            // that and trying to match pid and profiles enough(i think we can try using profile as a cap rather than a value for the pid)
+        // elapsed_time is updated at the very top of the loop, we didn't really seem to have much issues with the actual accel, decell but rather random
+        // movements(such as the bot would drive out to like 4,12 then to 0,24 rather than directly to 24
+        // that and trying to match pid and profiles enough(i think we can try using profile as a cap rather than a value for the pid)
         //but elapsed time should then be a function parameter: NO LOOPS IN HERE PLEASE
 //        double instantTargetPositionX = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getX(), elapsed_time) + init.getX();
 //        double instantTargetPositionY = MotionProfile.motion_profile(Config.MAX_ACCEL, Config.MAX_VELOCITY, init_target_pose.getY(), elapsed_time) + init.getY(); // (-90 - 90) + 90 = -180 + 90 = -90
@@ -101,12 +103,12 @@ public class Movement {
         double y = driveYPID.getValue(target.getY() - pose.getY());
         double rx = headingPID.getValue(utils.angleDifference(target.getRotation().getDegrees(), Math.toDegrees(pose.getHeading())));
         double botHeading = -pose.getRotation().getRadians();    //i won't change it cause it seems to work but y?
-                                                                    // just smt that happened when trying to get two wheel working, fixed in getPose()
+        // just smt that happened when trying to get two wheel working, fixed in getPose()
         double[] powers = absMovement(x, y, rx, botHeading);
 
         //dont spam telemetry on the actual driver hub, use dash if u want all this data
 
-        dashTelem.addData("power", Arrays.toString(new Double[] {x, y, rx}));
+        dashTelem.addData("power", Arrays.toString(new Double[]{x, y, rx}));
         dashTelem.addData("error Heading", utils.angleDifference(target.getRotation().getDegrees(), Math.toDegrees(pose.getHeading())));
         dashTelem.addData("error X", target.getX() - pose.getX());
         dashTelem.addData("error Y", target.getY() - pose.getY());
@@ -115,7 +117,7 @@ public class Movement {
         dashTelem.update();
 
 
-        drive.setDrivePowers(powers[0]*power, powers[1]*power, powers[2]*power, powers[3]*power);
+        drive.setDrivePowers(powers[0] * power, powers[1] * power, powers[2] * power, powers[3] * power);
         //returns if we're there for the outside loop. can easily change to &&'s(which I recommend)
 
         return Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > toleranceH;
@@ -131,6 +133,6 @@ public class Movement {
         double frontRightPower = (rotY - rotX - rx) / denominator;
         double backRightPower = (rotY + rotX - rx) / denominator;
 
-        return new double[] { frontLeftPower, frontRightPower, backLeftPower, backRightPower };
+        return new double[]{frontLeftPower, frontRightPower, backLeftPower, backRightPower};
     }
 }

@@ -28,8 +28,8 @@ public class Claw {
         topServo = hardwareMap.get(CRServo.class, "frontservo");
         bottomServo = hardwareMap.get(CRServo.class, "backservo");
     }
-    public void setPower(double bPower, double tPower)
-    {
+
+    public void setPower(double bPower, double tPower) {
         bottomServo.setPower(bPower);
         topServo.setPower(tPower);
     }
@@ -47,8 +47,7 @@ public class Claw {
                 bottomClaw = !bottomClaw;
                 timer.reset();
                 inBurst = true;
-            }
-            else if (topClaw == false && bottomClaw == false) {
+            } else if (topClaw == false && bottomClaw == false) {
                 topClaw = !topClaw;
                 bottomClaw = !bottomClaw;
             }

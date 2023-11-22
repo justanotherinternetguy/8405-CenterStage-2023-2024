@@ -18,9 +18,10 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 
 
-@TeleOp(name="Mecanum Drive", group="Linear Opmode")
+@TeleOp(name = "Mecanum Drive", group = "Linear Opmode")
 public class TeleOpControl extends LinearOpMode {
     public static boolean slowMode = false;
+
     @Override
     public void runOpMode() {
 
@@ -60,8 +61,7 @@ public class TeleOpControl extends LinearOpMode {
             telemetry.addData("kill", robot.lift.startedKill);
             robot.claw.input(gamepad1);
 //            robot.claw.setPower(-1, -1);
-            if(gamepad1.x && !lastX)
-            {
+            if (gamepad1.x && !lastX) {
                 slowMode = !slowMode;
             }
             lastX = gamepad1.x;
@@ -109,7 +109,7 @@ public class TeleOpControl extends LinearOpMode {
             tel.addData("!RIGHT ENCODER: ", robot.odom.getEncoders()[1]);
             tel.addData("!CENTER ENCODER: ", robot.odom.getEncoders()[2]);
 
-             tel.update();
+            tel.update();
 
 //            telemetry.addData("maxfps", apriltags.camera.getCurrentPipelineMaxFps());
 //            telemetry.addData("fps", apriltags.camera.getFps());

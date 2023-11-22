@@ -46,28 +46,21 @@ public class TestAlignment extends LinearOpMode {
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
         while (opModeIsActive()) {
 
-            if(!isAligned)
-            {
+            if (!isAligned) {
                 double[] pos = apriltags.searchFor(id);
                 //Telemetry tel = FtcDashboard.getInstance().getTelemetry();
                 tel.addData("pos", Arrays.toString(pos));
                 tel.addData("diff", pos != null ? pos[1] - apriltag_x : "none");
-                if(pos == null && lastPos != null)
-                {
+                if (pos == null && lastPos != null) {
                     pos = lastPos;
                 }
-                if(pos != null) {
+                if (pos != null) {
                     tel.addData("X: ", pos[1]);
-                    if (pos[1] - apriltag_x < -thres)
-                    {
+                    if (pos[1] - apriltag_x < -thres) {
                         movement.strafeAt(Config.alignment, initial, Movement.DIRECTION.LEFT);
-                    }
-                    else if(pos[1] - apriltag_x > thres)
-                    {
+                    } else if (pos[1] - apriltag_x > thres) {
                         movement.strafeAt(Config.alignment, initial, Movement.DIRECTION.RIGHT);
-                    }
-                    else
-                    {
+                    } else {
                         isAligned = true;
                         tel.addLine("DONE!");
                     }

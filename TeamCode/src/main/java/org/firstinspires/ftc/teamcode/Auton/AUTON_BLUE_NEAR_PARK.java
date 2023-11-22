@@ -40,7 +40,7 @@ public class AUTON_BLUE_NEAR_PARK extends LinearOpMode {
 
 
         int[] objectCenter = teamPropDet.search();
-        double third = 1920.0/3+100; // middle of camera, change later
+        double third = 1920.0 / 3 + 100; // middle of camera, change later
         int direction = -1;
         if (objectCenter != null) {
             int centerX = objectCenter[0];
@@ -52,11 +52,10 @@ public class AUTON_BLUE_NEAR_PARK extends LinearOpMode {
                         new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
                         new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0)))),
                         new Point(new Pose2d(-3, 30, new Rotation2d(Math.toRadians(-90))), false, true),
-                        new Point(new Pose2d(-3, 30, new Rotation2d(Math.toRadians(-90))), new LiftPoint(100, Config.liftMotorPowerAuton + Config.gravity),false, true),
+                        new Point(new Pose2d(-3, 30, new Rotation2d(Math.toRadians(-90))), new LiftPoint(100, Config.liftMotorPowerAuton + Config.gravity), false, true),
                         new Point(new Pose2d(-45, 3, new Rotation2d(Math.toRadians(-90)))),
                 };
-            }
-            else if (centerX > 2 * third) { // right
+            } else if (centerX > 2 * third) { // right
                 direction = 1;
                 Config.FLOOR = 27;
                 paths = new Point[]{
@@ -83,19 +82,18 @@ public class AUTON_BLUE_NEAR_PARK extends LinearOpMode {
 //                        new Point(new Pose2d(-20, 1, new Rotation2d(Math.toRadians(-90)))),
 //                        new Point(new Pose2d(-45, 1, new Rotation2d(Math.toRadians(-90)))),
 
-                                                new Point(Config.powerMultiplier * 0.8),
+                        new Point(Config.powerMultiplier * 0.8),
                         new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity), true, true),
                         new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
                         new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0)))),
                         new Point(new Pose2d(3, 30, new Rotation2d(Math.toRadians(90))), false, true),
-                        new Point(new Pose2d(3, 30, new Rotation2d(Math.toRadians(90))), new LiftPoint(100, Config.liftMotorPowerAuton + Config.gravity),false, true),
+                        new Point(new Pose2d(3, 30, new Rotation2d(Math.toRadians(90))), new LiftPoint(100, Config.liftMotorPowerAuton + Config.gravity), false, true),
                         new Point(new Pose2d(-45, 3, new Rotation2d(Math.toRadians(-90)))),
                 };
-            }
-            else {
+            } else {
                 direction = 2;
                 paths = new Point[]{ // center
-                        new Point(Config.powerMultiplier*0.9),
+                        new Point(Config.powerMultiplier * 0.9),
                         new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR + 30, Config.liftMotorFloor + Config.gravity)),
                         new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
                         new Point(new Pose2d(0, 33, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR + 70, Config.liftMotorFloor + Config.gravity), true, true),
@@ -144,10 +142,12 @@ public class AUTON_BLUE_NEAR_PARK extends LinearOpMode {
     public static class LiftPoint {
         public int height;
         public double power;
+
         public LiftPoint(int height, double power) {
             this.height = height;
             this.power = power;
         }
+
         public LiftPoint(int height) {
             this.height = height;
             this.power = Config.liftMotorPowerMacro;
@@ -181,50 +181,50 @@ public class AUTON_BLUE_NEAR_PARK extends LinearOpMode {
             this.Kp = pid.getKp();
             this.Ki = pid.getKi();
             this.Kd = pid.getKd();
-            this.maxIntegralSum = 0.25/this.Ki;
+            this.maxIntegralSum = 0.25 / this.Ki;
         }
 
         public double calc(double target, double current) {
-                // calculate the error
-                double error = target - current;
+            // calculate the error
+            double error = target - current;
 
-                double errorChange = (error - lastError);
+            double errorChange = (error - lastError);
 
-                // filter out hight frequency noise to increase derivative performance
-                currentFilterEstimate = (a * previousFilterEstimate) + (1-a) * errorChange;
-                previousFilterEstimate = currentFilterEstimate;
+            // filter out hight frequency noise to increase derivative performance
+            currentFilterEstimate = (a * previousFilterEstimate) + (1 - a) * errorChange;
+            previousFilterEstimate = currentFilterEstimate;
 
-                // rate of change of the error
-                double derivative = currentFilterEstimate / timer.seconds();
+            // rate of change of the error
+            double derivative = currentFilterEstimate / timer.seconds();
 
-                // sum of all error over time
-                integralSum = integralSum + (error * timer.seconds());
+            // sum of all error over time
+            integralSum = integralSum + (error * timer.seconds());
 
 
-                // max out integral sum
-                if (integralSum > maxIntegralSum) {
-                    integralSum = maxIntegralSum;
-                }
-
-                if (integralSum < -maxIntegralSum) {
-                    integralSum = -maxIntegralSum;
-                }
-
-                // reset integral sum upon setpoint changes
-                if (target != lastTarget) {
-                    integralSum = 0;
-                }
-
-                double out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
-
-                lastError = error;
-
-                lastTarget = target;
-
-                // reset the timer for next time
-                timer.reset();
-                return out;
+            // max out integral sum
+            if (integralSum > maxIntegralSum) {
+                integralSum = maxIntegralSum;
             }
+
+            if (integralSum < -maxIntegralSum) {
+                integralSum = -maxIntegralSum;
+            }
+
+            // reset integral sum upon setpoint changes
+            if (target != lastTarget) {
+                integralSum = 0;
+            }
+
+            double out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
+
+            lastError = error;
+
+            lastTarget = target;
+
+            // reset the timer for next time
+            timer.reset();
+            return out;
+        }
     }
 
     public static class Point {
@@ -239,56 +239,67 @@ public class AUTON_BLUE_NEAR_PARK extends LinearOpMode {
         public double[] powers;
         public Double duration = null;
         public ElapsedTime timer = null;
+
         public Point(double speed) {
             this.speed = speed;
         }
+
         public Point(double[] powers, Double duration) {
             this.powers = powers;
             this.duration = duration;
         }
+
         public Point(double[] powers, Double duration, boolean bottom, boolean top) {
             this.powers = powers;
             this.duration = duration;
             this.bottomClaw = bottom;
             this.topClaw = top;
         }
+
         public Point(Pose2d pose, LiftPoint lift, boolean bottom, boolean top) {
             this.pose = pose;
             this.lift = lift;
             this.bottomClaw = bottom;
             this.topClaw = top;
         }
+
         public Point(Pose2d pose) {
             this.pose = pose;
         }
+
         public Point(LiftPoint lift) {
             this.lift = lift;
         }
+
         public Point(boolean bottomClaw, boolean topClaw) {
             this.bottomClaw = bottomClaw;
             this.topClaw = topClaw;
         }
+
         public Point(Pose2d pose, LiftPoint lift) {
             this.pose = pose;
             this.lift = lift;
         }
+
         public Point(Pose2d pose, boolean bottomClaw, boolean topClaw) {
             this.pose = pose;
             this.bottomClaw = bottomClaw;
             this.topClaw = topClaw;
         }
+
         public Point(LiftPoint lift, boolean bottomClaw, boolean topClaw) {
             this.lift = lift;
             this.bottomClaw = bottomClaw;
             this.topClaw = topClaw;
         }
+
         public boolean move(Robot robot, Movement movement, Telemetry tel) {
             if (this.duration != null) {
                 if (this.timer == null) {
                     timer = new ElapsedTime();
                 }
                 if (timer.milliseconds() > this.duration) {
-                    robot.drive.setDrivePowers(0,0,0,0);
+                    robot.drive.setDrivePowers(0, 0, 0, 0);
                     return true;
                 } else {
                     robot.drive.mecanumDrive(this.powers[0], this.powers[1], this.powers[2]);

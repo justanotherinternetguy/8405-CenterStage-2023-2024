@@ -44,19 +44,19 @@ public class PIDTuning extends LinearOpMode {
                             new Pose2d(24, 0, new Rotation2d(Math.toRadians(90))),
                     };
                 } else if (gamepad1.left_bumper) {
-                    path = new Pose2d[] {
+                    path = new Pose2d[]{
                             new Pose2d(0, 0, new Rotation2d(Math.toRadians(90)))
                     };
                 } else if (gamepad1.right_bumper) {
-                    path = new Pose2d[] {
+                    path = new Pose2d[]{
                             new Pose2d(0, 0, new Rotation2d(Math.toRadians(180)))
                     };
                 } else if (gamepad1.left_trigger > 0.5) {
-                    path = new Pose2d[] {
+                    path = new Pose2d[]{
                             new Pose2d(24, 24, new Rotation2d(0))
                     };
                 } else if (gamepad1.right_trigger > 0.5) {
-                    path = new Pose2d[] {
+                    path = new Pose2d[]{
                             new Pose2d(24, 24, new Rotation2d(Math.toRadians(90)))
                     };
                 }
@@ -65,7 +65,7 @@ public class PIDTuning extends LinearOpMode {
             telemetry.addData("pose", rrDrive.getPose().toString());
             telemetry.update();
             if (!movement.move(path[0])) {
-                robot.drive.setDrivePowers(0,0,0,0);
+                robot.drive.setDrivePowers(0, 0, 0, 0);
                 telemetry.addData("Done", "done");
                 telemetry.update();
                 path = null;

@@ -41,7 +41,7 @@ public class AUTON_RED_NEAR extends LinearOpMode {
                 .add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed)); // close claw
 
         int[] objectCenter = teamPropDet.search();
-        double third = 1920.0/3+100; // middle of camera, change later
+        double third = 1920.0 / 3 + 100; // middle of camera, change later
         int direction = -1;
         if (objectCenter != null) {
             int centerX = objectCenter[0];
@@ -64,8 +64,7 @@ public class AUTON_RED_NEAR extends LinearOpMode {
                         .add(new LiftAction(Config.FLOOR + 40, Config.liftMotorPowerDown * 0.8), true)
                         .add(new MvntAction(pose2d(24, 3, 90)))             // move to the wall
                         .add(new MvntAction(pose2d(45, 3, 90)));            // park
-            }
-            else if (centerX > 2 * third) { // right
+            } else if (centerX > 2 * third) { // right
                 direction = 1;
                 path.add(new MvntAction(pose2d(0, 30, 0)))                 // drive to tape
                         .add(new MvntAction(pose2d(3, 30, 90)))            // face tape
@@ -87,8 +86,7 @@ public class AUTON_RED_NEAR extends LinearOpMode {
                         .add(new LiftAction(Config.FLOOR + 40, Config.liftMotorPowerDown * 0.8), true)
                         .add(new MvntAction(pose2d(24, 3, 90)))             // move to the wall
                         .add(new MvntAction(pose2d(45, 3, 90)));            // park
-            }
-            else {
+            } else {
                 direction = 2;
                 path.add(new MvntAction(pose2d(0, 28, 0)))                   // move to tape
                         .add(new ClawAction(ClawAction.ClawStates.bottomOpen))               // drop purple pixel
@@ -127,7 +125,7 @@ public class AUTON_RED_NEAR extends LinearOpMode {
             tel.update();
         }
     }
-    
+
     public static Pose2d pose2d(double x, double y, double heading) {
         return new Pose2d(x, y, new Rotation2d(Math.toRadians(heading)));
     }
