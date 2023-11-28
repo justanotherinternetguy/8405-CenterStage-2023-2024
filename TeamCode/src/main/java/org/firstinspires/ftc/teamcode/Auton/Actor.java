@@ -189,7 +189,7 @@ class MvntAction extends Action {
 
     @Override
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
-        if (target == null) {
+        if (target != null) {
             movement.move(target, maxPower);
         }
         Pose2d pose = rrDrive.getPose();
