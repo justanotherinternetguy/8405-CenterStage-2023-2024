@@ -25,16 +25,15 @@ public class testTeleOp extends LinearOpMode {
 
         Robot robot = new Robot(hardwareMap, gamepad1);
         Claw claw = robot.claw;
-        double lastPos = 0;
         while (opModeIsActive()) {
-            if(gamepad1.left_stick_y != 0)
+            if(gamepad1.x)
             {
-                lastPos = gamepad1.left_stick_y;
+                claw.clawServo.setPosition(0.775);
             }
-            claw.topServo.setPower(lastPos);
-            telemetry.addData("POSITION: ", lastPos);
+            if (gamepad1.y) {
+                claw.clawServo.setPosition(1);
+            }
             telemetry.update();
         }
-
         }
 }

@@ -392,7 +392,7 @@ public class AUTON_BLUE_NEAR extends LinearOpMode {
             if (this.bottomClaw != null) {
                 double bottomPower = this.bottomClaw ? Config.bottomServoClose : Config.bottomServoOpen;
                 double topPower = this.topClaw ? Config.topServoClose : Config.topServoOpen;
-                robot.claw.setPower(bottomPower, topPower);
+                robot.claw.setPos(bottomPower, topPower);
             }
             return atPose && atLift;
         }

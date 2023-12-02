@@ -52,11 +52,11 @@ public class Config {
     public static int mask2US = 255;
     public static int mask2UV = 255;
 
-    public static double topServoClose = 0.275;
-    public static double topServoOpen = 0.4;
-    public static double bottomServoClose = -0.075;
-    public static double bottomServoOpen = 0;
-    public static double clawServoFloor = 0.5;
+    public static double topServoClose = 0.15;
+    public static double topServoOpen = 1;
+    public static double bottomServoClose = 0.2;
+    public static double bottomServoOpen = 1;
+    public static double clawServoFloor = 0.775;
     public static double clawServoBackboard = 1;
 
 

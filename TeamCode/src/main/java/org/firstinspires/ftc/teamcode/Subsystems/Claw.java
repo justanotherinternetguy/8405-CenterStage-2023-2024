@@ -10,9 +10,9 @@ import org.firstinspires.ftc.robotcore.internal.system.CloseableOnFinalize;
 import org.firstinspires.ftc.teamcode.Auton.Config;
 
 public class Claw {
-    public CRServo clawServo;
-    public CRServo bottomServo;
-    public CRServo topServo;
+    public Servo clawServo;
+    public Servo bottomServo;
+    public Servo topServo;
 
     public Gamepad gamepad;
 
@@ -27,14 +27,14 @@ public class Claw {
 
     public Claw(HardwareMap hardwareMap, Gamepad gamepad) {
         this.gamepad = gamepad;
-        topServo = hardwareMap.get(CRServo.class, "frontServo");
-        bottomServo = hardwareMap.get(CRServo.class, "backServo");
-        clawServo = hardwareMap.get(CRServo.class, "clawServo");
+        topServo = hardwareMap.get(Servo.class, "frontServo");
+        bottomServo = hardwareMap.get(Servo.class, "backServo");
+        clawServo = hardwareMap.get(Servo.class, "clawServo");
     }
 
-    public void setPower(double bPower, double tPower) {
-        bottomServo.setPower(bPower);
-        topServo.setPower(tPower);
+    public void setPos(double bPos, double tPos) {
+        bottomServo.setPosition(bPos);
+        topServo.setPosition(tPos);
     }
 
     public void input(Gamepad gamepad1) {
@@ -63,19 +63,19 @@ public class Claw {
         lastLeftBumper = gamepad1.left_bumper;
         lastBurstButtom = gamepad1.y;
         if (bottomClaw) {
-            bottomServo.setPower(Config.bottomServoClose);
+            bottomServo.setPosition(Config.bottomServoClose);
         } else {
-            bottomServo.setPower(Config.bottomServoOpen);
+            bottomServo.setPosition(Config.bottomServoOpen);
         }
         if (topClaw) {
-            topServo.setPower(Config.topServoClose);
+            topServo.setPosition(Config.topServoClose);
         } else {
-            topServo.setPower(Config.topServoOpen);
+            topServo.setPosition(Config.topServoOpen);
         }
         if (isBackboard) {
-            clawServo.setPower(Config.clawServoBackboard);
+            clawServo.setPosition(Config.clawServoBackboard);
         } else {
-            clawServo.setPower(Config.clawServoFloor);
+            clawServo.setPosition(Config.clawServoFloor);
         }
     }
 }

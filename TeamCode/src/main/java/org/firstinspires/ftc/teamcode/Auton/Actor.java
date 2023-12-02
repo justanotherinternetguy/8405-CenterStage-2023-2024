@@ -127,16 +127,16 @@ class ClawAction extends Action {
         for (ClawStates state : states) {
             switch (state) {
                 case topOpen:
-                    robot.claw.topServo.setPower(Config.topServoOpen);
+                    robot.claw.topServo.setPosition(Config.topServoOpen);
                     break;
                 case topClosed:
-                    robot.claw.topServo.setPower(Config.topServoClose);
+                    robot.claw.topServo.setPosition(Config.topServoClose);
                     break;
                 case bottomOpen:
-                    robot.claw.bottomServo.setPower(Config.bottomServoOpen);
+                    robot.claw.bottomServo.setPosition(Config.bottomServoOpen);
                     break;
                 case bottomClosed:
-                    robot.claw.bottomServo.setPower(Config.bottomServoClose);
+                    robot.claw.bottomServo.setPosition(Config.bottomServoClose);
                     break;
             }
         }
