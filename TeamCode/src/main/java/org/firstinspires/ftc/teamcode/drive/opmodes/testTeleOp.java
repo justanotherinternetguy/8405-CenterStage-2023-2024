@@ -28,12 +28,9 @@ public class testTeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             if(gamepad1.x)
             {
-                claw.clawServo.setPosition(0.775);
-            }
-            if (gamepad1.y) {
-                claw.clawServo.setPosition(1);
+                claw.topServo.setPosition(Config.topServoOpen);
             }
             telemetry.update();
         }
-        }
+    }
 }

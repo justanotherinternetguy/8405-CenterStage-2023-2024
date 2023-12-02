@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
 import org.firstinspires.ftc.teamcode.util.Encoder;
@@ -60,14 +62,14 @@ public class Lift {
         holdingPos = -1;
     }
 
-    public void liftTeleOp(Gamepad gamepad) {
+    public void liftTeleOp(Gamepad gamepad, Telemetry tel) {
         this.gamepad = gamepad;
 
         if (currentMode != LIFT_MODE.KILL) {
             if (gamepad.right_trigger > 0.2 || gamepad.left_trigger > 0.2) {
                 currentMode = LIFT_MODE.MANUAL;
                 holdingPos = -1;
-                liftManual(gamepad);
+                liftManual(gamepad, tel);
             } else if (gamepad.a || currentMode == LIFT_MODE.MACRO) {
                 currentMode = LIFT_MODE.MACRO;
                 holdingPos = -1;
@@ -80,15 +82,8 @@ public class Lift {
                 leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             } else {
-//                currentMode = LIFT_MODE.HOLD;
-//                if(holdingPos == -1)
-//                {
-//                    holdingPos = Math.min(encoder.getCurrentPosition(), Config.LIFT_MAX);
-//                }
-//                liftToPos(holdingPos,  Config.liftMotorPowerHold);
                 setLiftPower(-Config.gravity);
             }
-
         } else {
             if (!startedKill) {
                 timer.reset();
@@ -122,11 +117,13 @@ public class Lift {
         return encoder.getCurrentPosition() - target;
     }
 
-    public void liftManual(Gamepad gamepad) {
+    public void liftManual(Gamepad gamepad, Telemetry tel) {
         if (gamepad.right_trigger > 0.2 && encoder.getCurrentPosition() < Config.LIFT_MAX) {
             setLiftPower(-gamepad.right_trigger - Config.gravity); // triggers were flipped 4 some reason
+            tel.addData("lp", -gamepad.right_trigger - Config.gravity);
         } else if (gamepad.left_trigger > 0.2) {
             setLiftPower(gamepad.left_trigger);
+            tel.addData("lp", gamepad.left_trigger);
         }
 //        else
 //        {

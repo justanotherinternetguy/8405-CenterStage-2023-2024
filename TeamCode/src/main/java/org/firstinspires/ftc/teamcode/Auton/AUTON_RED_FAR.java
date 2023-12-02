@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
-public class AUTON_BLUE_NEAR extends LinearOpMode {
+public class AUTON_RED_FAR extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         ObjectDetector teamPropDet;
@@ -47,12 +47,10 @@ public class AUTON_BLUE_NEAR extends LinearOpMode {
                 direction = 0;
                 paths = new Point[]{
                         new Point(Config.powerMultiplier * 0.8),
+                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity)),
                         new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
-                        new Point(true),
                         new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0)))),
-                        new Point(false),
-                        new Point(new Pose2d(3, 28, new Rotation2d(Math.toRadians(90))), false, true),
-                        new Point(true),
+                        new Point(new Pose2d(-3, 28, new Rotation2d(Math.toRadians(-90))), false, true),
 ////                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(300, Config.liftMotorPowerAuton + Config.gravity)),
 //                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(-90)))),
 //                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(90)))),
@@ -67,23 +65,18 @@ public class AUTON_BLUE_NEAR extends LinearOpMode {
 //                        new Point(false, false),
 //                        new Point(Config.powerMultiplier),
 //                        new Point(new Pose2d(20, 34.5, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR, Config.liftMotorPowerDown)),
-                        new Point(new Pose2d(-20, 3, new Rotation2d(Math.toRadians(-90)))),
-                        new Point(new Pose2d(-45, 3, new Rotation2d(Math.toRadians(-90)))),
+//                        new Point(new Pose2d(20, 3, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
                 };
             }
             else if (centerX > 2 * third) { // right
                 direction = 1;
                 paths = new Point[]{
                         new Point(Config.powerMultiplier * 0.8),
+                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity), true, true),
                         new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
-                        new Point(true),
                         new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0)))),
-                        new Point(false),
-                        new Point(new Pose2d(-3, 30, new Rotation2d(Math.toRadians(-90))), false, true),
-                        new Point(true),
-
-
-
+                        new Point(new Pose2d(3, 30, new Rotation2d(Math.toRadians(90))), false, true),
 //                        new Point(new Pose2d(3, 30, new Rotation2d(Math.toRadians(90))), new LiftPoint(100, Config.liftMotorPowerAuton + Config.gravity),false, true),
 ////                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(300, Config.liftMotorPowerAuton + Config.gravity)),
 //                        new Point(new Pose2d(-1, 30, new Rotation2d(Math.toRadians(90)))),
@@ -101,21 +94,18 @@ public class AUTON_BLUE_NEAR extends LinearOpMode {
 //                        new Point(false, false),
 //                        new Point(Config.powerMultiplier),
 //                        new Point(new Pose2d(24, 22, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR+30, Config.liftMotorPowerDown * 0.8)),
-                        new Point(new Pose2d(-3, 3, new Rotation2d(Math.toRadians(-90)))),
-                        new Point(new Pose2d(-24, 3, new Rotation2d(Math.toRadians(-90)))),
-                        new Point(new Pose2d(-45, 3, new Rotation2d(Math.toRadians(-90)))),
+//                        new Point(new Pose2d(3, 3, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new Pose2d(24, 3, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
                 };
             }
             else {
                 direction = 2;
                 paths = new Point[]{ // center
                         new Point(Config.powerMultiplier),
-                        new Point(true),
+                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity)),
                         new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
-                        new Point(false),
-
                         new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), false, true),
-                        new Point(true),
 //                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), new LiftPoint(300, Config.liftMotorPowerAuton + Config.gravity)),
 //                        new Point(new Pose2d(0, 26, new Rotation2d(Math.toRadians(0)))),
 //                        new Point(new Pose2d(24, 27, new Rotation2d(Math.toRadians(90))), new LiftPoint(500, Config.liftMotorPowerAuton + Config.gravity)),
@@ -128,8 +118,8 @@ public class AUTON_BLUE_NEAR extends LinearOpMode {
 //                        new Point(false, false),
 //                        new Point(Config.powerMultiplier),
 //                        new Point(new Pose2d(24, 27, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR + 40, Config.liftMotorPowerDown * 0.8)),
-                        new Point(new Pose2d(-24, 3, new Rotation2d(Math.toRadians(-90)))),
-                        new Point(new Pose2d(-45, 3, new Rotation2d(Math.toRadians(-90)))),
+//                        new Point(new Pose2d(24, 3, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
                 };
             }
         }

@@ -7,21 +7,23 @@ public class Config {
     public static double liftD = 0;
     public static double BACKSPOT = 35.5;
     public static int liftTolerance = 10;
-    public static double liftMotorFloor = 0.3;
+    public static double liftMotorFloor = 0.5;
     public static double gravity = 0.2;
     public static boolean fieldCentric = false;
     public static double XMULTI = 1.5;
     public static boolean manualWhite = false;
     public static int temp = 3334;
-    public static double translationP = 0.3;
+    //    public static double translationP = 0.3;
+    public static double translationP = 0.4;
     public static double translationI = 0.02;
     public static double translationD = 0.04;
-    public static double rotationP = 0.07;
+    //    public static double rotationP = 0.07;
+    public static double rotationP = 0.085;
     public static double rotationI = 0.0;
     public static double rotationD = 0.005;
     public static double tolerance = 1;
     public static double toleranceH = 3;
-    public static double powerMultiplier = 0.76;
+    public static double powerMultiplier = 0.85;
 
     public static double BOARDSPEED = 0.425;
 
@@ -34,8 +36,8 @@ public class Config {
     public static double liftMotorPowerDown = 0.42;
     public static int LIFT_MAX = Integer.MAX_VALUE;
     public static int LIFT_BACK = 1350;
-    public static int FLOOR = 39;
-    public static double KILLTIME = 500;
+    public static int FLOOR = 400;
+    public static double KILLTIME = 1000;
 
 
     public static int mask1LH = 0;
@@ -52,15 +54,15 @@ public class Config {
     public static int mask2US = 255;
     public static int mask2UV = 255;
 
-    public static double topServoClose = 0.2;
-    public static double topServoOpen = 0.75;
-    public static double bottomServoClose = 0.52;
-    public static double bottomServoOpen = 1;
-    public static double clawServoFloor = 0.775;
-    public static double clawServoBackboard = 1;
+    public static double topServoClose = 0;
+    public static double topServoOpen = 0.25;
+    public static double bottomServoClose = 0;
+    public static double bottomServoOpen = 0.6125;
+    public static double clawServoFloor = 1;
+    public static double clawServoBackboard = 0.65;
 
 
-    public static int burstDelay = 250;
+    public static int burstDelay = 1000;
 
     public static double frontMulti = 1;
 }

@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Control.Movement;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
+import org.firstinspires.ftc.teamcode.Subsystems.Lift;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utils;
@@ -53,19 +54,19 @@ public class Actor {
     }
 
     public Actor add(Action action, boolean parallel) {
-        return this.add(action, parallel);
+        return this.add(action, null,  parallel, false);
     }
 
-    public Actor add(Action action, double timeout, boolean parallel) {
+    public Actor add(Action action, Double timeout, boolean parallel) {
         return this.add(action, timeout, parallel, false);
     }
 
-    public Actor add(Action action, double timeout) {
+    public Actor add(Action action, Double timeout) {
         return this.add(action, timeout, false, false);
     }
 
     public Actor add(Action action) {
-        return this.add(action);
+        return this.add(action, null);
     }
 
     public void resetTimer() {
@@ -73,29 +74,47 @@ public class Actor {
         timer.reset();
     }
 
-    public boolean run() {
+    public int run() {
+        if (actions == null || actions.size() <= 0) {
+            return 0;
+        }
         ArrayList<Action> step = actions.get(0);
         boolean stepDone = true;
+        boolean hasHadLift = false;
         for (Action action : step) {
-            if (action.timeout != null && timer.seconds() > action.timeout) {
+            if (action.timeout != null && timer.milliseconds() > action.timeout) {
                 continue; // per action timeout(null is no timeout)
             }
-            // if the action is not done we run it and set stepDone to false so we don't move onto the next step until all actions are completed
+//             if the action is not done we run it and set stepDone to false so we don't move onto the next step until all actions are completed
             if (action.perpetual) {
                 action.run(hw, tm, robot, rrDrive, movement);
+                if (action.getClass().getName().equals(LiftAction.class.getName())) {
+                    hasHadLift = true;
+                }
                 continue; // if its perpetual we don't need to check if its done or have to override stepDone
             }
             if (!action.isDone(hw, tm, robot, rrDrive, movement)) {
                 stepDone = false;
+                if (action.getClass().getName().equals(LiftAction.class.getName())) {
+                    hasHadLift = true;
+                }
                 action.run(hw, tm, robot, rrDrive, movement);
             }
+//            stepDone = false;
+//            action.run(hw, tm, robot, rrDrive, movement);
         }
+        if (!hasHadLift) {
+            robot.lift.setLiftPower(-Config.gravity);
+        }
+        tm.addData("actions", step.size());
+        tm.addData("steps", actions.size());
         if (stepDone) {
             timer.reset();
             actions.remove(0);
         } // we move onto the next step
 
-        return actions.size() == 0;
+        return actions.size();
+//        return false;
     }
 }
 
@@ -135,6 +154,7 @@ class ClawAction extends Action {
             } else {
                 robot.claw.clawServo.setPosition(Config.clawServoFloor);
             }
+            return;
         }
         for (ClawStates state : states) {
             switch (state) {
@@ -158,6 +178,9 @@ class ClawAction extends Action {
     public boolean isDone(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         // Claw is a bit scuffed, because of the way I setup parallel actions, since isDone is always true(as we don't know the servo positon since we aren't using axons)
         // the run function would otherwise never be called, so we call it ourselves here before returning true
+        if (states == null) {
+            return false; // use timeout for time for now
+        }
         this.run(hw, tm, robot, rrDrive, movement);
         return true;
     }
@@ -178,12 +201,29 @@ class LiftAction extends Action {
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         // not gonna use liftToPos so this way we can allow for custom pid per section in the future
         double p = Range.clip(pid.calc(height, height - robot.lift.leftLift.getCurrentPosition()), -power, power);
-        robot.lift.setLiftPower(p + Config.gravity); // gravity is F in a traditional PIDF controller
+        robot.lift.setLiftPower(-p - Config.gravity); // gravity is F in a traditional PIDF controller
+
+//        double power = Range.clip(pid.calc(height, robot.lift.leftLift.getCurrentPosition()) * this.power, -Math.abs(this.power), Math.abs(this.power));
+//        robot.lift.leftLift.setPower(Config.liftMotorPowerDown);
+//        robot.lift.rightLift.setPower(Config.liftMotorPowerMacro);
+//        robot.lift.setLiftPower(Config.liftMotorPowerAuton);
+
+
+//        tm.addData("liftPower", power);
+//        tm.addData("liftTarget", height);
+//        robot.lift.setLiftPower(-(height - robot.lift.leftLift.getCurrentPosition()) * power - Config.gravity);
+//                robot.lift.leftLift.setPower(lift.power);
+//                robot.lift.rightLift.setPower(lift.power);
+//                robot.lift.leftLift.setTargetPosition(-lift.height);
+//                robot.lift.rightLift.setTargetPosition(lift.height);
+//                robot.lift.leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                robot.lift.rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        return Math.abs(robot.lift.leftLift.getCurrentPosition() - height) < Config.liftTolerance;
     }
 
     @Override
     public boolean isDone(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
-        return height - robot.lift.leftLift.getCurrentPosition() < Config.liftTolerance;
+        return Math.abs(height - robot.lift.leftLift.getCurrentPosition()) < Config.liftTolerance;
     }
 }
 
@@ -211,6 +251,7 @@ class MvntAction extends Action {
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         if (target != null) {
             movement.move(target, maxPower);
+            return;
         }
         Pose2d pose = rrDrive.getPose();
         double[] powers = Movement.absMovement(direction[0], direction[1], direction[2], pose.getHeading());

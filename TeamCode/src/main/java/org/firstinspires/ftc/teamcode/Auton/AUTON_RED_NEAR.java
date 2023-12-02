@@ -13,8 +13,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Control.Movement;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
 import org.firstinspires.ftc.teamcode.ObjectDet.ObjectDetector;
-import org.firstinspires.ftc.teamcode.Subsystems.Claw;
-import org.firstinspires.ftc.teamcode.Subsystems.Lift;
 import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -33,100 +31,330 @@ public class AUTON_RED_NEAR extends LinearOpMode {
         Movement movement = new Movement(robot.drive, rrDrive, this::opModeIsActive, translationConfig, rotationConfig, Config.tolerance, Config.toleranceH, telemetry);
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
         teamPropDet = new ObjectDetector(hardwareMap, tel);
-//        robot.claw.setPower(Config.bottomServoClose, Config.topServoClose);
         waitForStart();
         odometry.reset();
         robot.drive.imu.resetYaw();
 
-        Actor path = new Actor(hardwareMap, telemetry, robot, rrDrive, movement, 2500)
-                .add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed)) // close claw
-                .add(new ClawAction(false));
+        Point[] paths = new Point[0];
+
 
         int[] objectCenter = teamPropDet.search();
-        double third = 1920.0 / 3 + 100; // middle of camera, change later
+        double third = 1920.0/3+100; // middle of camera, change later
         int direction = -1;
         if (objectCenter != null) {
             int centerX = objectCenter[0];
             if (centerX < third) { // left
                 direction = 0;
-                path.add(new MvntAction(pose2d(0, 28, 0)))                  // drive to tape
-                        .add(new MvntAction(pose2d(-3, 28, -90)))           // face the tape
-                        .add(new ClawAction(ClawAction.ClawStates.bottomOpen))              // drop the purple pixel
-                        .add(new MvntAction(pose2d(0, 28, -90)))            // move back and up the claw
-                        .add(new LiftAction(300, Config.liftMotorPowerAuton), true)
-                        .add(new ClawAction(true))
-                        .add(new MvntAction(pose2d(0, 28, 90)))             // face the board
-                        .add(new MvntAction(pose2d(Config.BACKSPOT, 34.5, 90))) // move to the board and raise lifts
-                        .add(new LiftAction(Config.LIFT_BACK, Config.liftMotorPowerAuton * 1.1), true)
-                        .add(new MvntAction(Config.BOARDSPEED, 0, 0), 75) // continue driving and drop the yellow pixel
-                        .add(new ClawAction(ClawAction.ClawStates.topOpen), true)
-                        .add(new MvntAction(pose2d(24, 34.5, 90)))          // move back from the board and lower lift
-                        .add(new LiftAction(Config.FLOOR + 40, Config.liftMotorPowerDown * 0.8), true)
-                        .add(new MvntAction(pose2d(24, 3, 90)))             // move to the wall
-                        .add(new MvntAction(pose2d(45, 3, 90)))            // park
-                        .add(new ClawAction(false));
-            } else if (centerX > 2 * third) { // right
+                paths = new Point[]{
+                        new Point(Config.powerMultiplier * 0.8),
+                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity)),
+                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
+                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0)))),
+                        new Point(new Pose2d(-3, 28, new Rotation2d(Math.toRadians(-90))), false, true),
+////                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(300, Config.liftMotorPowerAuton + Config.gravity)),
+//                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(-90)))),
+//                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(Config.powerMultiplier * 0.8),
+//                        new Point(new Pose2d(24, 34.5, new Rotation2d(Math.toRadians(90))), new LiftPoint(500, Config.liftMotorPowerAuton + Config.gravity)),
+//                        new Point(new Pose2d(24, 34.5, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, (Config.liftMotorPowerAuton * 1.1) + Config.gravity)),
+//                        new Point(Config.BOARDSPEED * 1.25),
+//                        new Point(new Pose2d(Config.BACKSPOT, 34.5, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new double[]{Config.BOARDSPEED, 0.0, 0.0}, 2500.0),
+////                        new Point(new LiftPoint(Config.LIFT_BACK - 75, Config.liftMotorPowerDown)),
+//                        new Point(new LiftPoint(Config.LIFT_BACK - 100, Config.liftMotorPowerDown * 1.5)),
+//                        new Point(false, false),
+//                        new Point(Config.powerMultiplier),
+//                        new Point(new Pose2d(20, 34.5, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR, Config.liftMotorPowerDown)),
+                        new Point(new Pose2d(20, 3, new Rotation2d(Math.toRadians(90)))),
+                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
+                };
+            }
+            else if (centerX > 2 * third) { // right
                 direction = 1;
-                path.add(new MvntAction(pose2d(0, 30, 0)))                 // drive to tape
-                        .add(new MvntAction(pose2d(3, 30, 90)))            // face tape
-                        .add(new ClawAction(ClawAction.ClawStates.bottomOpen))             // drop purple pixel
-                        .add(new MvntAction(pose2d(0, 30, 90)))            // center and raise lift
-                        .add(new LiftAction(100, Config.liftMotorPowerAuton), true)
-                        .add(new ClawAction(true))
-                        .add(new MvntAction(pose2d(12, 14, 90)))           // move back a tile and start raising lift
-                        .add(new LiftAction(Config.LIFT_BACK, Config.liftMotorPowerAuton * 1.1), true, true)
-                        .add(new MvntAction(pose2d(24, 14, 90)))           // move forward and continue raising lift
-                        .add(new LiftAction(Config.LIFT_BACK, Config.liftMotorPowerAuton * 1.1), true, true)
-                        .add(new MvntAction(pose2d(Config.BACKSPOT, 22, 90)))  // move to the board and continue raising lift
-                        .add(new LiftAction(Config.LIFT_BACK, Config.liftMotorPowerAuton * 1.1), true, true)
-                        .add(new MvntAction(Config.BOARDSPEED, 0, 0), 75) // continue driving and drop the yellow pixel
-                        .add(new ClawAction(ClawAction.ClawStates.topOpen), true)
-                        .add(new MvntAction(pose2d(24, 22, 90)))  // move back from the board and lower lift
-                        .add(new LiftAction(Config.FLOOR + 40, Config.liftMotorPowerDown * 0.8), true)
-                        .add(new MvntAction(pose2d(24, 3, 90)))             // move to the wall
-                        .add(new MvntAction(pose2d(45, 3, 90)))            // park
-                        .add(new ClawAction(false));
-            } else {
+                paths = new Point[]{
+                        new Point(Config.powerMultiplier * 0.8),
+                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity), true, true),
+                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
+                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0)))),
+                        new Point(new Pose2d(3, 30, new Rotation2d(Math.toRadians(90))), false, true),
+//                        new Point(new Pose2d(3, 30, new Rotation2d(Math.toRadians(90))), new LiftPoint(100, Config.liftMotorPowerAuton + Config.gravity),false, true),
+////                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(300, Config.liftMotorPowerAuton + Config.gravity)),
+//                        new Point(new Pose2d(-1, 30, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new Pose2d(-1, 14, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new Pose2d(12, 14, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(Config.powerMultiplier * 0.9),
+////                        new Point(new Pose2d(24, 22, new Rotation2d(Math.toRadians(90))), new LiftPoint(500, Config.liftMotorPowerAuton + Config.gravity)),
+//                        new Point(new Pose2d(24, 22, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new Pose2d(24, 22, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, (Config.liftMotorPowerAuton * 1.1) + Config.gravity)),
+//                        new Point(Config.BOARDSPEED * 1.4),
+//                        new Point(new Pose2d(Config.BACKSPOT, 24, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new double[]{Config.BOARDSPEED, 0.0, 0.0}, 1900.0),
+////                        new Point(new LiftPoint(Config.LIFT_BACK - 75, Config.liftMotorPowerDown)),
+//                        new Point(new LiftPoint(Config.LIFT_BACK - 100, Config.liftMotorPowerDown * 0.8)),
+//                        new Point(false, false),
+//                        new Point(Config.powerMultiplier),
+//                        new Point(new Pose2d(24, 22, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR+30, Config.liftMotorPowerDown * 0.8)),
+                        new Point(new Pose2d(3, 3, new Rotation2d(Math.toRadians(90)))),
+                        new Point(new Pose2d(24, 3, new Rotation2d(Math.toRadians(90)))),
+                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
+                };
+            }
+            else {
                 direction = 2;
-                path.add(new LiftAction(Config.FLOOR, Config.liftMotorPowerAuton))
-                        .add(new MvntAction(pose2d(0, 28, 0)))                // move to tape
-                        .add(new ClawAction(ClawAction.ClawStates.bottomOpen))               // drop purple pixel
-                        .add(new LiftAction(300, Config.liftMotorPowerAuton))        // lift up height a bit while also moving back(to not knock over the purple pixel)
-                        .add(new ClawAction(true))
-                        .add(new MvntAction(pose2d(0, 26, 0)), true)
-                        .add(new MvntAction(pose2d(0, 27.5, 90)))            // rotate towards the board
-                        .add(new MvntAction(pose2d(Config.BACKSPOT, 27.5, 90))) // move to the board while moving the lift up
-                        .add(new LiftAction(Config.LIFT_BACK, Config.liftMotorPowerAuton * 1.1), true)
-                        .add(new MvntAction(Config.BOARDSPEED, 0, 0), 75)  // drive into the wall
-                        .add(new ClawAction(ClawAction.ClawStates.topOpen), true)
-                        .add(new MvntAction(pose2d(24, 27, 90)))             // move back from the board and lower lift
-                        .add(new LiftAction(Config.FLOOR + 40, Config.liftMotorPowerDown * 0.8), true)
-                        .add(new MvntAction(pose2d(24, 3, 90)))              // move to the wall
-                        .add(new MvntAction(pose2d(45, 3, 90)))             // park into the slot
-                        .add(new ClawAction(false));
+                paths = new Point[]{ // center
+                        new Point(Config.powerMultiplier),
+                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity)),
+                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
+                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), false, true),
+//                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), new LiftPoint(300, Config.liftMotorPowerAuton + Config.gravity)),
+//                        new Point(new Pose2d(0, 26, new Rotation2d(Math.toRadians(0)))),
+//                        new Point(new Pose2d(24, 27, new Rotation2d(Math.toRadians(90))), new LiftPoint(500, Config.liftMotorPowerAuton + Config.gravity)),
+//                        new Point(new Pose2d(24, 27, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.LIFT_BACK, (Config.liftMotorPowerAuton * 1.1) + Config.gravity)),
+//                        new Point(new Pose2d(Config.BACKSPOT, 27.5, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(Config.BOARDSPEED),
+//                        new Point(new double[]{Config.BOARDSPEED, 0.0, 0.0}, 1320.0),
+////                        new Point(new LiftPoint(Config.LIFT_BACK - 75, Config.liftMotorPowerDown)),
+//                        new Point(new LiftPoint(Config.LIFT_BACK - 100, Config.liftMotorPowerDown * 0.8)),
+//                        new Point(false, false),
+//                        new Point(Config.powerMultiplier),
+//                        new Point(new Pose2d(24, 27, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR + 40, Config.liftMotorPowerDown * 0.8)),
+                        new Point(new Pose2d(24, 3, new Rotation2d(Math.toRadians(90)))),
+                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
+                };
             }
         }
+
+        int pathOn = 0;
+        ElapsedTime timer = new ElapsedTime();
 
         tel.addData("lift", 0);
         tel.addData("liftPower", 0);
         tel.addData("liftTarget", 0);
         tel.update();
-        path.resetTimer();
         while (opModeIsActive()) {
-            if (!path.run()) {
-                robot.lift.setLiftPower(0);
+            if (pathOn != paths.length) {
+                if (paths[pathOn].move(robot, movement, tel)) {
+                    pathOn++;
+                    timer = new ElapsedTime();
+                    robot.drive.setDrivePowers(0, 0, 0, 0);
+                } else if (timer.milliseconds() > 2500) {
+                    pathOn++;
+                    robot.drive.setDrivePowers(0, 0, 0, 0);
+                    timer.reset();
+                }
+
+            } else {
+                robot.lift.liftToPos(Point.lastLiftHeight, Config.liftMotorPowerHold);
                 robot.drive.setDrivePowers(0, 0, 0, 0);
             }
             tel.addData("objectcenter: ", objectCenter[0]);
             tel.addData("direction", direction);
-            tel.addData("paths remaining", path.actions.size());
+            tel.addData("path on", pathOn);
             tel.addData("lift", robot.lift.encoder.getCurrentPosition());
+            tel.addData("holdPoint", Point.lastLiftHeight);
             tel.addData("Pose", odometry.getPose().toString());
             tel.update();
         }
     }
 
-    public static Pose2d pose2d(double x, double y, double heading) {
-        return new Pose2d(x, y, new Rotation2d(Math.toRadians(heading)));
+    public static class LiftPoint {
+        public int height;
+        public double power;
+        public LiftPoint(int height, double power) {
+            this.height = height;
+            this.power = power;
+        }
+        public LiftPoint(int height) {
+            this.height = height;
+            this.power = Config.liftMotorPowerMacro;
+        }
+    }
+
+    public static class CAFPid {
+        /*
+         * Proportional Integral Derivative Controller w/ Low pass filter and anti-windup
+         * Credit: CtrlAltFtc
+         */
+
+        public double Kp;
+        public double Ki;
+        public double Kd;
+
+        public double lastTarget = 0;
+        public double integralSum = 0;
+
+        public double lastError = 0;
+
+        public double maxIntegralSum;
+
+        public double a = 0.8; // a can be anything from 0 < a < 1
+        public double previousFilterEstimate = 0;
+        public double currentFilterEstimate = 0;
+
+        ElapsedTime timer = new ElapsedTime();
+
+        public CAFPid(PID.Config pid) {
+            this.Kp = pid.getKp();
+            this.Ki = pid.getKi();
+            this.Kd = pid.getKd();
+            this.maxIntegralSum = 0.25/this.Ki;
+        }
+
+        public double calc(double target, double current) {
+            // calculate the error
+            double error = target - current;
+
+            double errorChange = (error - lastError);
+
+            // filter out hight frequency noise to increase derivative performance
+            currentFilterEstimate = (a * previousFilterEstimate) + (1-a) * errorChange;
+            previousFilterEstimate = currentFilterEstimate;
+
+            // rate of change of the error
+            double derivative = currentFilterEstimate / timer.seconds();
+
+            // sum of all error over time
+            integralSum = integralSum + (error * timer.seconds());
+
+
+            // max out integral sum
+            if (integralSum > maxIntegralSum) {
+                integralSum = maxIntegralSum;
+            }
+
+            if (integralSum < -maxIntegralSum) {
+                integralSum = -maxIntegralSum;
+            }
+
+            // reset integral sum upon setpoint changes
+            if (target != lastTarget) {
+                integralSum = 0;
+            }
+
+            double out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
+
+            lastError = error;
+
+            lastTarget = target;
+
+            // reset the timer for next time
+            timer.reset();
+            return out;
+        }
+    }
+
+    public static class Point {
+        public Pose2d pose = null;
+        public LiftPoint lift = null;
+        public Boolean bottomClaw = null;
+        public Boolean topClaw = null;
+        public static int lastLiftHeight;
+        public static double drivePower = Config.powerMultiplier;
+        public Double speed = null;
+        public CAFPid liftPID = new CAFPid(new PID.Config(Config.liftP, Config.liftI, Config.liftD));
+        public double[] powers;
+        public Double duration = null;
+        public ElapsedTime timer = null;
+        public boolean isBackboard = false;
+        public Point(double speed) {
+            this.speed = speed;
+        }
+        public Point(double[] powers, Double duration) {
+            this.powers = powers;
+            this.duration = duration;
+        }
+        public Point(Pose2d pose, LiftPoint lift, boolean bottom, boolean top) {
+            this.pose = pose;
+            this.lift = lift;
+            this.bottomClaw = bottom;
+            this.topClaw = top;
+        }
+        public Point(Pose2d pose) {
+            this.pose = pose;
+        }
+        public Point(LiftPoint lift) {
+            this.lift = lift;
+        }
+        public Point(boolean bottomClaw, boolean topClaw) {
+            this.bottomClaw = bottomClaw;
+            this.topClaw = topClaw;
+        }
+        public Point(boolean isBackboard) {
+            this.isBackboard = isBackboard;
+        }
+        public Point(Pose2d pose, LiftPoint lift) {
+            this.pose = pose;
+            this.lift = lift;
+        }
+        public Point(Pose2d pose, boolean bottomClaw, boolean topClaw) {
+            this.pose = pose;
+            this.bottomClaw = bottomClaw;
+            this.topClaw = topClaw;
+        }
+        public Point(LiftPoint lift, boolean bottomClaw, boolean topClaw) {
+            this.lift = lift;
+            this.bottomClaw = bottomClaw;
+            this.topClaw = topClaw;
+        }
+        public boolean move(Robot robot, Movement movement, Telemetry tel) {
+            if (this.duration != null) {
+                if (this.timer == null) {
+                    timer = new ElapsedTime();
+                }
+                if (timer.milliseconds() > this.duration) {
+                    robot.drive.setDrivePowers(0,0,0,0);
+                    return true;
+                } else {
+                    robot.drive.mecanumDrive(this.powers[0], this.powers[1], this.powers[2]);
+                    return false;
+                }
+            }
+
+            timer = null;
+
+            if (this.speed != null) {
+                drivePower = this.speed;
+            }
+
+            boolean atPose = true;
+            if (this.pose != null) {
+                atPose = !movement.move(this.pose, drivePower);
+            }
+            boolean atLift = true;
+            if (this.lift != null) {
+                lastLiftHeight = lift.height;
+                atLift = Math.abs(robot.lift.liftToPos(lift.height, lift.power)) < Config.liftTolerance;
+                double power = Range.clip(liftPID.calc(lift.height, robot.lift.encoder.getCurrentPosition()) * lift.power, -lift.power, lift.power);
+                tel.addData("liftPower", power);
+                tel.addData("liftTarget", lift.height);
+                robot.lift.leftLift.setPower(power);
+                robot.lift.rightLift.setPower(power);
+//                robot.lift.leftLift.setPower(lift.power);
+//                robot.lift.rightLift.setPower(lift.power);
+//                robot.lift.leftLift.setTargetPosition(-lift.height);
+//                robot.lift.rightLift.setTargetPosition(lift.height);
+//                robot.lift.leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                robot.lift.rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                return Math.abs(robot.lift.encoder.getCurrentPosition() - lift.height) < Config.liftTolerance;
+            } else {
+                robot.lift.leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.lift.rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.lift.leftLift.setPower(Config.gravity);
+                robot.lift.rightLift.setPower(Config.gravity);
+                tel.addData("liftPower", Config.gravity);
+                tel.addData("liftTarget", lastLiftHeight);
+            }
+            if (this.bottomClaw != null) {
+                double bottomPower = this.bottomClaw ? Config.bottomServoClose : Config.bottomServoOpen;
+                double topPower = this.topClaw ? Config.topServoClose : Config.topServoOpen;
+                robot.claw.setPos(bottomPower, topPower);
+            }
+            if (this.isBackboard) {
+                robot.claw.clawServo.setPosition(Config.clawServoBackboard);
+            } else {
+                robot.claw.clawServo.setPosition(Config.clawServoFloor);
+            }
+            return atPose && atLift;
+        }
     }
 }

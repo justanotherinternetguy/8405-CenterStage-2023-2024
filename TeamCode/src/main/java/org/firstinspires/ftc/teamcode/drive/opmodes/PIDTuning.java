@@ -25,7 +25,7 @@ public class PIDTuning extends LinearOpMode {
         Pose2d[] path = null;
         waitForStart();
         while (opModeIsActive() && !isStopRequested()) {
-            robot.lift.liftToPos(100, Config.liftMotorPowerMacro);
+            robot.lift.setLiftPower(-Config.gravity);
             if (path == null) {
                 if (gamepad1.x) {
                     path = new Pose2d[]{
@@ -39,11 +39,11 @@ public class PIDTuning extends LinearOpMode {
                     path = new Pose2d[]{
                             new Pose2d(24, 0, new Rotation2d(0)),
                     };
-                } else if (gamepad1.a) {
+                } else if (gamepad1.b) {
                     path = new Pose2d[]{
-                            new Pose2d(24, 0, new Rotation2d(Math.toRadians(90))),
+                            new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
                     };
-                } else if (gamepad1.left_bumper) {
+                } else if (gamepad1.dpad_up) {
                     path = new Pose2d[]{
                             new Pose2d(0, 0, new Rotation2d(Math.toRadians(90)))
                     };

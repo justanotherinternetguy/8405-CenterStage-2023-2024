@@ -30,10 +30,10 @@ public class TeleOpControl extends LinearOpMode {
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         ElapsedTime timer = new ElapsedTime();
 
-        AprilTagsInit apriltags = new AprilTagsInit(hardwareMap, telemetry);
-        apriltags.initialize(telemetry);
+//        AprilTagsInit apriltags = new AprilTagsInit(hardwareMap, telemetry);
+//        apriltags.initialize(telemetry);
 
-        TwoWheelTrackingLocalizer tw = new TwoWheelTrackingLocalizer(hardwareMap, drive);
+//        TwoWheelTrackingLocalizer tw = new TwoWheelTrackingLocalizer(hardwareMap, drive);
 
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
 
@@ -45,20 +45,20 @@ public class TeleOpControl extends LinearOpMode {
         timer.reset();
 
         while (opModeIsActive()) {
-            drive.update();
+            drive.updatePoseEstimate();
             Pose2d poseEstimate = drive.getPose();
 
-            telemetry.addData("left x: ", gamepad1.left_stick_x);
-            telemetry.addData("left y: ", gamepad1.left_stick_y);
-            telemetry.addData("right x: ", gamepad1.right_stick_x);
-            telemetry.addData("right y: ", gamepad1.right_stick_y);
+//            telemetry.addData("left x: ", gamepad1.left_stick_x);
+//            telemetry.addData("left y: ", gamepad1.left_stick_y);
+//            telemetry.addData("right x: ", gamepad1.right_stick_x);
+//            telemetry.addData("right y: ", gamepad1.right_stick_y);
 
-            robot.lift.liftTeleOp(gamepad1); // LIFT
-            telemetry.addData("kill time", robot.lift.timer.milliseconds());
-            telemetry.addData("hasReset", robot.lift.hasResetKill);
-            telemetry.addData("macro", robot.lift.currentMode);
-            telemetry.addData("hold", robot.lift.holdingPos);
-            telemetry.addData("kill", robot.lift.startedKill);
+            robot.lift.liftTeleOp(gamepad1, tel); // LIFT
+//            telemetry.addData("kill time", robot.lift.timer.milliseconds());
+//            telemetry.addData("hasReset", robot.lift.hasResetKill);
+//            telemetry.addData("macro", robot.lift.currentMode);
+//            telemetry.addData("hold", robot.lift.holdingPos);
+//            telemetry.addData("kill", robot.lift.startedKill);
             robot.claw.input(gamepad1);
 //            robot.claw.setPower(-1, -1);
             if (gamepad1.x && !lastX) {
@@ -73,7 +73,7 @@ public class TeleOpControl extends LinearOpMode {
                 double multiplier = slowMode ? 0.3 : 1;
                 robot.drive.mecanumDrive(power * multiplier, strafe * multiplier, turn * multiplier);
 //                robot.drive.mecanumDrive(power, strafe, turn);
-                telemetry.addData("drive: ", "robotCentric");
+//                telemetry.addData("drive: ", "robotCentric");
             } else {
                 double elapsed = timer.seconds();
 
@@ -108,15 +108,16 @@ public class TeleOpControl extends LinearOpMode {
             tel.addData("!LEFT ENCODER: ", robot.odom.getEncoders()[0]);
             tel.addData("!RIGHT ENCODER: ", robot.odom.getEncoders()[1]);
             tel.addData("!CENTER ENCODER: ", robot.odom.getEncoders()[2]);
+            tel.addData("lift owo: ", robot.lift.leftLift.getCurrentPosition());
 
             tel.update();
 
 //            telemetry.addData("maxfps", apriltags.camera.getCurrentPipelineMaxFps());
 //            telemetry.addData("fps", apriltags.camera.getFps());
             telemetry.addData("SlowMode: ", slowMode);
-            telemetry.addData("RightEnc: ", robot.lift.rightLift.getCurrentPosition());
-            telemetry.addData("LeftEnc: ", robot.lift.leftLift.getCurrentPosition());
-            telemetry.addData("top claw", robot.claw.timer.milliseconds());
+            telemetry.addData("lift owo: ", robot.lift.leftLift.getCurrentPosition());
+
+//            telemetry.addData("top claw", robot.claw.timer.milliseconds());
 
             telemetry.update();
         }
