@@ -126,10 +126,18 @@ class ClawAction extends Action {
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         for (ClawStates state : states) {
             switch (state) {
-                case topOpen -> robot.claw.topServo.setPower(Config.topServoOpen);
-                case topClosed -> robot.claw.topServo.setPower(Config.topServoClose);
-                case bottomOpen -> robot.claw.bottomServo.setPower(Config.bottomServoOpen);
-                case bottomClosed -> robot.claw.bottomServo.setPower(Config.bottomServoClose);
+                case topOpen:
+                    robot.claw.topServo.setPower(Config.topServoOpen);
+                    break;
+                case topClosed:
+                    robot.claw.topServo.setPower(Config.topServoClose);
+                    break;
+                case bottomOpen:
+                    robot.claw.bottomServo.setPower(Config.bottomServoOpen);
+                    break;
+                case bottomClosed:
+                    robot.claw.bottomServo.setPower(Config.bottomServoClose);
+                    break;
             }
         }
     }

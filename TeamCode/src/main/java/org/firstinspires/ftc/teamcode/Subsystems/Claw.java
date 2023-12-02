@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.internal.system.CloseableOnFinalize;
 import org.firstinspires.ftc.teamcode.Auton.Config;
 
 public class Claw {
+    public CRServo clawServo;
     public CRServo bottomServo;
     public CRServo topServo;
 
@@ -17,6 +18,7 @@ public class Claw {
 
     public boolean bottomClaw = false; // is closed?
     public boolean topClaw = false; // is closed?
+    public boolean isBackboard = false; // is angled?
     public boolean lastLeftBumper = false;
     public boolean lastRightBumper = false;
     public boolean lastBurstButtom = false;
@@ -25,8 +27,9 @@ public class Claw {
 
     public Claw(HardwareMap hardwareMap, Gamepad gamepad) {
         this.gamepad = gamepad;
-        topServo = hardwareMap.get(CRServo.class, "frontservo");
-        bottomServo = hardwareMap.get(CRServo.class, "backservo");
+        topServo = hardwareMap.get(CRServo.class, "frontServo");
+        bottomServo = hardwareMap.get(CRServo.class, "backServo");
+        clawServo = hardwareMap.get(CRServo.class, "clawServo");
     }
 
     public void setPower(double bPower, double tPower) {
@@ -36,11 +39,11 @@ public class Claw {
 
     public void input(Gamepad gamepad1) {
         //true = closed
-        if (gamepad1.left_bumper && !lastLeftBumper) {
-            topClaw = !topClaw;
-        }
+//        if (gamepad1.left_bumper && !lastLeftBumper) {
+//            topClaw = !topClaw;
+//        }
         if (gamepad1.right_bumper && !lastRightBumper) {
-            bottomClaw = !bottomClaw;
+            isBackboard = !isBackboard;
         }
         if (gamepad1.y && !lastBurstButtom) {
             if (topClaw == true && bottomClaw == true) {
@@ -68,6 +71,11 @@ public class Claw {
             topServo.setPower(Config.topServoClose);
         } else {
             topServo.setPower(Config.topServoOpen);
+        }
+        if (isBackboard) {
+            clawServo.setPower(Config.clawServoBackboard);
+        } else {
+            clawServo.setPower(Config.clawServoFloor);
         }
     }
 }

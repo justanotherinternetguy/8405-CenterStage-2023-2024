@@ -8,7 +8,7 @@ public class Config {
     public static double BACKSPOT = 35.5;
     public static int liftTolerance = 10;
     public static double liftMotorFloor = 0.3;
-    public static double gravity = 0.15;
+    public static double gravity = 0.5;
     public static boolean fieldCentric = false;
     public static double XMULTI = 1.5;
     public static boolean manualWhite = false;
@@ -52,11 +52,13 @@ public class Config {
     public static int mask2US = 255;
     public static int mask2UV = 255;
 
-    public static double topServoClose = -0.3;
-    public static double topServoOpen = -0.5;
+    public static double topServoClose = 0.275;
+    public static double topServoOpen = 0.4;
+    public static double bottomServoClose = -0.075;
+    public static double bottomServoOpen = 0;
+    public static double clawServoFloor = 0.5;
+    public static double clawServoBackboard = 1;
 
-    public static double bottomServoClose = 0.875;
-    public static double bottomServoOpen = 0.75;
 
     public static int burstDelay = 500;
 
