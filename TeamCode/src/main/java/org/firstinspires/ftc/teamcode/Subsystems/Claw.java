@@ -53,6 +53,7 @@ public class Claw {
             } else if (topClaw == false && bottomClaw == false) {
                 topClaw = !topClaw;
                 bottomClaw = !bottomClaw;
+                inBurst = false;
             }
         }
         if (inBurst && timer.milliseconds() > Config.burstDelay && topClaw == true && bottomClaw == false) {

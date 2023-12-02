@@ -86,7 +86,7 @@ public class Lift {
 //                    holdingPos = Math.min(encoder.getCurrentPosition(), Config.LIFT_MAX);
 //                }
 //                liftToPos(holdingPos,  Config.liftMotorPowerHold);
-                setLiftPower(Config.gravity);
+                setLiftPower(-Config.gravity);
             }
 
         } else {
@@ -123,10 +123,10 @@ public class Lift {
     }
 
     public void liftManual(Gamepad gamepad) {
-        if (gamepad.right_trigger > 0.3 && encoder.getCurrentPosition() < Config.LIFT_MAX) {
-            setLiftPower(gamepad.right_trigger + Config.gravity);
-        } else if (gamepad.left_trigger > 0.3) {
-            setLiftPower(-gamepad.left_trigger);
+        if (gamepad.right_trigger > 0.2 && encoder.getCurrentPosition() < Config.LIFT_MAX) {
+            setLiftPower(-gamepad.right_trigger - Config.gravity); // triggers were flipped 4 some reason
+        } else if (gamepad.left_trigger > 0.2) {
+            setLiftPower(gamepad.left_trigger);
         }
 //        else
 //        {

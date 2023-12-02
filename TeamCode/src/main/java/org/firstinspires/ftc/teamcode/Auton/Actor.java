@@ -115,15 +115,27 @@ class ClawAction extends Action {
         bottomOpen,
         bottomClosed
     }
+    boolean isBackboard = false;
 
-    private final ClawStates[] states;
+    private ClawStates[] states = null;
 
     public ClawAction(ClawStates... states) {
         this.states = states;
     }
 
+    public ClawAction(boolean isBackboard) {
+        this.isBackboard = isBackboard;
+    }
+
     @Override
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
+        if (states == null) {
+            if (isBackboard) {
+                robot.claw.clawServo.setPosition(Config.clawServoBackboard);
+            } else {
+                robot.claw.clawServo.setPosition(Config.clawServoFloor);
+            }
+        }
         for (ClawStates state : states) {
             switch (state) {
                 case topOpen:
@@ -155,7 +167,7 @@ class LiftAction extends Action {
 
     private final int height;
     private final double power;
-    private final AUTON_BLUE_NEAR.CAFPid pid = new AUTON_BLUE_NEAR.CAFPid(new PID.Config(Config.liftP, Config.liftI, Config.liftD));
+    private final AUTON_BLUE_NEAR_OLD.CAFPid pid = new AUTON_BLUE_NEAR_OLD.CAFPid(new PID.Config(Config.liftP, Config.liftI, Config.liftD));
 
     public LiftAction(int height, double power) {
         this.height = height;
