@@ -25,21 +25,30 @@ public class testTeleOp extends LinearOpMode {
 
         Robot robot = new Robot(hardwareMap, gamepad1);
         while (opModeIsActive()) {
-            if(gamepad1.x)
-            {
-                robot.drive.backLeft.setPower(0.5);
-            }
-            if(gamepad1.y)
-            {
-                robot.drive.backRight.setPower(0.5);
-            }
-            if(gamepad1.a)
-            {
-                robot.drive.frontLeft.setPower(0.5);
-            }
-            if(gamepad1.b)
-            {
-                robot.drive.frontRight.setPower(0.5);
+//            if(gamepad1.x)
+//            {
+//                robot.drive.backLeft.setPower(0.5);
+//            }
+//            if(gamepad1.y)
+//            {
+//                robot.drive.backRight.setPower(0.5);
+//            }
+//            if(gamepad1.a)
+//            {
+//                robot.drive.frontLeft.setPower(0.5);
+//            }
+//            if(gamepad1.b)
+//            {
+//                robot.drive.frontRight.setPower(0.5);
+//            }
+            if (gamepad1.y) {
+                robot.claw.topServo.setPosition(Config.topServoOpen);
+            } else if (gamepad1.x) {
+                robot.claw.topServo.setPosition(Config.topServoClose);
+            } else if (gamepad1.a) {
+                robot.claw.bottomServo.setPosition(Config.bottomServoOpen);
+            } else if (gamepad1.b) {
+                robot.claw.bottomServo.setPosition(Config.bottomServoClose);
             }
 
             telemetry.update();

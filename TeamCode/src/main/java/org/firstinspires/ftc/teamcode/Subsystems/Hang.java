@@ -24,13 +24,21 @@ public class Hang {
 
     public void input(Gamepad gamepad1) {
         if (gamepad1.dpad_up) {
-            setHangMotorPower(0.3);
+            setHangMotorPower(0.25);
         } else if (gamepad1.dpad_down) {
-            setHangMotorPower(-0.3);
+            setHangMotorPower(-0.25);
+        } else if (gamepad1.dpad_left) {
+//            hangNow();
         }
     }
     public void setHangMotorPower(double power) {
         hangMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hangMotor.setPower(power);
+    }
+
+    public void hangNow() {
+        for (;;) {
+            hangMotor.setPower(Config.hangPower);
+        }
     }
 }

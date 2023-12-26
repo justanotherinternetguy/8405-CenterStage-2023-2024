@@ -13,8 +13,8 @@ public class Robot {
     public Robot(HardwareMap hardwareMap, Gamepad gamepad) {
         drive = new Drive(hardwareMap);
         lift = new Lift(hardwareMap, gamepad);
-//        claw = new Claw(hardwareMap, gamepad);
+        claw = new Claw(hardwareMap, gamepad);
         odom = new Odometry(hardwareMap, drive.imu);
-//        hang = new Hang(hardwareMap, gamepad);
+        hang = new Hang(hardwareMap, gamepad);
     }
 }

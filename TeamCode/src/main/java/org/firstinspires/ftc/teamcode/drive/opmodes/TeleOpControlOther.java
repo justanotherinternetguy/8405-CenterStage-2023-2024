@@ -50,7 +50,9 @@ public class TeleOpControlOther extends LinearOpMode {
                 slowMode = !slowMode;
             }
             lastX = gamepad1.x;
-//            robot.hang.input(gamepad1);
+            robot.hang.input(gamepad1);
+            robot.claw.input(gamepad1);
+            robot.lift.liftTeleOp(gamepad1, tel);
 
             if (!Config.fieldCentric) {
                 double power = -gamepad1.left_stick_y; // remember this is reversed

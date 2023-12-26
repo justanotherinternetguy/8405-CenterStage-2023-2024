@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import android.provider.ContactsContract;
 
+import com.acmerobotics.roadrunner.drive.Drive;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.Motor.Encoder;
@@ -18,6 +19,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Rotation;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 
 /**
  * This sample shows how to use dead wheels with external encoders
@@ -28,7 +30,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Rotation;
  */
 @NonNull
 public class Odometry {
-    public static final double TRACK_WIDTH = 14.6;
+    public static final double TRACK_WIDTH = DriveConstants.TRACK_WIDTH;
     public static final double CENTER_WHEEL_OFFSET = -0.5;
     public static final double WHEEL_DIAMETER = 35.0 / 25.4;
     public static final double TICKS_PER_REV = 8192.0;
