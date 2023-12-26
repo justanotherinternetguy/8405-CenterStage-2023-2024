@@ -24,12 +24,24 @@ public class testTeleOp extends LinearOpMode {
         waitForStart();
 
         Robot robot = new Robot(hardwareMap, gamepad1);
-        Claw claw = robot.claw;
         while (opModeIsActive()) {
             if(gamepad1.x)
             {
-                claw.topServo.setPosition(Config.topServoOpen);
+                robot.drive.backLeft.setPower(0.5);
             }
+            if(gamepad1.y)
+            {
+                robot.drive.backRight.setPower(0.5);
+            }
+            if(gamepad1.a)
+            {
+                robot.drive.frontLeft.setPower(0.5);
+            }
+            if(gamepad1.b)
+            {
+                robot.drive.frontRight.setPower(0.5);
+            }
+
             telemetry.update();
         }
     }

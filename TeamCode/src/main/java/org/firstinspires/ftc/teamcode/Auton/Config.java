@@ -14,7 +14,7 @@ public class Config {
     public static boolean manualWhite = false;
     public static int temp = 3334;
     //    public static double translationP = 0.3;
-    public static double translationP = 0.4;
+    public static double translationP = 0.005;
     public static double translationI = 0.02;
     public static double translationD = 0.04;
     //    public static double rotationP = 0.07;
