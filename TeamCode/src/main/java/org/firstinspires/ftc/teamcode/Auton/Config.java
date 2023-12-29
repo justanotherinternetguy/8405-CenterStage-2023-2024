@@ -24,7 +24,7 @@ public class Config {
     public static double rotationD = 0.005;
     public static double tolerance = 1;
     public static double toleranceH = 3;
-    public static double powerMultiplier = 0.85;
+    public static double powerMultiplier = 0.9;
 
     public static double BOARDSPEED = 0.425;
 

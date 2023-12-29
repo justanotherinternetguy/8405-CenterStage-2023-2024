@@ -30,7 +30,7 @@ public class PIDTuning extends LinearOpMode {
             if (path == null) {
                 if (gamepad1.x) {
                     path = new Pose2d[]{
-                            new Pose2d(0, 12, new Rotation2d(0)),
+                            new Pose2d(0, 24, new Rotation2d(0)),
                     };
                 } else if (gamepad1.y) {
                     path = new Pose2d[]{
