@@ -59,7 +59,7 @@ public class Config {
     public static double topServoOpen = 0.5;
     public static double bottomServoClose = 0.41;
     public static double bottomServoOpen = 0.55;
-    public static double clawServoFloor = 1;
+    public static double clawServoFloor = 0.34;
     public static double clawServoBackboard = 0.65;
 
 

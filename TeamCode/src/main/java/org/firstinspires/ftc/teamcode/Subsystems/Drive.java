@@ -23,16 +23,16 @@ public class Drive {
 
     public Drive(HardwareMap hardwareMap) {
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        frontLeft.setDirection(DcMotor.Direction.FORWARD); // motor direction
+        frontLeft.setDirection(DcMotor.Direction.REVERSE); // motor direction
 
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
-        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
 
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
 
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);

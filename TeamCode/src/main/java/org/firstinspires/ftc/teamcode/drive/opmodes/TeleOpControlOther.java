@@ -52,6 +52,7 @@ public class TeleOpControlOther extends LinearOpMode {
             lastX = gamepad1.x;
             robot.hang.input(gamepad1);
             robot.claw.input(gamepad1);
+            robot.drone.input(gamepad1);
             robot.lift.liftTeleOp(gamepad1, tel);
 
             if (!Config.fieldCentric) {
