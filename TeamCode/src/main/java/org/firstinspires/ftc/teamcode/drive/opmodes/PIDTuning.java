@@ -30,37 +30,38 @@ public class PIDTuning extends LinearOpMode {
             if (path == null) {
                 if (gamepad1.x) {
                     path = new Pose2d[]{
-                            new Pose2d(0, 24, new Rotation2d(0)),
-                    };
-                } else if (gamepad1.y) {
-                    path = new Pose2d[]{
-                            new Pose2d(0, -24, new Rotation2d(Math.toDegrees(90))),
-                    };
-                } else if (gamepad1.a) {
-                    path = new Pose2d[]{
-                            new Pose2d(24, 0, new Rotation2d(0)),
-                    };
-                } else if (gamepad1.b) {
-                    path = new Pose2d[]{
-                            new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))),
-                    };
-                } else if (gamepad1.dpad_up) {
-                    path = new Pose2d[]{
-                            new Pose2d(0, 0, new Rotation2d(Math.toRadians(90)))
-                    };
-                } else if (gamepad1.right_bumper) {
-                    path = new Pose2d[]{
-                            new Pose2d(0, 0, new Rotation2d(Math.toRadians(180)))
-                    };
-                } else if (gamepad1.left_trigger > 0.5) {
-                    path = new Pose2d[]{
-                            new Pose2d(24, 24, new Rotation2d(0))
-                    };
-                } else if (gamepad1.right_trigger > 0.5) {
-                    path = new Pose2d[]{
-                            new Pose2d(0, 1, new Rotation2d(0)),
+                            new Pose2d(0, 0, new Rotation2d(Math.toRadians(90))),
                     };
                 }
+//                else if (gamepad1.y) {
+//                    path = new Pose2d[]{
+//                            new Pose2d(0, -24, new Rotation2d(Math.toDegrees(90))),
+//                    };
+//                } else if (gamepad1.a) {
+//                    path = new Pose2d[]{
+//                            new Pose2d(24, 0, new Rotation2d(0)),
+//                    };
+//                } else if (gamepad1.b) {
+//                    path = new Pose2d[]{
+//                            new Pose2d(-24, 0, new Rotation2d(Math.toRadians(0))),
+//                    };
+//                } else if (gamepad1.dpad_up) {
+//                    path = new Pose2d[]{
+//                            new Pose2d(0, 0, new Rotation2d(Math.toRadians(90)))
+//                    };
+//                } else if (gamepad1.right_bumper) {
+//                    path = new Pose2d[]{
+//                            new Pose2d(0, 0, new Rotation2d(Math.toRadians(180)))
+//                    };
+//                } else if (gamepad1.left_trigger > 0.5) {
+//                    path = new Pose2d[]{
+//                            new Pose2d(24, 24, new Rotation2d(0))
+//                    };
+//                } else if (gamepad1.right_trigger > 0.5) {
+//                    path = new Pose2d[]{
+//                            new Pose2d(0, 1, new Rotation2d(0)),
+//                    };
+//                }
                 continue;
             }
             telemetry.addData("pose", rrDrive.getPose().toString());

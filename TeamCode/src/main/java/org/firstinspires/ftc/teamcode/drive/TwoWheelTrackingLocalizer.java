@@ -48,9 +48,16 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
 
 //    public static double X_MULTIPLIER = 100 / 196.68751; // Multiplier in the X direction
-    public static double X_MULTIPLIER = 0.9997052151; // Multiplier in the X direction
+    /*
+    * 153.1115
+    * 153.287
+    *----
+    * 147.349
+    * 147.046
+    * */
+    public static double X_MULTIPLIER = 78 / 153.19925; // Multiplier in the X direction
 //    public static double Y_MULTIPLIER = 100 / 195.07846667; // Multiplier in the Y direction
-    public static double Y_MULTIPLIER = 1.0039656664; // Multiplier in the Y direction
+    public static double Y_MULTIPLIER = 78 / 147.1975; // Multiplier in the Y direction
 
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
@@ -72,7 +79,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
         parallelEncoder.setDirection(Encoder.Direction.REVERSE);
-        perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
+        perpendicularEncoder.setDirection(Encoder.Direction.FORWARD);
     }
 
     public static double encoderTicksToInches(double ticks) {
