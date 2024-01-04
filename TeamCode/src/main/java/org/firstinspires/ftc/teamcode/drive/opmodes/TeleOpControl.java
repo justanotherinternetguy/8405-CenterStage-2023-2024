@@ -60,6 +60,7 @@ public class TeleOpControl extends LinearOpMode {
 //            telemetry.addData("hold", robot.lift.holdingPos);
 //            telemetry.addData("kill", robot.lift.startedKill);
             robot.claw.input(gamepad1);
+            robot.hang.input(gamepad1);
 //            robot.claw.setPower(-1, -1);
             if (gamepad1.x && !lastX) {
                 slowMode = !slowMode;

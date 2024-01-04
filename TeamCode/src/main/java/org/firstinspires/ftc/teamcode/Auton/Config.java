@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.Auton;
 
 @com.acmerobotics.dashboard.config.Config
 public class Config {
-    public static double hangPower = -0.5;
+    public static double hangPower = -0.85;
     public static double liftP = 0.05;
     public static double liftI = 0.03;
     public static double liftD = 0;

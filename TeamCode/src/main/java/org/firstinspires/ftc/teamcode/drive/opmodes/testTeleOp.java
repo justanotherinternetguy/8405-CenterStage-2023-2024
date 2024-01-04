@@ -50,6 +50,12 @@ public class testTeleOp extends LinearOpMode {
 //                robot.claw.bottomServo.setPosition(Config.bottomServoClose);
 //            }
 
+//            if (gamepad1.dpad_left) {
+//                robot.hang.hangMotor.setPower(0.8);
+//            } if (gamepad1.dpad_right) {
+//                robot.hang.hangMotor.setPower(-0.8);
+//            }
+
             telemetry.update();
         }
     }
