@@ -27,9 +27,8 @@ public class Hang {
             setHangMotorPower(0.7);
         } else if (gamepad1.dpad_down) {
             hangNow();
-        } else {
-            setHangMotorPower(0);
         }
+        setHangMotorPower(0);
     }
     public void setHangMotorPower(double power) {
         hangMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

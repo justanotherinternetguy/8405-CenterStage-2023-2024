@@ -33,7 +33,6 @@ public class Lift {
     public LAST_KEY_PRESSED last_key_pressed = LAST_KEY_PRESSED.NONE;
 
     private PID pid;
-    private double P = 0.05;
 
     public ElapsedTime timer = new ElapsedTime();
     public boolean hasResetKill = false;
@@ -44,7 +43,7 @@ public class Lift {
         currentMode = LIFT_MODE.NONE;
         rightLift = hardwareMap.get(DcMotorEx.class, "rightLift");
         leftLift = hardwareMap.get(DcMotorEx.class, "leftLift");
-        encoder = new Encoder(leftLift);
+        encoder = new Encoder(rightLift);
 
         leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -55,7 +54,7 @@ public class Lift {
         rightLift.setDirection(DcMotor.Direction.FORWARD);
         rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        encoder.setDirection(Encoder.Direction.FORWARD);
+        encoder.setDirection(Encoder.Direction.REVERSE);
 
         pid = new PID(Config.liftP, Config.liftI, Config.liftD);
 
@@ -112,10 +111,11 @@ public class Lift {
     }
 
     public double liftToPos(int target, double power) {
-        double p = Range.clip(pid.getValue(target - encoder.getCurrentPosition()), -power, power);
+        double p = Range.clip(pid.getValue(target - (encoder.getCurrentPosition() * -1)), -power, power);
         setLiftPower(p);
         return encoder.getCurrentPosition() - target;
     }
+
 
     public void liftManual(Gamepad gamepad, Telemetry tel) {
         if (gamepad.right_trigger > 0.2 && encoder.getCurrentPosition() < Config.LIFT_MAX) {
@@ -130,6 +130,9 @@ public class Lift {
 //            setLiftPower(0);
 //            currentMode = LIFT_MODE.NONE;
 //        }
+        tel.addData("left", leftLift.getCurrentPosition());
+        tel.addData("right", rightLift.getCurrentPosition());
+        tel.addData("enc", encoder.getCurrentPosition());
 
     }
 
@@ -152,8 +155,8 @@ public class Lift {
     public void setLiftPower(double power) {
         leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftLift.setPower(power * Config.liftMotorPowerMultTeleOp);
-        rightLift.setPower(power * Config.liftMotorPowerMultTeleOp);
+        leftLift.setPower(power * Config.liftMotorPowerMultTeleOp * -1);
+        rightLift.setPower(power * Config.liftMotorPowerMultTeleOp * -1);
     }
 
     public void liftToBase() {

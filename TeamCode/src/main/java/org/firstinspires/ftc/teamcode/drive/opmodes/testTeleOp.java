@@ -25,22 +25,21 @@ public class testTeleOp extends LinearOpMode {
 
         Robot robot = new Robot(hardwareMap, gamepad1);
         while (opModeIsActive()) {
-            if(gamepad1.x)
-            {
-                robot.drive.backLeft.setPower(0.5);
+//            if (gamepad1.right_trigger > 0.2 || gamepad1.left_trigger > 0.2)    robot.lift.liftManual(gamepad1, telemetry);
+//            else robot.lift.setLiftPower(0);
+//
+            if (gamepad1.x) {
+                robot.lift.liftToPos(400, 0.4);
             }
-            if(gamepad1.y)
-            {
-                robot.drive.backRight.setPower(0.5);
-            }
-            if(gamepad1.a)
-            {
-                robot.drive.frontLeft.setPower(0.5);
-            }
-            if(gamepad1.b)
-            {
-                robot.drive.frontRight.setPower(0.5);
-            }
+
+            //            if(gamepad1.a)
+//            {
+//                robot.drive.frontLeft.setPower(0.5);
+//            }
+//            if(gamepad1.b)
+//            {
+//                robot.drive.frontRight.setPower(0.5);
+//            }
 //            if (gamepad1.y) {
 //            } else if (gamepad1.x) {
 //                robot.claw.topServo.setPosition(Config.topServoClose);
@@ -56,6 +55,11 @@ public class testTeleOp extends LinearOpMode {
 //                robot.hang.hangMotor.setPower(-0.8);
 //            }
 
+            telemetry.addData("left", robot.lift.leftLift.getCurrentPosition());
+            telemetry.addData("right", robot.lift.rightLift.getCurrentPosition());
+            telemetry.addData("leftp", robot.lift.leftLift.getPower());
+            telemetry.addData("rightp", robot.lift.rightLift.getPower());
+            telemetry.addData("enc", robot.lift.encoder.getCurrentPosition());
             telemetry.update();
         }
     }

@@ -200,9 +200,9 @@ class LiftAction extends Action {
     @Override
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         // not gonna use liftToPos so this way we can allow for custom pid per section in the future
-        double p = Range.clip(pid.calc(height, height - robot.lift.leftLift.getCurrentPosition()), -power, power);
-        robot.lift.setLiftPower(-p - Config.gravity); // gravity is F in a traditional PIDF controller
-
+//        double p = Range.clip(pid.calc(height, height - robot.lift.leftLift.getCurrentPosition()), -power, power);
+//        robot.lift.setLiftPower(p + Config.gravity); // gravity is F in a traditional PIDF controller
+            System.out.println(robot.lift.liftToPos(height, power));
 //        double power = Range.clip(pid.calc(height, robot.lift.leftLift.getCurrentPosition()) * this.power, -Math.abs(this.power), Math.abs(this.power));
 //        robot.lift.leftLift.setPower(Config.liftMotorPowerDown);
 //        robot.lift.rightLift.setPower(Config.liftMotorPowerMacro);

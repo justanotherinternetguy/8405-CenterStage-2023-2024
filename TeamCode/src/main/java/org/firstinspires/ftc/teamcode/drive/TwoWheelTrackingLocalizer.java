@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.drive;
 
+import android.util.SparseArray;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -38,11 +40,11 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double WHEEL_RADIUS = 35 / 25.4; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double PARALLEL_X = -1; // X is the up and down direction
+    public static double PARALLEL_X = 1; // X is the up and down direction
     public static double PARALLEL_Y = -7.5; // Y is the strafe direction
 
 
-    public static double PERPENDICULAR_X = -0.5;
+    public static double PERPENDICULAR_X = 0.5;
     //    public static double PERPENDICULAR_Y = -0.5;
     public static double PERPENDICULAR_Y = 1.5;
 
@@ -73,12 +75,11 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         ));
 
         this.drive = drive;
-
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backLeft"));
         perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontRight"));
-
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
         parallelEncoder.setDirection(Encoder.Direction.REVERSE);
+//        parallelEncoder.setDirection(Encoder.Direction.FORWARD);
         perpendicularEncoder.setDirection(Encoder.Direction.FORWARD);
     }
 

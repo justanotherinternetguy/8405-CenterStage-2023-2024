@@ -34,11 +34,14 @@ public class AUTON_RED_NEAR extends LinearOpMode {
         waitForStart();
         odometry.reset();
         robot.drive.imu.resetYaw();
+        robot.odom.reset();
 
         Point[] paths = new Point[0];
 
 
-        int[] objectCenter = teamPropDet.search();
+//        int[] objectCenter = teamPropDet.search();
+        int[] objectCenter = new int[1];
+        objectCenter[0] = 960;
         double third = 1920.0/3+100; // middle of camera, change later
         int direction = -1;
         if (objectCenter != null) {
@@ -47,10 +50,10 @@ public class AUTON_RED_NEAR extends LinearOpMode {
                 direction = 0;
                 paths = new Point[]{
                         new Point(Config.powerMultiplier * 0.8),
-                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity)),
-                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
-                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0)))),
-                        new Point(new Pose2d(-3, 28, new Rotation2d(Math.toRadians(-90))), false, true),
+//                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity)),
+//                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
+//                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0)))),
+//                        new Point(new Pose2d(-3, 28, new Rotation2d(Math.toRadians(-90))), false, true),
 ////                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(300, Config.liftMotorPowerAuton + Config.gravity)),
 //                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(-90)))),
 //                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(90)))),
@@ -65,18 +68,18 @@ public class AUTON_RED_NEAR extends LinearOpMode {
 //                        new Point(false, false),
 //                        new Point(Config.powerMultiplier),
 //                        new Point(new Pose2d(20, 34.5, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR, Config.liftMotorPowerDown)),
-                        new Point(new Pose2d(20, 3, new Rotation2d(Math.toRadians(90)))),
-                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new Pose2d(20, 3, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
                 };
             }
             else if (centerX > 2 * third) { // right
                 direction = 1;
                 paths = new Point[]{
                         new Point(Config.powerMultiplier * 0.8),
-                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity), true, true),
-                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
-                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0)))),
-                        new Point(new Pose2d(3, 30, new Rotation2d(Math.toRadians(90))), false, true),
+//                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity), true, true),
+//                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
+//                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0)))),
+//                        new Point(new Pose2d(3, 30, new Rotation2d(Math.toRadians(90))), false, true),
 //                        new Point(new Pose2d(3, 30, new Rotation2d(Math.toRadians(90))), new LiftPoint(100, Config.liftMotorPowerAuton + Config.gravity),false, true),
 ////                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(90))), new LiftPoint(300, Config.liftMotorPowerAuton + Config.gravity)),
 //                        new Point(new Pose2d(-1, 30, new Rotation2d(Math.toRadians(90)))),
@@ -94,18 +97,19 @@ public class AUTON_RED_NEAR extends LinearOpMode {
 //                        new Point(false, false),
 //                        new Point(Config.powerMultiplier),
 //                        new Point(new Pose2d(24, 22, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR+30, Config.liftMotorPowerDown * 0.8)),
-                        new Point(new Pose2d(3, 3, new Rotation2d(Math.toRadians(90)))),
-                        new Point(new Pose2d(24, 3, new Rotation2d(Math.toRadians(90)))),
-                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new Pose2d(3, 3, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new Pose2d(24, 3, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
                 };
             }
             else {
                 direction = 2;
                 paths = new Point[]{ // center
-                        new Point(Config.powerMultiplier),
-                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity)),
-                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
-                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), false, true),
+//                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), new LiftPoint(Config.FLOOR, Config.liftMotorFloor + Config.gravity)),
+//                        new Point(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))), true, true),
+                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0)))),
+                        new Point(new Pose2d(0, 22, new Rotation2d(Math.toRadians(90)))),
+                        new Point(new Pose2d(37, 22, new Rotation2d(Math.toRadians(90)))),
 //                        new Point(new Pose2d(0, 28, new Rotation2d(Math.toRadians(0))), new LiftPoint(300, Config.liftMotorPowerAuton + Config.gravity)),
 //                        new Point(new Pose2d(0, 26, new Rotation2d(Math.toRadians(0)))),
 //                        new Point(new Pose2d(24, 27, new Rotation2d(Math.toRadians(90))), new LiftPoint(500, Config.liftMotorPowerAuton + Config.gravity)),
@@ -118,8 +122,8 @@ public class AUTON_RED_NEAR extends LinearOpMode {
 //                        new Point(false, false),
 //                        new Point(Config.powerMultiplier),
 //                        new Point(new Pose2d(24, 27, new Rotation2d(Math.toRadians(90))), new LiftPoint(Config.FLOOR + 40, Config.liftMotorPowerDown * 0.8)),
-                        new Point(new Pose2d(24, 3, new Rotation2d(Math.toRadians(90)))),
-                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new Pose2d(24, 3, new Rotation2d(Math.toRadians(90)))),
+//                        new Point(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))),
                 };
             }
         }
@@ -127,9 +131,6 @@ public class AUTON_RED_NEAR extends LinearOpMode {
         int pathOn = 0;
         ElapsedTime timer = new ElapsedTime();
 
-        tel.addData("lift", 0);
-        tel.addData("liftPower", 0);
-        tel.addData("liftTarget", 0);
         tel.update();
         while (opModeIsActive()) {
             if (pathOn != paths.length) {
@@ -137,7 +138,7 @@ public class AUTON_RED_NEAR extends LinearOpMode {
                     pathOn++;
                     timer = new ElapsedTime();
                     robot.drive.setDrivePowers(0, 0, 0, 0);
-                } else if (timer.milliseconds() > 2500) {
+                } else if (timer.milliseconds() > 3000) {
                     pathOn++;
                     robot.drive.setDrivePowers(0, 0, 0, 0);
                     timer.reset();

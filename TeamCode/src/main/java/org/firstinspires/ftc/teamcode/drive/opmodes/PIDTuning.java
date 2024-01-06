@@ -26,42 +26,43 @@ public class PIDTuning extends LinearOpMode {
         waitForStart();
         robot.odom.reset();
         while (opModeIsActive() && !isStopRequested()) {
-//            robot.lift.setLiftPower(-Config.gravity);
+//            robot.lift.liftToBase();
             if (path == null) {
+//                192.168.43.1
                 if (gamepad1.x) {
                     path = new Pose2d[]{
-                            new Pose2d(0, 0, new Rotation2d(Math.toRadians(90))),
+                            new Pose2d(0, 24, new Rotation2d(Math.toRadians(0))),
                     };
                 }
-//                else if (gamepad1.y) {
-//                    path = new Pose2d[]{
-//                            new Pose2d(0, -24, new Rotation2d(Math.toDegrees(90))),
-//                    };
-//                } else if (gamepad1.a) {
-//                    path = new Pose2d[]{
-//                            new Pose2d(24, 0, new Rotation2d(0)),
-//                    };
-//                } else if (gamepad1.b) {
-//                    path = new Pose2d[]{
-//                            new Pose2d(-24, 0, new Rotation2d(Math.toRadians(0))),
-//                    };
-//                } else if (gamepad1.dpad_up) {
-//                    path = new Pose2d[]{
-//                            new Pose2d(0, 0, new Rotation2d(Math.toRadians(90)))
-//                    };
-//                } else if (gamepad1.right_bumper) {
-//                    path = new Pose2d[]{
-//                            new Pose2d(0, 0, new Rotation2d(Math.toRadians(180)))
-//                    };
-//                } else if (gamepad1.left_trigger > 0.5) {
-//                    path = new Pose2d[]{
-//                            new Pose2d(24, 24, new Rotation2d(0))
-//                    };
-//                } else if (gamepad1.right_trigger > 0.5) {
-//                    path = new Pose2d[]{
-//                            new Pose2d(0, 1, new Rotation2d(0)),
-//                    };
-//                }
+                else if (gamepad1.y) {
+                    path = new Pose2d[]{
+                            new Pose2d(0, -24, new Rotation2d(Math.toRadians(0))),
+                    };
+                } else if (gamepad1.a) {
+                    path = new Pose2d[]{
+                            new Pose2d(24, 0, new Rotation2d(0)),
+                    };
+                } else if (gamepad1.b) {
+                    path = new Pose2d[]{
+                            new Pose2d(-24, 0, new Rotation2d(Math.toRadians(0))),
+                    };
+                } else if (gamepad1.dpad_up) {
+                    path = new Pose2d[]{
+                            new Pose2d(0, 0, new Rotation2d(Math.toRadians(90)))
+                    };
+                } else if (gamepad1.right_bumper) {
+                    path = new Pose2d[]{
+                            new Pose2d(0, 0, new Rotation2d(Math.toRadians(180)))
+                    };
+                } else if (gamepad1.left_trigger > 0.5) {
+                    path = new Pose2d[]{
+                            new Pose2d(24, 24, new Rotation2d(0))
+                    };
+                } else if (gamepad1.right_trigger > 0.5) {
+                    path = new Pose2d[]{
+                            new Pose2d(0, 0, new Rotation2d(0)),
+                    };
+                }
                 continue;
             }
             telemetry.addData("pose", rrDrive.getPose().toString());
@@ -69,7 +70,7 @@ public class PIDTuning extends LinearOpMode {
             telemetry.addData("!RIGHT ENCODER: ", robot.odom.getEncoders()[1]);
             telemetry.addData("!CENTER ENCODER: ", robot.odom.getEncoders()[2]);
             telemetry.update();
-            if (!movement.move(path[0])) {
+            if (path != null && !movement.move(path[0])) {
                 robot.drive.setDrivePowers(0, 0, 0, 0);
                 telemetry.addData("Done", "done");
                 telemetry.update();
