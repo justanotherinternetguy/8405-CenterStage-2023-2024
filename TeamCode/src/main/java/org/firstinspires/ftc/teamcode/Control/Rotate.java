@@ -27,13 +27,12 @@ public class Rotate {
 
     public void rotate(double targetHeading) {
         odom.update();
-        rotatePID.reset();
         double error;
         odom.update();
         while (Math.abs(utils.angleDifference(targetHeading, odom.getHeading())) > tolerance && opModeIsActive.get()) {
             odom.update();
             error = utils.angleDifference(targetHeading, odom.getHeading());
-            double headingPower = rotatePID.getValue(error);
+            double headingPower = rotatePID.getPower(targetHeading, odom.getHeading(), PID::rotationGetError);
             drive.mecanumDrive(0, 0, headingPower);
             telemetry.addData("heading ", odom.getHeading());
             telemetry.addData("error ", error);

@@ -2,77 +2,122 @@ package org.firstinspires.ftc.teamcode.Controllers;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.utils;
+
+import java.util.function.DoubleBinaryOperator;
+
 public class PID {
-    public PID.Config settings;
+    /*
+     * Proportional Integral Derivative Controller w/ Low pass filter and anti-windup
+     */
 
-    private double integralSum = 0.0;
-    private double lastError = 0.0;
+    private Config config;
 
-    private ElapsedTime timer;
+    Double lastTarget = null;
+    double integralSum = 0;
+    double lastError = 0;
+    double maxIntegralSum = Double.MAX_VALUE;
+    double a = 0.8; // a can be anything from 0 < a < 1
+    double previousFilterEstimate = 0;
+    double currentFilterEstimate = 0;
 
-    public PID(Config settings) {
-        this.settings = settings;
-        timer = new ElapsedTime();
-        timer.reset();
+    // Elapsed timer class from SDK, please use it, it's epic
+    ElapsedTime timer = null;
+
+    public PID(Config config) {
+        this.config = config;
     }
 
-    public PID(double Kp, double Ki, double Kd) {
-        this.settings = new PID.Config(Kp, Ki, Kd);
-        timer = new ElapsedTime();
-        timer.reset();
+    public PID(double p, double i, double d) {
+        this(new Config(p, i, d));
     }
 
-    // error is given by the user so that this class has multiple use cases
-    public double getValue(double error) {
-        double dT = timer.seconds();
-        double derivative = (error - lastError) / dT;
+    public double getPower(double target, double current) {
+        return this.getPower(target, current, PID::defaultGetError);
+    }
 
-        // sum all the error over time
-        integralSum += (error * dT);
+    public static double defaultGetError(double target, double current) {
+       return target - current;
+    }
 
-        // returns this value which can differ depending on the use case of the class
-        // eg. set motor power
-        double out = (settings.getKp() * error) + (settings.getKi() * integralSum) + (settings.getKd() * derivative);
+    public static double rotationGetError(double target, double current) {
+        return utils.angleDifference(target, current);
+    }
+
+    public double getPower(double target, double current, DoubleBinaryOperator getError) {
+        // on the first run, we will initalize lastTarget and timer
+        if (lastTarget == null) lastTarget = target;
+        if (timer == null) {
+            timer = new ElapsedTime();
+            timer.reset();
+        }
+
+        // calculate the error
+        double error = getError.applyAsDouble(target, current);
+
+        double errorChange = (error - lastError);
+
+        // filter out hight frequency noise to increase derivative performance
+        currentFilterEstimate = (a * previousFilterEstimate) + (1 - a) * errorChange;
+        previousFilterEstimate = currentFilterEstimate;
+
+        // rate of change of the error
+        double derivative = currentFilterEstimate / timer.seconds();
+
+        // sum of all error over time
+        integralSum = integralSum + (error * timer.seconds());
+
+
+        // max out integral sum
+        if (integralSum > maxIntegralSum) {
+            integralSum = maxIntegralSum;
+        }
+
+        if (integralSum < -maxIntegralSum) {
+            integralSum = -maxIntegralSum;
+        }
+
+        // reset integral sum upon setpoint changes
+        if (target != lastTarget) {
+            integralSum = 0;
+        }
+
+        double power = (config.getP() * error) + (config.getI() * integralSum) + (config.getD() * derivative);
 
         lastError = error;
-
+        lastTarget = target;
         timer.reset();
 
-        return out;
-    }
-
-    public void reset() {
-        lastError = 0;
-        integralSum = 0;
-        timer.reset();
+        return power;
     }
 
     public static class Config {
-        private double Kp;
-        private double Ki;
-        private double Kd;
+        private double p;
+        private double i;
+        private double d;
 
-        public Config(double Kp, double Ki, double Kd) {
-            this.Kp = Kp;
-            this.Ki = Ki;
-            this.Kd = Kd;
+        public Config(double p, double i, double d) {
+            this.p = p;
+            this.i = i;
+            this.d = d;
         }
 
-        public double getKp() {
-            return Kp;
-        }
+        public double getP() { return p; }
+        public double getKp() { return this.getP(); }
 
-        public double getKi() {
-            return Ki;
-        }
+        public void setP(double p) { this.p = p; }
+        public void setKp(double p) { this.setP(p); }
 
-        public double getKd() {
-            return Kd;
-        }
+        public double getI() { return i; }
+        public double getKi() { return this.getI(); }
 
-        @Override
-        public String toString() {
-            return "{ Kp: " + getKp() + ", Ki: " + getKi() + ", Kd: " + getKd() + " }";
-        }
+        public void setI(double i) { this.i = i; }
+        public void setKi(double i) { this.setI(i); }
+
+        public double getD() { return d; }
+        public double getKd() { return this.getD(); }
+
+        public void setD(double d) { this.d = d; }
+        public void setKd(double d) { this.setD(d); }
     }
 }

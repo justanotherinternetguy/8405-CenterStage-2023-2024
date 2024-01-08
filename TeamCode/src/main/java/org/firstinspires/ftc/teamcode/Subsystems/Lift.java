@@ -111,7 +111,7 @@ public class Lift {
     }
 
     public double liftToPos(int target, double power) {
-        double p = Range.clip(pid.getValue(target-encoder.getCurrentPosition()), -power, power);
+        double p = Range.clip(pid.getPower(target, encoder.getCurrentPosition()), -power, power);
         setLiftPower(p);
         return encoder.getCurrentPosition() - target;
     }

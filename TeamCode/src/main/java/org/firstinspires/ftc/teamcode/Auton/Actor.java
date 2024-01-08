@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Auton;
 
 import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.Control.Movement;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
 import org.firstinspires.ftc.teamcode.Subsystems.Lift;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utils;
 
@@ -190,7 +192,7 @@ class LiftAction extends Action {
 
     private final int height;
     private final double power;
-    private final AUTON_BLUE_NEAR_OLD.CAFPid pid = new AUTON_BLUE_NEAR_OLD.CAFPid(new PID.Config(Config.liftP, Config.liftI, Config.liftD));
+    private final PID pid = new PID(new PID.Config(Config.liftP, Config.liftI, Config.liftD));
 
     public LiftAction(int height, double power) {
         this.height = height;
@@ -249,13 +251,12 @@ class MvntAction extends Action {
 
     @Override
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
+        Pose2d pose = rrDrive.getPose();
         if (target != null) {
-            movement.move(target, maxPower);
+            movement.move(target, pose, new Double[]{maxPower, maxPower, maxPower});
             return;
         }
-        Pose2d pose = rrDrive.getPose();
-        double[] powers = Movement.absMovement(direction[0], direction[1], direction[2], pose.getHeading());
-        robot.drive.setDrivePowers(powers[0], powers[1], powers[2], powers[3]);
+        robot.drive.setDrivePowers(Drive.absoluteMovement(direction[0], direction[1], direction[2], pose.getHeading()));
     }
 
     @Override

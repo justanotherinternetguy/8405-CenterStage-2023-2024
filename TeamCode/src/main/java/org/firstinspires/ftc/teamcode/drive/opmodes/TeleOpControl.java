@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.Controllers.MotionProfile;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
+import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 
 
 @TeleOp(name = "Mecanum Drive", group = "Linear Opmode")
@@ -109,8 +110,7 @@ public class TeleOpControl extends LinearOpMode {
             tel.addData("!LEFT ENCODER: ", robot.odom.getEncoders()[0]);
             tel.addData("!RIGHT ENCODER: ", robot.odom.getEncoders()[1]);
             tel.addData("!CENTER ENCODER: ", robot.odom.getEncoders()[2]);
-            tel.addData("lift owo: ", robot.lift.leftLift.getCurrentPosition());
-
+            tel.addData("lift owo: ", robot.lift.leftLift.getCurrentPosition());;
             tel.update();
 
 //            telemetry.addData("maxfps", apriltags.camera.getCurrentPipelineMaxFps());
