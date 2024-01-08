@@ -145,7 +145,7 @@ public class AUTON_RED_NEAR extends LinearOpMode {
                 }
 
             } else {
-                robot.lift.liftToPos(Point.lastLiftHeight, Config.liftMotorPowerHold);
+                robot.lift.liftToPos(Point.lastLiftHeight, Config.gravity);
                 robot.drive.setDrivePowers(0, 0, 0, 0);
             }
             tel.addData("objectcenter: ", objectCenter[0]);

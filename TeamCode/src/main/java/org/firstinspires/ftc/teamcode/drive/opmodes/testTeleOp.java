@@ -31,8 +31,8 @@ public class testTeleOp extends LinearOpMode {
 //            else robot.lift.setLiftPower(0);
 //
 
-            tel.addData("OUTPUT:", robot.lift.liftToPos(400, 0.8));
-            tel.update();
+//            tel.addData("OUTPUT:", robot.lift.liftToPos(400, 0.8));
+//            tel.update();
 
 
             //            if(gamepad1.a)
@@ -52,11 +52,11 @@ public class testTeleOp extends LinearOpMode {
 //                robot.claw.bottomServo.setPosition(Config.bottomServoClose);
 //            }
 
-//            if (gamepad1.dpad_left) {
-//                robot.hang.hangMotor.setPower(0.8);
-//            } if (gamepad1.dpad_right) {
-//                robot.hang.hangMotor.setPower(-0.8);
-//            }
+            if (gamepad1.dpad_left) {
+                robot.hang.hangMotor.setPower(0.8);
+            } if (gamepad1.dpad_right) {
+                robot.hang.hangMotor.setPower(-0.8);
+            }
 
             telemetry.addData("left", robot.lift.leftLift.getCurrentPosition());
             telemetry.addData("right", robot.lift.rightLift.getCurrentPosition());

@@ -81,7 +81,7 @@ public class Lift {
                 leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             } else {
-                setLiftPower(-Config.gravity);
+                setLiftPower(Config.gravity);
             }
         } else {
             if (!startedKill) {
@@ -119,10 +119,10 @@ public class Lift {
 
     public void liftManual(Gamepad gamepad, Telemetry tel) {
         if (gamepad.right_trigger > 0.2 && encoder.getCurrentPosition() < Config.LIFT_MAX) {
-            setLiftPower(-gamepad.right_trigger - Config.gravity); // triggers were flipped 4 some reason
+            setLiftPower(gamepad.right_trigger - Config.gravity); // triggers were flipped 4 some reason
             tel.addData("lp", -gamepad.right_trigger - Config.gravity);
         } else if (gamepad.left_trigger > 0.2) {
-            setLiftPower(gamepad.left_trigger);
+            setLiftPower(-gamepad.left_trigger);
             tel.addData("lp", gamepad.left_trigger);
         }
 //        else
@@ -161,6 +161,6 @@ public class Lift {
 
     public void liftToBase() {
         currentMode = LIFT_MODE.MACRO;
-        liftToPos(400, (Config.liftMotorPowerMacro * 1.1) + Config.gravity);
+        liftToPos(400, (Config.liftMotorPowerMacro));// * 1.1) + Config.gravity);
     }
 }

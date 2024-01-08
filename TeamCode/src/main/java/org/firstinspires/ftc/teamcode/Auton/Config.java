@@ -31,8 +31,7 @@ public class Config {
     public static double alignment = 0.2;
 
     public static double liftMotorPowerMultTeleOp = 1;
-    public static double liftMotorPowerMacro = 0.5;
-    public static double liftMotorPowerHold = 0.275;
+    public static double liftMotorPowerMacro = 0.3;
     public static double liftMotorPowerAuton = 0.8;
     public static double liftMotorPowerDown = 0.42;
     public static int LIFT_MAX = Integer.MAX_VALUE;
