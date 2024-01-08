@@ -16,21 +16,24 @@ import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
+import com.acmerobotics.dashboard.FtcDashboard;
 
 @TeleOp(name = "Test", group = "Linear Opmode")
 public class testTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() {
         waitForStart();
+        Telemetry tel = FtcDashboard.getInstance().getTelemetry();
 
         Robot robot = new Robot(hardwareMap, gamepad1);
         while (opModeIsActive()) {
 //            if (gamepad1.right_trigger > 0.2 || gamepad1.left_trigger > 0.2)    robot.lift.liftManual(gamepad1, telemetry);
 //            else robot.lift.setLiftPower(0);
 //
-            if (gamepad1.x) {
-                robot.lift.liftToPos(400, 0.4);
-            }
+
+            tel.addData("OUTPUT:", robot.lift.liftToPos(400, 0.8));
+            tel.update();
+
 
             //            if(gamepad1.a)
 //            {

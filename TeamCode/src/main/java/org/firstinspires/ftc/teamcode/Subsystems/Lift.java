@@ -54,7 +54,7 @@ public class Lift {
         rightLift.setDirection(DcMotor.Direction.FORWARD);
         rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        encoder.setDirection(Encoder.Direction.REVERSE);
+        //encoder.setDirection(Encoder.Direction.REVERSE);
 
         pid = new PID(Config.liftP, Config.liftI, Config.liftD);
 
@@ -111,7 +111,7 @@ public class Lift {
     }
 
     public double liftToPos(int target, double power) {
-        double p = Range.clip(pid.getValue(target - (encoder.getCurrentPosition() * -1)), -power, power);
+        double p = Range.clip(pid.getValue(target-encoder.getCurrentPosition()), -power, power);
         setLiftPower(p);
         return encoder.getCurrentPosition() - target;
     }
