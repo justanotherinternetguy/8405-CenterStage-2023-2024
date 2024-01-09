@@ -26,6 +26,7 @@ public class PID {
 
     public PID(Config config) {
         this.config = config;
+        this.maxIntegralSum = config.i / 0.25;
     }
 
     public PID(double p, double i, double d) {

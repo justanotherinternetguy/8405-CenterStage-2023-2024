@@ -77,7 +77,7 @@ public class Movement {
         if (power != null) y *= power[1];
         if (power != null) h *= power[2];
 
-        Drive.DrivePowers powers = Drive.absoluteMovement(x, y, h, pose.getHeading());
+        Drive.DrivePowers powers = Drive.absoluteMovement(x, y, h, -pose.getHeading());
         drive.setDrivePowers(powers);
 
         double atX = Math.abs(PID.defaultGetError(target.getX(), pose.getX()));

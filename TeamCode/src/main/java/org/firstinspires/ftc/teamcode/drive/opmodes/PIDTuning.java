@@ -50,11 +50,11 @@ public class PIDTuning extends LinearOpMode {
                     };
                 } else if (gamepad1.dpad_up) {
                     path = new Pose2d[]{
-                            new Pose2d(0, 0, new Rotation2d(Math.toRadians(90)))
+                            new Pose2d(0, 24, new Rotation2d(Math.toRadians(90)))
                     };
                 } else if (gamepad1.right_bumper) {
                     path = new Pose2d[]{
-                            new Pose2d(0, 0, new Rotation2d(Math.toRadians(180)))
+                            new Pose2d(0, 24, new Rotation2d(Math.toRadians(180)))
                     };
                 } else if (gamepad1.left_trigger > 0.5) {
                     path = new Pose2d[]{
