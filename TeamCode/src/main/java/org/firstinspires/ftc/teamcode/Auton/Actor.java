@@ -253,7 +253,7 @@ class MvntAction extends Action {
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         Pose2d pose = rrDrive.getPose();
         if (target != null) {
-            movement.move(target, pose, new Double[]{maxPower, maxPower, maxPower});
+            movement.move(pose, target, new Double[]{maxPower, maxPower, maxPower}, null);
             return;
         }
         robot.drive.setDrivePowers(Drive.absoluteMovement(direction[0], direction[1], direction[2], pose.getHeading()));

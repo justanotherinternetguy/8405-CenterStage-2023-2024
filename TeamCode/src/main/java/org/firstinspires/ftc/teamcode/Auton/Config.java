@@ -17,11 +17,11 @@ public class Config {
     //    public static double translationP = 0.3;
     public static double translationP = 0.3;
     public static double translationI = 0.02;
-    public static double translationD = 0.042;
+    public static double translationD = 0.0;
     //    public static double rotationP = 0.07;
     public static double rotationP = 0.2;
-    public static double rotationI = 0.01;
-    public static double rotationD = 0.005;
+    public static double rotationI = 0.0;
+    public static double rotationD = 0.0;
     public static double tolerance = 1;
     public static double toleranceH = 2;
     public static double powerMultiplier = 0.8;

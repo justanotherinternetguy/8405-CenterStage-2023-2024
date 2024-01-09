@@ -66,13 +66,13 @@ public class Drive {
     }
 
     public void setDrivePowers(DrivePowers drivePowers) {
-        this.setDrivePowers(drivePowers);
+        this.setDrivePowers(drivePowers.frontLeft, drivePowers.frontRight, drivePowers.backLeft, drivePowers.backRight);
     }
 
     public void setDrivePowers(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
         frontLeft.setPower(frontLeftPower);
-        backLeft.setPower(backLeftPower);
         frontRight.setPower(frontRightPower);
+        backLeft.setPower(backLeftPower);
         backRight.setPower(backRightPower);
     }
 

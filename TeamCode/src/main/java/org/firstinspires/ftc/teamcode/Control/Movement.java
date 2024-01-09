@@ -64,25 +64,46 @@ public class Movement {
 
     // returns whether or not the bot still needs to move
 
-    public boolean move(Pose2d pose, Pose2d target) {
-        return this.move(pose, target, null);
+    public boolean move(Pose2d pose, Pose2d target, Telemetry tel) {
+        return this.move(pose, target, null, tel);
     }
 
-    public boolean move(Pose2d pose, Pose2d target, Double[] power) {
+    public boolean move(Pose2d pose, Pose2d target, Double[] power, Telemetry tel) {
         double x = driveX.getPower(target.getX(), pose.getX());
-        double y = driveX.getPower(target.getY(), pose.getY());
-        double h = driveX.getPower(target.getRotation().getDegrees(), pose.getRotation().getDegrees(), PID::rotationGetError);
+        double y = driveY.getPower(target.getY(), pose.getY());
+        double h = driveH.getPower(target.getRotation().getDegrees(), pose.getRotation().getDegrees(), PID::rotationGetError);
 
         if (power != null) x *= power[0];
         if (power != null) y *= power[1];
         if (power != null) h *= power[2];
 
-        drive.setDrivePowers(Drive.absoluteMovement(x, y, h, pose.getHeading()));
+        Drive.DrivePowers powers = Drive.absoluteMovement(x, y, h, pose.getHeading());
+        drive.setDrivePowers(powers);
 
-        boolean atX = PID.defaultGetError(target.getX(), pose.getX()) < this.tolX;
-        boolean atY = PID.defaultGetError(target.getY(), pose.getY()) < this.tolY;
-        boolean atH = PID.rotationGetError(target.getRotation().getDegrees(), pose.getRotation().getDegrees()) < this.tolH;
+        double atX = Math.abs(PID.defaultGetError(target.getX(), pose.getX()));
+        double atY = Math.abs(PID.defaultGetError(target.getY(), pose.getY()));
+        double atH = Math.abs(PID.rotationGetError(target.getRotation().getDegrees(), pose.getRotation().getDegrees()));
 
-        return !atX && !atY && !atH;
+        if (tel != null) {
+            tel.addData("atX", atX);
+            tel.addData("atY", atY);
+            tel.addData("atH", atH);
+            tel.addData("eX", x);
+            tel.addData("eY", y);
+            tel.addData("eH", h);
+            tel.addData("eX2", target.getX() - pose.getX());
+            tel.addData("eY2", target.getY() - pose.getY());
+            tel.addData("eH2", PID.rotationGetError(target.getRotation().getDegrees(), pose.getRotation().getDegrees()));
+            tel.addData("x", pose.getX());
+            tel.addData("y", pose.getY());
+            tel.addData("h", pose.getRotation().getDegrees());
+            tel.addData("fl", powers.frontLeft);
+            tel.addData("fr", powers.frontRight);
+            tel.addData("bl", powers.backLeft);
+            tel.addData("br", powers.backRight);
+            tel.update();
+        }
+
+        return !(atX < this.tolX) || !(atY < this.tolY) || !(atH < this.tolH);
     }
 }
