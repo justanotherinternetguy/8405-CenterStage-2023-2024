@@ -7,7 +7,6 @@ public class Robot {
     public Drive drive;
     public Lift lift;
     public Claw claw;
-    public Odometry odom;
     public Hang hang;
     public Plane drone;
 
@@ -15,7 +14,6 @@ public class Robot {
         drive = new Drive(hardwareMap);
         lift = new Lift(hardwareMap, gamepad);
         claw = new Claw(hardwareMap, gamepad);
-        odom = new Odometry(hardwareMap, drive.imu);
         hang = new Hang(hardwareMap, gamepad);
         drone = new Plane (hardwareMap, gamepad);
     }

@@ -26,7 +26,7 @@ public class Encoder {
         FORWARD(1),
         REVERSE(-1);
 
-        private int multiplier;
+        private final int multiplier;
 
         Direction(int multiplier) {
             this.multiplier = multiplier;

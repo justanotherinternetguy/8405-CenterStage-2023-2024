@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.drive.opmodes;
 
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
@@ -8,9 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.firstinspires.ftc.teamcode.Control.Movement;
-import org.firstinspires.ftc.teamcode.Controllers.PID;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -27,7 +24,6 @@ public class PIDTuning extends LinearOpMode {
         Pose2d[] path = null;
         Telemetry dashTel = FtcDashboard.getInstance().getTelemetry();
         waitForStart();
-        robot.odom.reset();
         while (opModeIsActive() && !isStopRequested()) {
 //            robot.lift.liftToBase();
             if (path == null) {
@@ -68,13 +64,10 @@ public class PIDTuning extends LinearOpMode {
                 continue;
             }
             telemetry.addData("pose", rrDrive.getPose().toString());
-            telemetry.addData("!LEFT ENCODER: ", robot.odom.getEncoders()[0]);
-            telemetry.addData("!RIGHT ENCODER: ", robot.odom.getEncoders()[1]);
-            telemetry.addData("!CENTER ENCODER: ", robot.odom.getEncoders()[2]);
             telemetry.update();
             rrDrive.updatePoseEstimate();
             Pose2d pose = rrDrive.getPose();
-            if (path != null && !movement.move(pose, path[0], dashTel)) {
+            if (!movement.move(pose, path[0], dashTel)) {
                 robot.drive.setDrivePowers(0, 0, 0, 0);
                 telemetry.addData("Done", "done");
                 telemetry.update();

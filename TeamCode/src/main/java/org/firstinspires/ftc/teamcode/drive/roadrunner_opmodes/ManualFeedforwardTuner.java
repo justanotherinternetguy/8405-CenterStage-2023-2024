@@ -132,7 +132,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     if (gamepad1.b) {
                         mode = Mode.TUNING_MODE;
                         movingForwards = true;
-                        activeProfile = generateProfile(movingForwards);
+                        activeProfile = generateProfile(true);
                         profileStart = clock.seconds();
                     }
 

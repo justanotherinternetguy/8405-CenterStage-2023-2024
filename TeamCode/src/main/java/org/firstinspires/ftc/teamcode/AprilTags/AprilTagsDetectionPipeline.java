@@ -18,7 +18,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 
-// CREDIT: openftc - https://github.com/OpenFTC/EOCV-AprilTag-Plugin
+// CREDIT: openFTC - https://github.com/OpenFTC/EOCV-AprilTag-Plugin
 
 public class AprilTagsDetectionPipeline extends OpenCvPipeline
 {
@@ -69,7 +69,7 @@ public class AprilTagsDetectionPipeline extends OpenCvPipeline
     }
 
     @Override
-    public void finalize()
+    protected void finalize()
     {
         // Might be null if createApriltagDetector() threw an exception
         if (nativeApriltagPtr != 0)
@@ -276,7 +276,7 @@ public class AprilTagsDetectionPipeline extends OpenCvPipeline
      * A simple container to hold both rotation and translation
      * vectors, which together form a 6DOF pose.
      */
-    class Pose
+    static class Pose
     {
         Mat rvec;
         Mat tvec;

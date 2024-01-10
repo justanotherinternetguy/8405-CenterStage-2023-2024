@@ -5,7 +5,9 @@ import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Utility functions for log files.
@@ -17,7 +19,7 @@ public class LoggingUtil {
     private static final long LOG_QUOTA = 25 * 1024 * 1024; // 25MB log quota for now
 
     private static void buildLogList(List<File> logFiles, File dir) {
-        for (File file : dir.listFiles()) {
+        for (File file : Objects.requireNonNull(dir.listFiles())) {
             if (file.isDirectory()) {
                 buildLogList(logFiles, file);
             } else {
@@ -29,8 +31,7 @@ public class LoggingUtil {
     private static void pruneLogsIfNecessary() {
         List<File> logFiles = new ArrayList<>();
         buildLogList(logFiles, ROAD_RUNNER_FOLDER);
-        Collections.sort(logFiles, (lhs, rhs) ->
-                Long.compare(lhs.lastModified(), rhs.lastModified()));
+        logFiles.sort(Comparator.comparingLong(File::lastModified));
 
         long dirSize = 0;
         for (File file: logFiles) {

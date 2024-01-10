@@ -41,6 +41,7 @@ public class StrafeTest extends LinearOpMode {
         telemetry.addData("finalHeading", poseEstimate.getHeading());
         telemetry.update();
 
+        //noinspection StatementWithEmptyBody
         while (!isStopRequested() && opModeIsActive()) ;
     }
 }

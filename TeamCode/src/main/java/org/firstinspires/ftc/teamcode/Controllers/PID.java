@@ -16,7 +16,7 @@ public class PID {
     Double lastTarget = null;
     double integralSum = 0;
     double lastError = 0;
-    double maxIntegralSum = Double.MAX_VALUE;
+    double maxIntegralSum;
     double a = 0.8; // a can be anything from 0 < a < 1
     double previousFilterEstimate = 0;
     double currentFilterEstimate = 0;
