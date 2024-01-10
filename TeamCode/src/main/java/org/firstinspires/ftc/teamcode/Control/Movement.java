@@ -21,9 +21,14 @@ import java.util.Arrays;
 import java.util.function.DoubleBinaryOperator;
 import java.util.function.Supplier;
 
+import dalvik.system.DelegateLastClassLoader;
+
 public class Movement {
     private Drive drive;
     private Pose2d pose;
+    private Pose2d lastTarget = null;
+    private ElapsedTime settlingTime = new ElapsedTime();
+    private boolean settling = false;
     private PID driveX = new PID(Config.translationP, Config.translationI, Config.translationD);
     private PID driveY = new PID(Config.translationP, Config.translationI, Config.translationD);
     private PID driveH = new PID(Config.rotationP, Config.rotationI, Config.rotationD);
@@ -69,6 +74,11 @@ public class Movement {
     }
 
     public boolean move(Pose2d pose, Pose2d target, Double[] power, Telemetry tel) {
+        if (target != lastTarget) {
+            settlingTime.reset();
+            settling = false;
+            lastTarget = target;
+        }
         double x = driveX.getPower(target.getX(), pose.getX());
         double y = driveY.getPower(target.getY(), pose.getY());
         double h = driveH.getPower(target.getRotation().getDegrees(), pose.getRotation().getDegrees(), PID::rotationGetError);
@@ -104,6 +114,19 @@ public class Movement {
             tel.update();
         }
 
-        return !(atX < this.tolX) || !(atY < this.tolY) || !(atH < this.tolH);
+        if (atX < this.tolX && atY < this.tolY && atH < this.tolH) {
+            if (!settling) {
+                settlingTime.reset();
+            }
+            settling = true;
+            if (settlingTime.milliseconds() > 500) {
+                return false;
+            }
+        } else {
+            settling = false;
+        }
+
+//        return !(atX < this.tolX) || !(atY < this.tolY) || !(atH < this.tolH);
+        return true;
     }
 }

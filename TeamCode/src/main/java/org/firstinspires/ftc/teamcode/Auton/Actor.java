@@ -178,13 +178,8 @@ class ClawAction extends Action {
 
     @Override
     public boolean isDone(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
-        // Claw is a bit scuffed, because of the way I setup parallel actions, since isDone is always true(as we don't know the servo positon since we aren't using axons)
-        // the run function would otherwise never be called, so we call it ourselves here before returning true
-        if (states == null) {
-            return false; // use timeout for time for now
-        }
-        this.run(hw, tm, robot, rrDrive, movement);
-        return true;
+        // use timeout to determine(servo cannot teleport instantly)
+        return false;
     }
 }
 
@@ -251,12 +246,15 @@ class MvntAction extends Action {
 
     @Override
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
-        Pose2d pose = rrDrive.getPose();
-        if (target != null) {
-            movement.move(pose, target, new Double[]{maxPower, maxPower, maxPower}, null);
-            return;
+//        if (target != null) {
+//            movement.move(pose, target, new Double[]{maxPower, maxPower, maxPower}, tm);
+//            return;
+//        }
+        if (target == null) {
+            rrDrive.updatePoseEstimate();
+            Pose2d pose = rrDrive.getPose();
+            robot.drive.setDrivePowers(Drive.absoluteMovement(direction[0], direction[1], direction[2], -pose.getHeading()));
         }
-        robot.drive.setDrivePowers(Drive.absoluteMovement(direction[0], direction[1], direction[2], pose.getHeading()));
     }
 
     @Override
@@ -265,9 +263,12 @@ class MvntAction extends Action {
             return false;
         }
         // same as in movement.move, just inverted to be isDone instead of continueNextLoop
-        double tolerance = Config.tolerance;
-        double toleranceH = Config.toleranceH;
+//        double tolerance = Config.tolerance;
+//        double toleranceH = Config.toleranceH;
+//        Pose2d pose = rrDrive.getPose();
+//        return !(Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > toleranceH);
+        rrDrive.updatePoseEstimate();
         Pose2d pose = rrDrive.getPose();
-        return !(Math.abs(target.getX() - pose.getX()) > tolerance || Math.abs(target.getY() - pose.getY()) > tolerance || Math.abs(utils.angleDifference(target.getRotation().getDegrees(), pose.getRotation().getDegrees())) > toleranceH);
+        return !movement.move(pose, target, new Double[]{maxPower, maxPower, maxPower}, tm);
     }
 }
