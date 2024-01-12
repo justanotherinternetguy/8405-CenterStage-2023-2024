@@ -1,31 +1,15 @@
 package org.firstinspires.ftc.teamcode.Control;
 
-import android.app.admin.DeviceAdminService;
-
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.geometry.Pose2d;
-import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Auton.Config;
-import org.firstinspires.ftc.teamcode.Controllers.MotionProfile;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive;
-import org.firstinspires.ftc.teamcode.Subsystems.Odometry;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.utils;
-
-import java.util.Arrays;
-import java.util.function.DoubleBinaryOperator;
-import java.util.function.Supplier;
-
-import dalvik.system.DelegateLastClassLoader;
 
 public class Movement {
     private Drive drive;
-    private Pose2d pose;
     private Pose2d lastTarget = null;
     private ElapsedTime settlingTime = new ElapsedTime();
     private boolean settling = false;
@@ -119,9 +103,7 @@ public class Movement {
                 settlingTime.reset();
             }
             settling = true;
-            if (settlingTime.milliseconds() > 500) {
-                return false;
-            }
+            return !(settlingTime.milliseconds() > 500);
         } else {
             settling = false;
         }

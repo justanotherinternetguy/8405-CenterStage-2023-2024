@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.ObjectDet;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBa
 import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -15,14 +17,10 @@ import org.opencv.imgproc.Moments;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
-import org.openftc.easyopencv.OpenCvInternalCamera2;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
-import org.opencv.core.*;
 
 import java.util.ArrayList;
-
 
 public class ObjectDetector {
     private HardwareMap hm;

@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.internal.system.CloseableOnFinalize;
 import org.firstinspires.ftc.teamcode.Auton.Config;
 
 public class Claw {
@@ -21,7 +19,7 @@ public class Claw {
     public boolean isBackboard = false; // is angled?
     public boolean lastLeftBumper = false;
     public boolean lastRightBumper = false;
-    public boolean lastBurstButtom = false;
+    public boolean lastBurstButton = false;
     public ElapsedTime timer = new ElapsedTime();
     public boolean inBurst = false;
 
@@ -32,37 +30,29 @@ public class Claw {
         clawServo = hardwareMap.get(Servo.class, "clawServo");
     }
 
-    public void setPos(double bPos, double tPos) {
-        bottomServo.setPosition(bPos);
-        topServo.setPosition(tPos);
-    }
-
     public void input(Gamepad gamepad1) {
         //true = closed
-//        if (gamepad1.left_bumper && !lastLeftBumper) {
-//            topClaw = !topClaw;
-//        }
         if (gamepad1.right_bumper && !lastRightBumper) {
             isBackboard = !isBackboard;
         }
-        if (gamepad1.y && !lastBurstButtom) {
-            if (topClaw == true && bottomClaw == true) {
-                bottomClaw = !bottomClaw;
+        if (gamepad1.y && !lastBurstButton) {
+            if (topClaw && bottomClaw) {
+                bottomClaw = false;
                 timer.reset();
                 inBurst = true;
-            } else if (topClaw == false && bottomClaw == false) {
-                topClaw = !topClaw;
-                bottomClaw = !bottomClaw;
+            } else if (!topClaw && !bottomClaw) {
+                topClaw = true;
+                bottomClaw = true;
                 inBurst = false;
             }
         }
-        if (inBurst && timer.milliseconds() > Config.burstDelay && topClaw == true && bottomClaw == false) {
-            topClaw = !topClaw;
+        if (inBurst && timer.milliseconds() > Config.burstDelay && topClaw && !bottomClaw) {
+            topClaw = false;
             inBurst = false;
         }
         lastRightBumper = gamepad1.right_bumper;
         lastLeftBumper = gamepad1.left_bumper;
-        lastBurstButtom = gamepad1.y;
+        lastBurstButton = gamepad1.y;
         if (bottomClaw) {
             bottomServo.setPosition(Config.bottomServoClose);
         } else {

@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -125,11 +121,6 @@ public class Lift {
             setLiftPower(-gamepad.left_trigger);
             tel.addData("lp", gamepad.left_trigger);
         }
-//        else
-//        {
-//            setLiftPower(0);
-//            currentMode = LIFT_MODE.NONE;
-//        }
         tel.addData("left", leftLift.getCurrentPosition());
         tel.addData("right", rightLift.getCurrentPosition());
         tel.addData("enc", encoder.getCurrentPosition());
@@ -143,10 +134,6 @@ public class Lift {
             liftToBase();
         }
 //        else if(gamepad.b)
-//        {
-//            last_key_pressed = LAST_KEY_PRESSED.B;
-//            this.currentMode = LIFT_MODE.KILL;
-//        }
         else if (last_key_pressed == LAST_KEY_PRESSED.A) {
             liftToBase();
         }

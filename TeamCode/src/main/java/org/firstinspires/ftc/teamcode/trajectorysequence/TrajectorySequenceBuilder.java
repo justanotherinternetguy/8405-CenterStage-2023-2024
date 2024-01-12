@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public class TrajectorySequenceBuilder {
     private final double resolution = 0.25;
@@ -702,7 +703,7 @@ public class TrajectorySequenceBuilder {
                 closestPoint = comparingPoint;
         }
 
-        return displacementToTime(sequenceSegments, closestPoint.thisPathDisplacement);
+        return displacementToTime(sequenceSegments, Objects.requireNonNull(closestPoint).thisPathDisplacement);
     }
 
     private interface AddPathCallback {

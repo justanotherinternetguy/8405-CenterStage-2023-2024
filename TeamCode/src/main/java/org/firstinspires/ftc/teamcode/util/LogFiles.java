@@ -24,10 +24,12 @@ import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -176,7 +178,7 @@ public final class LogFiles {
 
             // clean up old files
             File[] fs = Objects.requireNonNull(ROOT.listFiles());
-            Arrays.sort(fs, (a, b) -> Long.compare(a.lastModified(), b.lastModified()));
+            Arrays.sort(fs, Comparator.comparingLong(File::lastModified));
             long totalSizeBytes = 0;
             for (File f : fs) {
                 totalSizeBytes += f.length();
@@ -267,7 +269,7 @@ public final class LogFiles {
             }
 
             return NanoHTTPD.newChunkedResponse(NanoHTTPD.Response.Status.OK,
-                    "application/json", new FileInputStream(f));
+                    "application/json", Files.newInputStream(f.toPath()));
         });
     }
 }
