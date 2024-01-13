@@ -60,10 +60,10 @@ public class TeleOpControl2 extends LinearOpMode {
                 robot.claw.topServo.setPosition(Config.bottomServoClose);
             }
             if (gamepad1.left_trigger > 0.5) {
-                robot.claw.topServo.setPosition(Config.topServoOpen);
+                robot.claw.bottomServo.setPosition(Config.topServoOpen);
             }
             if (gamepad1.right_trigger > 0.5) {
-                robot.claw.topServo.setPosition(Config.topServoClose);
+                robot.claw.bottomServo.setPosition(Config.topServoClose);
             }
         }
     }
