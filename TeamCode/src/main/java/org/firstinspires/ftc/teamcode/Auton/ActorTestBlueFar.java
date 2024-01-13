@@ -39,7 +39,7 @@ public class ActorTestBlueFar extends LinearOpMode {
                     .add(new LiftAction(Config.stack + 150, Config.liftMotorPowerAuton))
                     .add(new ClawAction(false), 2000.0)
                     .add(new LiftAction(Config.stack + 150, Config.liftMotorPowerAuton), true, true)
-                    .add(new MvntAction(1/3.0, 0,0), 1750.0)  // into wall
+                    .add(new MvntAction(1/3.0, 0,0), 500.0)  // into wall
                     .add(new LiftAction(Config.stack + 100, Config.liftMotorPowerAuton / 2), true, true)
                     .add(new MvntAction(-0.2, 0,0), 25.0) // over stack
 //                    .add(new LiftAction(Config.stack + 150, Config.liftMotorPowerAuton / 2), true, true)

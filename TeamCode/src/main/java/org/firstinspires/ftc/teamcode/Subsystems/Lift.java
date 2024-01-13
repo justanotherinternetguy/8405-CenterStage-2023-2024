@@ -65,10 +65,6 @@ public class Lift {
                 currentMode = LIFT_MODE.MANUAL;
                 holdingPos = -1;
                 liftManual(gamepad, tel);
-            } else if (gamepad.a || currentMode == LIFT_MODE.MACRO) {
-                currentMode = LIFT_MODE.MACRO;
-                holdingPos = -1;
-                liftMacro(gamepad);
             } else if (gamepad.b || currentMode == LIFT_MODE.POWEROFF) {
                 currentMode = LIFT_MODE.POWEROFF;
                 holdingPos = -1;
@@ -127,27 +123,10 @@ public class Lift {
 
     }
 
-    private void liftMacro(Gamepad gamepad) {
-
-        if (gamepad.a) {
-            last_key_pressed = LAST_KEY_PRESSED.A;
-            liftToBase();
-        }
-//        else if(gamepad.b)
-        else if (last_key_pressed == LAST_KEY_PRESSED.A) {
-            liftToBase();
-        }
-    }
-
     public void setLiftPower(double power) {
         leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftLift.setPower(power * Config.liftMotorPowerMultTeleOp * -1);
         rightLift.setPower(power * Config.liftMotorPowerMultTeleOp * -1);
-    }
-
-    public void liftToBase() {
-        currentMode = LIFT_MODE.MACRO;
-        liftToPos(400, (Config.liftMotorPowerMacro));// * 1.1) + Config.gravity);
     }
 }

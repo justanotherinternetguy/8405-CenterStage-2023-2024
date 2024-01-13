@@ -44,6 +44,7 @@ public class TeleOpControl extends LinearOpMode {
             robot.lift.liftTeleOp(gamepad1, tel); // LIFT
             robot.claw.input(gamepad1);
             robot.hang.input(gamepad1);
+            robot.drone.input(gamepad1);
 //            robot.claw.setPower(-1, -1);
             if (gamepad1.x && !lastX) {
                 slowMode = !slowMode;

@@ -57,7 +57,7 @@ public class Config {
     public static double clawServoBackboard = 0.775;
 
 
-    public static int burstDelay = 1500 ;
+    public static int burstDelay = 1000;
 
     public static double frontMulti = 1;
 }

@@ -15,6 +15,6 @@ public class Robot {
         lift = new Lift(hardwareMap, gamepad);
         claw = new Claw(hardwareMap, gamepad);
         hang = new Hang(hardwareMap, gamepad);
-        drone = new Plane (hardwareMap, gamepad);
+        drone = new Plane(hardwareMap, gamepad);
     }
 }
