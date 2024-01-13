@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.Control.Actor.ClawAction;
 import org.firstinspires.ftc.teamcode.Control.Actor.LiftAction;
 import org.firstinspires.ftc.teamcode.Control.Actor.MvntAction;
 import org.firstinspires.ftc.teamcode.Control.Movement;
+import org.firstinspires.ftc.teamcode.ObjectDet.ObjectDetector;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -25,7 +26,25 @@ public class ActorTest extends LinearOpMode {
         Movement movement = new Movement(robot.drive);
         Actor actor = new Actor(hardwareMap, telemetry, robot, rrDrive, movement, 3000);
 
-        if (Config.dir == 0) {
+        ObjectDetector objectDetector = new ObjectDetector(hardwareMap, tel);
+
+        double third = 1920.0 / 3 + 100;
+        int dir = 1; // center by default, will get overriden
+
+        while (!isStarted()) {
+            int[] coords = objectDetector.search();
+            int centerX = coords[0];
+            if (centerX < third) { // left
+                dir = 0;
+            } else if (centerX > 2 * third) {
+                dir = 2;
+            } else {
+                dir = 1;
+            }
+        }
+
+//        if (Config.dir == 0) {
+        if (dir == 0) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 750.0)
                     .add(new MvntAction(new Pose2d(3, 27.5, new Rotation2d(Math.toRadians(-90)))))
@@ -37,16 +56,18 @@ public class ActorTest extends LinearOpMode {
                     .add(new MvntAction(new Pose2d(24, 32.5, new Rotation2d(Math.toRadians(90)))))
                     .add(new MvntAction(new Pose2d(32, 32.5, new Rotation2d(Math.toRadians(90)))))
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton))
-                    .add(new MvntAction(1/3.0, 0.0, 0.0), 1000.0)
+                    .add(new MvntAction(1 / 3.0, 0.0, 0.0), 1000.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
                     .add(new ClawAction(ClawAction.ClawStates.topOpen), 750.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
                     .add(new MvntAction(new Pose2d(32, 31, new Rotation2d(Math.toRadians(90)))))
                     .add(new MvntAction(new Pose2d(32, 3, new Rotation2d(Math.toRadians(90)))))
                     .add(new MvntAction(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))));
+
         }
 
-        if (Config.dir == 1) {
+//        if (Config.dir == 1) {
+        if (dir == 1) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 1000.0)
                     .add(new MvntAction(new Pose2d(0, 32.5, new Rotation2d(0))))
@@ -65,7 +86,8 @@ public class ActorTest extends LinearOpMode {
                     .add(new MvntAction(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))));
         }
 
-        if (Config.dir == 2) {
+//        if (Config.dir == 2) {
+        if (dir == 2) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 750.0)
                     .add(new MvntAction(new Pose2d(5.5, 27, new Rotation2d(Math.toRadians(90)))), 2500.0)
@@ -77,7 +99,7 @@ public class ActorTest extends LinearOpMode {
                     .add(new MvntAction(new Pose2d(32, 3, new Rotation2d(Math.toRadians(90)))), 2500.0)
                     .add(new MvntAction(new Pose2d(32, 21.625, new Rotation2d(Math.toRadians(90)))), 2500.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton))
-                    .add(new MvntAction(1/3.0, 0.0, 0.0), 1750.0)
+                    .add(new MvntAction(1 / 3.0, 0.0, 0.0), 1750.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
                     .add(new ClawAction(ClawAction.ClawStates.topOpen), 750.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
@@ -94,7 +116,7 @@ public class ActorTest extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             if (actor.run() == 0) {
-                robot.drive.setDrivePowers(0,0,0,0);
+                robot.drive.setDrivePowers(0, 0, 0, 0);
                 rrDrive.updatePoseEstimate();
                 Pose2d pose = rrDrive.getPose();
                 tel.addData("finished", true);
