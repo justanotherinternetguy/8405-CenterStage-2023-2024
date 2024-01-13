@@ -28,56 +28,77 @@ public class ActorTestBlueFar extends LinearOpMode {
         ElapsedTime pathTime = new ElapsedTime();
         double pathLength = -1;
 
+
+        if (Config.dir == 2) {
+            actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
+                    .add(new ClawAction(true), 750.0)
+                    .add(new MvntAction(new Pose2d(-3, 27.5, new Rotation2d(Math.toRadians(90)))))
+                    .add(new MvntAction(new Pose2d(6, 27, new Rotation2d(Math.toRadians(90)))))
+                    .add(new ClawAction(false), 750.0)
+                    .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 1000.0)
+                    .add(new ClawAction(true), 750.0)
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(Math.toRadians(90)))))
+                    .add(new MvntAction(new Pose2d(0, 3, new Rotation2d(Math.toRadians(90)))))
+                    .add(new MvntAction(new Pose2d(28, 3, new Rotation2d(Math.toRadians(90)))))
+                    .add(new MvntAction(new Pose2d(28, 51, new Rotation2d(Math.toRadians(90)))))
+                    .add(new MvntAction(new Pose2d(-72, 51, new Rotation2d(Math.toRadians(90)))))
+                    .add(new MvntAction(new Pose2d(-72, 51, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new MvntAction(new Pose2d(-80, 24.5, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton))
+                    .add(new MvntAction(-1/3.0, 0.0, 0.0), 1000.0)
+                    .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
+                    .add(new ClawAction(ClawAction.ClawStates.topOpen), 750.0)
+                    .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
+                    .add(new MvntAction(new Pose2d(-80, 23.5, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new MvntAction(new Pose2d(-80, 5, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new MvntAction(new Pose2d(-84, 5, new Rotation2d(Math.toRadians(-90)))));
+        }
+
+        if (Config.dir == 1) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 1000.0)
                     .add(new MvntAction(new Pose2d(0, 32.5, new Rotation2d(0))))
                     .add(new ClawAction(false), 1000.0)
                     .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 1000.0)
                     .add(new ClawAction(true), 1000.0)
-                    // done with purple placement
-                    .add(new MvntAction(new Pose2d(0, 26, new Rotation2d(0)))) // go back
-                    .add(new MvntAction(new Pose2d(20, 26, new Rotation2d(Math.toRadians(0)))))
-                    .add(new MvntAction(new Pose2d(15, 51, new Rotation2d(Math.toRadians(0)))))
-                    .add(new MvntAction(new Pose2d(15, 51, new Rotation2d(Math.toRadians(00)))))
-                    .add(new MvntAction(new Pose2d(20, 51, new Rotation2d(Math.toRadians(90))))) // in front of the stack
-                    .add(new LiftAction(Config.stack + 150, Config.liftMotorPowerAuton))
-                    .add(new ClawAction(false), 2000.0)
-                    .add(new LiftAction(Config.stack + 150, Config.liftMotorPowerAuton), true, true)
-                    .add(new MvntAction(1/3.0, 0,0), 1000.0) // into wall
-                    .add(new LiftAction(Config.stack + 100, Config.liftMotorPowerAuton / 2), true, true)
-                    .add(new MvntAction(-0.2, 0,0), 25.0) // over stack
-                    .add(new LiftAction(Config.stack + 150, Config.liftMotorPowerAuton / 2), true, true)
-                    .add(new MvntAction(0, 0,0), 100.0) // stop
-                    .add(new LiftAction(Config.stack + 150, Config.liftMotorPowerAuton / 2), true, true)
-                    .add(new LiftAction(Config.stack, Config.liftMotorPowerAuton / 2.0), 750.0)
-                    .add(new ClawAction(ClawAction.ClawStates.bottomClosed), 2000.0)
-                    .add(new LiftAction(Config.stack, Config.liftMotorPowerAuton), true, true)
-                    .add(new LiftAction(Config.stack+150, Config.liftMotorPowerAuton / 1.5))
-                    .add(new MvntAction(new Pose2d(20, 51, new Rotation2d(Math.toRadians(90)))))
-                    .add(new LiftAction(Config.stack+150, Config.liftMotorPowerAuton / 1.5), true, true)
-                    .add(new ClawAction(true), 2000.0)
-                    .add(new LiftAction(Config.stack+150, Config.liftMotorPowerAuton / 1.5), true, true)
-                    .add(new MvntAction(new Pose2d(-24, 51, new Rotation2d(Math.toRadians(90)))))
-                    .add(new LiftAction(Config.FLOOR / 2, Config.liftMotorPowerAuton / 1.5), true, true)
-                    .add(new MvntAction(new Pose2d(-48, 52, new Rotation2d(Math.toRadians(90)))))
-                    .add(new MvntAction(new Pose2d(-48, 52, new Rotation2d(Math.toRadians(-90)))))
-                    .add(new MvntAction(new Pose2d(-56, 24.5, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new MvntAction(new Pose2d(0, 20, new Rotation2d(0))))                    .add(new MvntAction(new Pose2d(28, 3, new Rotation2d(Math.toRadians(90)))))
+                    .add(new MvntAction(new Pose2d(28, 51, new Rotation2d(Math.toRadians(90)))))
+                    .add(new MvntAction(new Pose2d(-72, 51, new Rotation2d(Math.toRadians(90)))))
+                    .add(new MvntAction(new Pose2d(-72, 51, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new MvntAction(new Pose2d(-80, 24.5, new Rotation2d(Math.toRadians(-90)))))
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton))
                     .add(new MvntAction(-0.25, 0.0, 0.0))
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
-                    .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 2000.0)
+                    .add(new ClawAction(ClawAction.ClawStates.topOpen), 1000.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
-                    .add(new ClawAction(ClawAction.ClawStates.topOpen), 2000.0)
-                    .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
-                    .add(new MvntAction(new Pose2d(-56, 24.5, new Rotation2d(Math.toRadians(-90)))))
-                    .add(new MvntAction(new Pose2d(-56, 1, new Rotation2d(Math.toRadians(-90)))))
-                    .add(new MvntAction(new Pose2d(-56, 1, new Rotation2d(Math.toRadians(-90)))));;
+                    .add(new MvntAction(new Pose2d(-80, 24.5, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new MvntAction(new Pose2d(-80, 1, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new MvntAction(new Pose2d(-84, 1, new Rotation2d(Math.toRadians(-90)))));
+        }
 
-//        actor
-//                .add(new MvntAction(new Pose2d(20, 26, new Rotation2d(Math.toRadians(0)))))
-//                .add(new LiftAction(Config.stack+150, Config.liftMotorPowerAuton / 1.5), true, true)
-//                .add(new MvntAction(new Pose2d(0, 2, new Rotation2d(0))));
-//                .add(new LiftAction(Config.stack+150, Config.liftMotorPowerAuton / 1.5), true, true);
+        if (Config.dir == 0) {
+            actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
+                    .add(new ClawAction(true), 750.0)
+                    .add(new MvntAction(new Pose2d(-5.5, 27, new Rotation2d(Math.toRadians(-90)))), 2500.0)
+                    .add(new ClawAction(false), 750.0)
+                    .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 500.0)
+                    .add(new ClawAction(true), 750.0)
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(0))))
+                    .add(new MvntAction(new Pose2d(28, 27, new Rotation2d(0))))
+                    .add(new MvntAction(new Pose2d(28, 51, new Rotation2d(Math.toRadians(90)))))
+                    .add(new MvntAction(new Pose2d(-72, 51, new Rotation2d(Math.toRadians(90)))))
+                    .add(new MvntAction(new Pose2d(-72, 51, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new MvntAction(new Pose2d(-80, 3, new Rotation2d(Math.toRadians(-90)))), 2500.0)
+                    .add(new MvntAction(new Pose2d(-80, 21.625, new Rotation2d(Math.toRadians(-90)))), 2500.0)
+                    .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton))
+                    .add(new MvntAction(-1/3.0, 0.0, 0.0), 1750.0)
+                    .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
+                    .add(new ClawAction(ClawAction.ClawStates.topOpen), 750.0)
+                    .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
+                    .add(new MvntAction(new Pose2d(-80, 21.625, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new MvntAction(new Pose2d(-80, 3, new Rotation2d(Math.toRadians(-90)))), 2000.0)
+                    .add(new MvntAction(new Pose2d(-84, 3, new Rotation2d(Math.toRadians(-90)))), 2500.0);
+        }
 
         waitForStart();
         actor.resetTimer();
@@ -88,7 +109,7 @@ public class ActorTestBlueFar extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             if (actor.run() == 0) {
                 if (pathLength == -1) pathLength = pathTime.seconds();
-                robot.drive.setDrivePowers(0,0,0,0);
+                robot.drive.setDrivePowers(0, 0, 0, 0);
                 robot.lift.setLiftPower(0);
                 rrDrive.updatePoseEstimate();
                 Pose2d pose = rrDrive.getPose();

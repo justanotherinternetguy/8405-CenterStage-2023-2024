@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.Control.Actor.ClawAction;
 import org.firstinspires.ftc.teamcode.Control.Actor.LiftAction;
 import org.firstinspires.ftc.teamcode.Control.Actor.MvntAction;
 import org.firstinspires.ftc.teamcode.Control.Movement;
-import org.firstinspires.ftc.teamcode.Subsystems.Claw;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -26,7 +25,7 @@ public class ActorTestBlue extends LinearOpMode {
         Movement movement = new Movement(robot.drive);
         Actor actor = new Actor(hardwareMap, telemetry, robot, rrDrive, movement, 5000);
 
-        if (Config.dir == 0) {
+        if (Config.dir == 2) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 750.0)
                     .add(new MvntAction(new Pose2d(-3, 27.5, new Rotation2d(Math.toRadians(90)))))
@@ -66,7 +65,7 @@ public class ActorTestBlue extends LinearOpMode {
                     .add(new MvntAction(new Pose2d(-36, 1, new Rotation2d(Math.toRadians(-90)))));
         }
 
-        if (Config.dir == 2) {
+        if (Config.dir == 0) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 750.0)
                     .add(new MvntAction(new Pose2d(-5.5, 27, new Rotation2d(Math.toRadians(-90)))), 2500.0)
