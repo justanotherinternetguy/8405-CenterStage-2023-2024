@@ -23,7 +23,7 @@ public class ActorTestFar extends LinearOpMode {
         SampleMecanumDrive rrDrive = new SampleMecanumDrive(hardwareMap);
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
         Movement movement = new Movement(robot.drive);
-        Actor actor = new Actor(hardwareMap, telemetry, robot, rrDrive, movement, 5000);
+        Actor actor = new Actor(hardwareMap, telemetry, robot, rrDrive, movement, 3000);
 
         if (Config.dir == 0) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
