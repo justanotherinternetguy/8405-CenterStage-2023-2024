@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Auton.Config;
 
 public class Claw {
@@ -30,7 +31,9 @@ public class Claw {
         clawServo = hardwareMap.get(Servo.class, "clawServo");
     }
 
-    public void input(Gamepad gamepad1) {
+    public void input(Gamepad gamepad1, Telemetry tel) {
+        tel.addData("topClaw", topClaw);
+        tel.addData("bottomClaw", bottomClaw);
         //true = closed
         if (gamepad1.right_bumper && !lastRightBumper) {
             isBackboard = !isBackboard;
@@ -64,9 +67,11 @@ public class Claw {
             topServo.setPosition(Config.topServoOpen);
         }
         if (isBackboard) {
+            clawServo.getController().pwmEnable();
             clawServo.setPosition(Config.clawServoBackboard);
         } else {
-            clawServo.setPosition(Config.clawServoFloor);
+//            clawServo.setPosition(Config.clawServoFloor);
+            clawServo.getController().pwmDisable();
         }
     }
 }

@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Auton.Config;
 
+import java.util.function.Supplier;
+
 public class Hang {
     public DcMotorEx hangMotor;
     public Gamepad gamepad;
@@ -18,11 +20,11 @@ public class Hang {
     }
 
 
-    public void input(Gamepad gamepad1) {
+    public void input(Gamepad gamepad1, Supplier<Boolean> opMode, Supplier<Boolean> stop) {
         if (gamepad1.dpad_up) {
             setHangMotorPower(0.7);
         } else if (gamepad1.dpad_down) {
-            hangNow();
+            hangNow(opMode, stop);
         }
         setHangMotorPower(0);
     }
@@ -31,10 +33,9 @@ public class Hang {
         hangMotor.setPower(power);
     }
 
-    public void hangNow() {
-        //noinspection InfiniteLoopStatement
-        for (;;) {
-            hangMotor.setPower(Config.hangPower);
+    public void hangNow(Supplier<Boolean> opMode, Supplier<Boolean> stop) {
+        while (opMode.get() && !stop.get()) {
+            hangMotor.setPower(-Config.hangPower);
         }
     }
 }

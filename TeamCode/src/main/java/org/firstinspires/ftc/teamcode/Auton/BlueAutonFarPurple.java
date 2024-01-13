@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
-public class ActorTestBlueFarSafe extends LinearOpMode {
+public class BlueAutonFarPurple extends LinearOpMode {
     @Override
     public void runOpMode() {
         Robot robot = new Robot(hardwareMap, gamepad1);

@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
-public class ActorTestBlueSafe extends LinearOpMode {
+public class RedAutonClosePurple extends LinearOpMode {
     @Override
     public void runOpMode() {
         Robot robot = new Robot(hardwareMap, gamepad1);
@@ -42,14 +42,15 @@ public class ActorTestBlueSafe extends LinearOpMode {
             }
         }
 
-//        if (Config.dir == 2) {
-        if (dir == 2) {
+//        if (Config.dir == 0) {
+        if (dir == 0) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 750.0)
-                    .add(new MvntAction(new Pose2d(-3, 27.5, new Rotation2d(Math.toRadians(90)))))
-                    .add(new MvntAction(new Pose2d(6, 27, new Rotation2d(Math.toRadians(90)))))
+                    .add(new MvntAction(new Pose2d(3, 27.5, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new MvntAction(new Pose2d(-5, 27, new Rotation2d(Math.toRadians(-90)))))
                     .add(new ClawAction(false), 750.0)
                     .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 1000.0);
+
         }
 
 //        if (Config.dir == 1) {
@@ -61,17 +62,17 @@ public class ActorTestBlueSafe extends LinearOpMode {
                     .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 1000.0);
         }
 
-//        if (Config.dir == 0) {
-        if (dir == 0) {
+//        if (Config.dir == 2) {
+        if (dir == 2) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 750.0)
-                    .add(new MvntAction(new Pose2d(-5.5, 27, new Rotation2d(Math.toRadians(-90)))), 2500.0)
+                    .add(new MvntAction(new Pose2d(5.5, 27, new Rotation2d(Math.toRadians(90)))), 2500.0)
                     .add(new ClawAction(false), 750.0)
                     .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 500.0);
         }
 
-        waitForStart();
 
+        waitForStart();
         actor.resetTimer();
 
         robot.drive.imu.resetYaw();

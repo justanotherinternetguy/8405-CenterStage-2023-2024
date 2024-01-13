@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Auton.Config;
-import org.firstinspires.ftc.teamcode.ObjectDet.ObjectDetector;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -33,7 +32,7 @@ public class TeleOpControl extends LinearOpMode {
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
 
 
-        ObjectDetector objectDetector = new ObjectDetector(hardwareMap, tel);
+//        ObjectDetector objectDetector = new ObjectDetector(hardwareMap, tel);
 
         boolean lastX = false;
 
@@ -42,18 +41,18 @@ public class TeleOpControl extends LinearOpMode {
         timer.reset();
 
         while (opModeIsActive()) {
-            int[] results = objectDetector.search();
+//            int[] results = objectDetector.search();
 
-            for (int i = 0; i < results.length; i++) {
-                tel.addData("Results " + i, results[i]);
-            }
+//            for (int i = 0; i < results.length; i++) {
+//                tel.addData("Results " + i, results[i]);
+//            }
 
             drive.updatePoseEstimate();
             Pose2d poseEstimate = drive.getPose();
 
             robot.lift.liftTeleOp(gamepad1, tel); // LIFT
-            robot.claw.input(gamepad1);
-            robot.hang.input(gamepad1);
+            robot.claw.input(gamepad1, tel);
+            robot.hang.input(gamepad1, this::opModeIsActive, this::isStopRequested);
             robot.drone.input(gamepad1);
 //            robot.claw.setPower(-1, -1);
             if (gamepad1.x && !lastX) {
