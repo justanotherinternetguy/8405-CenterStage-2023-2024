@@ -46,8 +46,10 @@ public class BlueAutonClosePurple extends LinearOpMode {
         if (dir == 2) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 750.0)
-                    .add(new MvntAction(new Pose2d(-3, 27.5, new Rotation2d(Math.toRadians(90)))))
-                    .add(new MvntAction(new Pose2d(6, 27, new Rotation2d(Math.toRadians(90)))))
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(Math.toRadians(0)))), 2500.0)
+                    .add(new MvntAction(new Pose2d(8, 27, new Rotation2d(Math.toRadians(0)))), 2500.0)
+                    .add(new MvntAction(new Pose2d(5.5, 27, new Rotation2d(Math.toRadians(0)))), 2500.0)
+                    .add(new MvntAction(new Pose2d(5.5, 27, new Rotation2d(Math.toRadians(90)))), 2500.0)
                     .add(new ClawAction(false), 750.0)
                     .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 1000.0);
         }
@@ -56,6 +58,11 @@ public class BlueAutonClosePurple extends LinearOpMode {
         if (dir == 1) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 1000.0)
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(0))))
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(-90))))
+                    .add(new MvntAction(new Pose2d(0, 36, new Rotation2d(-90))))
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(-90))))
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(0))))
                     .add(new MvntAction(new Pose2d(0, 32.5, new Rotation2d(0))))
                     .add(new ClawAction(false), 1000.0)
                     .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 1000.0);
@@ -65,7 +72,11 @@ public class BlueAutonClosePurple extends LinearOpMode {
         if (dir == 0) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 750.0)
-                    .add(new MvntAction(new Pose2d(-5.5, 27, new Rotation2d(Math.toRadians(-90)))), 2500.0)
+                    .add(new MvntAction(new Pose2d(0, 27.5, new Rotation2d(Math.toRadians(0)))))
+                    .add(new MvntAction(new Pose2d(-15, 27, new Rotation2d(Math.toRadians(0)))))
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(Math.toRadians(0)))))
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new MvntAction(new Pose2d(-5, 27, new Rotation2d(Math.toRadians(-90)))))
                     .add(new ClawAction(false), 750.0)
                     .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 500.0);
         }
