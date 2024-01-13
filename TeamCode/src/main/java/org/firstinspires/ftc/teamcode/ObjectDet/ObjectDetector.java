@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -125,7 +126,7 @@ public class ObjectDetector {
                 int centerY = (int) (mu.get_m01() / mu.get_m00());
                 this.latest_x = centerX;
                 this.latest_y = centerY;
-//                Imgproc.circle(res, new Point(centerX, centerY), 5, new Scalar(0, 0, 255), -1);
+                Imgproc.circle(input, new Point(centerX, centerY), 25, new Scalar(255, 0, 255), -1);
             }
 
             mask.release();

@@ -9,7 +9,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Auton.Config;
-import org.firstinspires.ftc.teamcode.Subsystems.*;
+import org.firstinspires.ftc.teamcode.ObjectDet.ObjectDetector;
+import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @TeleOp(name = "Mecanum Drive", group = "Linear Opmode")
@@ -31,6 +32,9 @@ public class TeleOpControl extends LinearOpMode {
 
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
 
+
+        ObjectDetector objectDetector = new ObjectDetector(hardwareMap, tel);
+
         boolean lastX = false;
 
         waitForStart();
@@ -38,6 +42,12 @@ public class TeleOpControl extends LinearOpMode {
         timer.reset();
 
         while (opModeIsActive()) {
+            int[] results = objectDetector.search();
+
+            for (int i = 0; i < results.length; i++) {
+                tel.addData("Results " + i, results[i]);
+            }
+
             drive.updatePoseEstimate();
             Pose2d poseEstimate = drive.getPose();
 

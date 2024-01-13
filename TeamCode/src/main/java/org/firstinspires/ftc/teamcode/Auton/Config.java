@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.Auton;
 @com.acmerobotics.dashboard.config.Config
 public class Config {
     public static int boardBase = 425;
-    public static int stack = 240;
+    public static int stack = 200;
     public static double hangPower = -0.85;
     public static double liftP = 0.02;
     public static double liftI = 0;
@@ -20,8 +20,8 @@ public class Config {
     public static double rotationP = 0.115;
     public static double rotationI = 0.0;
     public static double rotationD = 0.0;
-    public static double tolerance = 1;
-    public static double toleranceH = 2;
+    public static double tolerance = 0.75;
+    public static double toleranceH = 1.5;
     public static double powerMultiplier = 0.8;
 
     public static int dir = 1;
