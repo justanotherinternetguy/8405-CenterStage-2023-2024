@@ -23,11 +23,11 @@ public class BlueAutonClosePurple extends LinearOpMode {
         SampleMecanumDrive rrDrive = new SampleMecanumDrive(hardwareMap);
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
         Movement movement = new Movement(robot.drive);
-        Actor actor = new Actor(hardwareMap, telemetry, robot, rrDrive, movement, 3000);
+        Actor actor = new Actor(hardwareMap, telemetry, robot, rrDrive, movement, 2000);
 
         ObjectDetector objectDetector = new ObjectDetector(hardwareMap, tel);
 
-        double third = 1920.0 / 3 + 100;
+        double third = 1920.0 / 3;
         int dir = 1; // center by default, will get overriden
 
         while (!isStarted()) {
@@ -42,6 +42,44 @@ public class BlueAutonClosePurple extends LinearOpMode {
             }
         }
 
+//        if (Config.dir == 0) {
+        if (dir == 0) {
+            actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
+                    .add(new ClawAction(true), 750.0)
+                    .add(new MvntAction(new Pose2d(0, 27.5, new Rotation2d(Math.toRadians(0)))))
+                    .add(new MvntAction(new Pose2d(-12, 27, new Rotation2d(Math.toRadians(0)))))
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(Math.toRadians(0)))))
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new MvntAction(new Pose2d(-6, 27, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new ClawAction(false), 750.0)
+                    .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 1000.0)
+                    .add(new ClawAction(true), 1000.0)
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new MvntAction(new Pose2d(0, 4, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new MvntAction(new Pose2d(-36, 4, new Rotation2d(Math.toRadians(-90)))))
+                    .add(new MvntAction(new Pose2d(-36, 27, new Rotation2d(-90))))
+                    .add(new ClawAction(ClawAction.ClawStates.topOpen), 1000.0);
+
+
+        }
+
+//        if (Config.dir == 1) {
+        if (dir == 1) {
+            actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
+                    .add(new ClawAction(true), 1000.0)
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(0))))
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(90))))
+                    .add(new MvntAction(new Pose2d(0, 36, new Rotation2d(90))))
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(90))))
+                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(0))))
+                    .add(new MvntAction(new Pose2d(0, 32.5, new Rotation2d(0))))
+                    .add(new ClawAction(false), 1000.0)
+                    .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 1000.0)
+                    .add(new ClawAction(true), 1000.0)
+                    .add(new MvntAction(new Pose2d(-36, 27, new Rotation2d(0))));
+
+        }
+
 //        if (Config.dir == 2) {
         if (dir == 2) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
@@ -51,38 +89,14 @@ public class BlueAutonClosePurple extends LinearOpMode {
                     .add(new MvntAction(new Pose2d(5.5, 27, new Rotation2d(Math.toRadians(0)))), 2500.0)
                     .add(new MvntAction(new Pose2d(5.5, 27, new Rotation2d(Math.toRadians(90)))), 2500.0)
                     .add(new ClawAction(false), 750.0)
-                    .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 1000.0);
-        }
-
-//        if (Config.dir == 1) {
-        if (dir == 1) {
-            actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
+                    .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 500.0)
                     .add(new ClawAction(true), 1000.0)
-                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(0))))
-                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(-90))))
-                    .add(new MvntAction(new Pose2d(0, 36, new Rotation2d(-90))))
-                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(-90))))
-                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(0))))
-                    .add(new MvntAction(new Pose2d(0, 32.5, new Rotation2d(0))))
-                    .add(new ClawAction(false), 1000.0)
-                    .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 1000.0);
+                    .add(new MvntAction(new Pose2d(-36, 12, new Rotation2d(90))))
+                    .add(new ClawAction(ClawAction.ClawStates.topOpen), 1000.0);
         }
 
-//        if (Config.dir == 0) {
-        if (dir == 0) {
-            actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
-                    .add(new ClawAction(true), 750.0)
-                    .add(new MvntAction(new Pose2d(0, 27.5, new Rotation2d(Math.toRadians(0)))))
-                    .add(new MvntAction(new Pose2d(-15, 27, new Rotation2d(Math.toRadians(0)))))
-                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(Math.toRadians(0)))))
-                    .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(Math.toRadians(-90)))))
-                    .add(new MvntAction(new Pose2d(-5, 27, new Rotation2d(Math.toRadians(-90)))))
-                    .add(new ClawAction(false), 750.0)
-                    .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 500.0);
-        }
 
         waitForStart();
-
         actor.resetTimer();
 
         robot.drive.imu.resetYaw();
@@ -93,6 +107,15 @@ public class BlueAutonClosePurple extends LinearOpMode {
                 rrDrive.updatePoseEstimate();
                 Pose2d pose = rrDrive.getPose();
                 tel.addData("finished", true);
+                tel.addData("x", pose.getX());
+                tel.addData("y", pose.getY());
+                tel.addData("h", pose.getRotation().getDegrees());
+                tel.update();
+            }
+            else {
+                rrDrive.updatePoseEstimate();
+                Pose2d pose = rrDrive.getPose();
+
                 tel.addData("x", pose.getX());
                 tel.addData("y", pose.getY());
                 tel.addData("h", pose.getRotation().getDegrees());

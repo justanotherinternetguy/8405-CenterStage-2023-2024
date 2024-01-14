@@ -17,7 +17,7 @@ public class Config {
     public static double translationP = 0.2;
     public static double translationI = 0.1;
     public static double translationD = 0.025;
-    public static double rotationP = 0.115;
+    public static double rotationP = 0.01;
     public static double rotationI = 0.0;
     public static double rotationD = 0.0;
     public static double tolerance = 0.75;

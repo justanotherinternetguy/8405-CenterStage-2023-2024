@@ -32,10 +32,17 @@ public class ClawAction extends Action {
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         if (states == null) {
             if (isBackboard) {
+                robot.claw.clawServo.getController().pwmEnable();
                 robot.claw.clawServo.setPosition(Config.clawServoBackboard);
             } else {
-                robot.claw.clawServo.setPosition(Config.clawServoFloor);
+//            clawServo.setPosition(Config.clawServoFloor);
+                robot.claw.clawServo.getController().pwmDisable();
             }
+//            if (isBackboard) {
+//                robot.claw.clawServo.setPosition(Config.clawServoBackboard);
+//            } else {
+//                robot.claw.clawServo.setPosition(Config.clawServoFloor);
+//            }
             return;
         }
         for (ClawStates state : states) {
