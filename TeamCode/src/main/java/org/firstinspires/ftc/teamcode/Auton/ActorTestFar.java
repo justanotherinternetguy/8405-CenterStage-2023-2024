@@ -111,7 +111,6 @@ public class ActorTestFar extends LinearOpMode {
                     .add(new MvntAction(new Pose2d(84, 3, new Rotation2d(Math.toRadians(90)))), 2500.0);
         }
 
-
         waitForStart();
         actor.resetTimer();
 
