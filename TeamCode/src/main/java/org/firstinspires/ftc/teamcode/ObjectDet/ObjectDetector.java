@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.ObjectDet;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Supplier;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBalanceControl;
@@ -138,5 +139,16 @@ public class ObjectDetector {
             return input;
         }
 
+    }
+
+    public int getDir() {
+        int[] detection = this.search();
+        if (detection[0] < third) {
+            return 0; // left
+        }
+        if (detection[0] > 2 * third) {
+            return 2; // right
+        }
+        return 1; // center
     }
 }

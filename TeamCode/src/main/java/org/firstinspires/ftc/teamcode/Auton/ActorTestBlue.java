@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Control.Actor.Actor;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Control.Actor.ClawAction;
 import org.firstinspires.ftc.teamcode.Control.Actor.LiftAction;
 import org.firstinspires.ftc.teamcode.Control.Actor.MvntAction;
 import org.firstinspires.ftc.teamcode.Control.Movement;
+import org.firstinspires.ftc.teamcode.ObjectDet.ObjectDetector;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -24,8 +26,20 @@ public class ActorTestBlue extends LinearOpMode {
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
         Movement movement = new Movement(robot.drive);
         Actor actor = new Actor(hardwareMap, telemetry, robot, rrDrive, movement, 3000);
+        ElapsedTime pathTime = new ElapsedTime();
+        double pathLength = -1;
+        int dir = 0;
 
-        if (Config.dir == 2) {
+        waitForStart();
+
+        if (Config.dir != -1) {
+            dir = Config.dir;
+        } else {
+            ObjectDetector objectDetector = new ObjectDetector(hardwareMap, tel);
+            dir = objectDetector.getDir();
+        }
+
+        if (dir == 2) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 750.0)
                     .add(new MvntAction(new Pose2d(-3, 27.5, new Rotation2d(Math.toRadians(90)))))
@@ -46,7 +60,7 @@ public class ActorTestBlue extends LinearOpMode {
                     .add(new MvntAction(new Pose2d(-36, 5, new Rotation2d(Math.toRadians(-90)))));
         }
 
-        if (Config.dir == 1) {
+        if (dir == 1) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 1000.0)
                     .add(new MvntAction(new Pose2d(0, 32.5, new Rotation2d(0))))
@@ -65,7 +79,7 @@ public class ActorTestBlue extends LinearOpMode {
                     .add(new MvntAction(new Pose2d(-36, 1, new Rotation2d(Math.toRadians(-90)))));
         }
 
-        if (Config.dir == 0) {
+        if (dir == 0) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 750.0)
                     .add(new MvntAction(new Pose2d(-5.5, 27, new Rotation2d(Math.toRadians(-90)))), 2500.0)
