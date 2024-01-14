@@ -17,7 +17,7 @@ public class Config {
     public static double translationP = 0.2;
     public static double translationI = 0.1;
     public static double translationD = 0.025;
-    public static double rotationP = 0.115;
+    public static double rotationP = 0.01;
     public static double rotationI = 0.0;
     public static double rotationD = 0.0;
     public static double tolerance = 0.75;
@@ -54,7 +54,7 @@ public class Config {
     public static double bottomServoClose = 0.25;
     public static double bottomServoOpen = 0.425;
     public static double clawServoFloor = 0.34;
-    public static double clawServoBackboard = 0.775;
+    public static double clawServoBackboard = 0.5;
 
 
     public static int burstDelay = 1000;

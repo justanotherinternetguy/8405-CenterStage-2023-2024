@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
-public class ActorTestBlue extends LinearOpMode {
+public class BlueAutonClose extends LinearOpMode {
     @Override
     public void runOpMode() {
         Robot robot = new Robot(hardwareMap, gamepad1);
@@ -51,7 +51,7 @@ public class ActorTestBlue extends LinearOpMode {
                     .add(new MvntAction(new Pose2d(-24, 24.5, new Rotation2d(Math.toRadians(-90)))))
                     .add(new MvntAction(new Pose2d(-32, 24.5, new Rotation2d(Math.toRadians(-90)))))
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton))
-                    .add(new MvntAction(-1/3.0, 0.0, 0.0), 1000.0)
+                    .add(new MvntAction(-1 / 3.0, 0.0, 0.0), 1000.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
                     .add(new ClawAction(ClawAction.ClawStates.topOpen), 750.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
@@ -91,7 +91,7 @@ public class ActorTestBlue extends LinearOpMode {
                     .add(new MvntAction(new Pose2d(-32, 3, new Rotation2d(Math.toRadians(-90)))), 2500.0)
                     .add(new MvntAction(new Pose2d(-32, 21.625, new Rotation2d(Math.toRadians(-90)))), 2500.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton))
-                    .add(new MvntAction(-1/3.0, 0.0, 0.0), 1750.0)
+                    .add(new MvntAction(-1 / 3.0, 0.0, 0.0), 1750.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
                     .add(new ClawAction(ClawAction.ClawStates.topOpen), 750.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
@@ -100,15 +100,15 @@ public class ActorTestBlue extends LinearOpMode {
                     .add(new MvntAction(new Pose2d(-36, 3, new Rotation2d(Math.toRadians(-90)))), 2500.0);
         }
 
-
         waitForStart();
+
         actor.resetTimer();
 
         robot.drive.imu.resetYaw();
 
         while (opModeIsActive() && !isStopRequested()) {
             if (actor.run() == 0) {
-                robot.drive.setDrivePowers(0,0,0,0);
+                robot.drive.setDrivePowers(0, 0, 0, 0);
                 rrDrive.updatePoseEstimate();
                 Pose2d pose = rrDrive.getPose();
                 tel.addData("finished", true);

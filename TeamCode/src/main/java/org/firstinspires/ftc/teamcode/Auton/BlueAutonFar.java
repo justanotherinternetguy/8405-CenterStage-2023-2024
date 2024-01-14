@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous
-public class ActorTestBlueFar extends LinearOpMode {
+public class BlueAutonFar extends LinearOpMode {
     @Override
     public void runOpMode() {
         Robot robot = new Robot(hardwareMap, gamepad1);
@@ -39,7 +39,6 @@ public class ActorTestBlueFar extends LinearOpMode {
             dir = objectDetector.getDir();
         }
 
-
         if (dir == 2) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 750.0)
@@ -55,7 +54,7 @@ public class ActorTestBlueFar extends LinearOpMode {
                     .add(new MvntAction(new Pose2d(-72, 51, new Rotation2d(Math.toRadians(-90)))))
                     .add(new MvntAction(new Pose2d(-80, 24.5, new Rotation2d(Math.toRadians(-90)))))
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton))
-                    .add(new MvntAction(-1/3.0, 0.0, 0.0), 1000.0)
+                    .add(new MvntAction(-1 / 3.0, 0.0, 0.0), 1000.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
                     .add(new ClawAction(ClawAction.ClawStates.topOpen), 750.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
@@ -71,7 +70,7 @@ public class ActorTestBlueFar extends LinearOpMode {
                     .add(new ClawAction(false), 1000.0)
                     .add(new ClawAction(ClawAction.ClawStates.bottomOpen), 1000.0)
                     .add(new ClawAction(true), 1000.0)
-                    .add(new MvntAction(new Pose2d(0, 20, new Rotation2d(0))))                    .add(new MvntAction(new Pose2d(28, 3, new Rotation2d(Math.toRadians(90)))))
+                    .add(new MvntAction(new Pose2d(0, 20, new Rotation2d(0)))).add(new MvntAction(new Pose2d(28, 3, new Rotation2d(Math.toRadians(90)))))
                     .add(new MvntAction(new Pose2d(28, 51, new Rotation2d(Math.toRadians(90)))))
                     .add(new MvntAction(new Pose2d(-72, 51, new Rotation2d(Math.toRadians(90)))))
                     .add(new MvntAction(new Pose2d(-72, 51, new Rotation2d(Math.toRadians(-90)))))
@@ -102,7 +101,7 @@ public class ActorTestBlueFar extends LinearOpMode {
                     .add(new MvntAction(new Pose2d(-80, 3, new Rotation2d(Math.toRadians(-90)))), 2500.0)
                     .add(new MvntAction(new Pose2d(-80, 21.625, new Rotation2d(Math.toRadians(-90)))), 2500.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton))
-                    .add(new MvntAction(-1/3.0, 0.0, 0.0), 1750.0)
+                    .add(new MvntAction(-1 / 3.0, 0.0, 0.0), 1750.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)
                     .add(new ClawAction(ClawAction.ClawStates.topOpen), 750.0)
                     .add(new LiftAction(Config.boardBase + 100, Config.liftMotorPowerAuton), true, true)

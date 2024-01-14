@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.firstinspires.ftc.teamcode.ObjectDet.ObjectDetector;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -51,6 +52,18 @@ public class TeleOpControl2 extends LinearOpMode {
             }
             if (gamepad1.x) {
                 robot.drive.setDrivePowers(0, 0, 1, 0);
+            }
+            if (gamepad1.left_bumper) {
+                robot.claw.topServo.setPosition(Config.bottomServoOpen);
+            }
+            if (gamepad1.right_bumper) {
+                robot.claw.topServo.setPosition(Config.bottomServoClose);
+            }
+            if (gamepad1.left_trigger > 0.5) {
+                robot.claw.bottomServo.setPosition(Config.topServoOpen);
+            }
+            if (gamepad1.right_trigger > 0.5) {
+                robot.claw.bottomServo.setPosition(Config.topServoClose);
             }
         }
     }
