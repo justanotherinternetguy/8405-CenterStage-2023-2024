@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Control.Actor.Actor;
@@ -25,25 +26,19 @@ public class RedAutonClose extends LinearOpMode {
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
         Movement movement = new Movement(robot.drive);
         Actor actor = new Actor(hardwareMap, telemetry, robot, rrDrive, movement, 3000);
+        ElapsedTime pathTime = new ElapsedTime();
+        double pathLength = -1;
+        int dir = 0;
 
-        ObjectDetector objectDetector = new ObjectDetector(hardwareMap, tel);
+        waitForStart();
 
-        double third = 1920.0 / 3 + 100;
-        int dir = 1; // center by default, will get overriden
-
-        while (!isStarted()) {
-            int[] coords = objectDetector.search();
-            int centerX = coords[0];
-            if (centerX < third) { // left
-                dir = 0;
-            } else if (centerX > 2 * third) {
-                dir = 2;
-            } else {
-                dir = 1;
-            }
+        if (Config.dir != -1) {
+            dir = Config.dir;
+        } else {
+            ObjectDetector objectDetector = new ObjectDetector(hardwareMap, tel);
+            dir = objectDetector.getDir();
         }
 
-//        if (Config.dir == 0) {
         if (dir == 0) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 750.0)
@@ -69,7 +64,6 @@ public class RedAutonClose extends LinearOpMode {
 
         }
 
-//        if (Config.dir == 1) {
         if (dir == 1) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 1000.0)
@@ -94,7 +88,6 @@ public class RedAutonClose extends LinearOpMode {
                     .add(new MvntAction(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))));
         }
 
-//        if (Config.dir == 2) {
         if (dir == 2) {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2000.0)
                     .add(new ClawAction(true), 750.0)
@@ -119,8 +112,6 @@ public class RedAutonClose extends LinearOpMode {
                     .add(new MvntAction(new Pose2d(45, 3, new Rotation2d(Math.toRadians(90)))), 2500.0);
         }
 
-
-        waitForStart();
         actor.resetTimer();
 
         robot.drive.imu.resetYaw();

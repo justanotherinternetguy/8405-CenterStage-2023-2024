@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @TeleOp(name = "Mecanum Drive", group = "Linear Opmode")
 public class TeleOpControl extends LinearOpMode {
-    public static boolean slowMode = false;
+    public boolean slowMode = false;
 
     @Override
     public void runOpMode() {
@@ -30,7 +30,6 @@ public class TeleOpControl extends LinearOpMode {
 //        TwoWheelTrackingLocalizer tw = new TwoWheelTrackingLocalizer(hardwareMap, drive);
 
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
-
 
 //        ObjectDetector objectDetector = new ObjectDetector(hardwareMap, tel);
 
@@ -50,11 +49,12 @@ public class TeleOpControl extends LinearOpMode {
             drive.updatePoseEstimate();
             Pose2d poseEstimate = drive.getPose();
 
-            robot.lift.liftTeleOp(gamepad1, tel); // LIFT
-            robot.claw.input(gamepad1, tel);
-            robot.hang.input(gamepad1, this::opModeIsActive, this::isStopRequested);
-            robot.drone.input(gamepad1);
-//            robot.claw.setPower(-1, -1);
+            robot.lift.liftTeleOp(gamepad1, tel);
+
+            robot.claw.input(gamepad1);
+            robot.hang.input(gamepad1, this::opModeIsActive, this::opModeIsActive, timer);
+            robot.drone.input(gamepad1, timer);
+
             if (gamepad1.x && !lastX) {
                 slowMode = !slowMode;
             }
@@ -67,8 +67,6 @@ public class TeleOpControl extends LinearOpMode {
                 double multiplier = slowMode ? 0.3 : 1;
                 robot.drive.mecanumDrive(power * multiplier, strafe * multiplier, turn * multiplier);
             } else {
-                double elapsed = timer.seconds();
-
                 double y = -gamepad1.left_stick_y;
                 double x = gamepad1.left_stick_x;
                 double rx = gamepad1.right_stick_x;
@@ -87,21 +85,14 @@ public class TeleOpControl extends LinearOpMode {
 
                 double multiplier = slowMode ? 0.3 : 1;
                 robot.drive.setDrivePowers(frontLeftPower * multiplier, frontRightPower * multiplier, backLeftPower * multiplier, backRightPower * multiplier);
-                telemetry.addData("drive: ", "fieldCentric");
 
             }
-            tel.addData("drive", Config.fieldCentric);
-//            tel.addData("TEMP", apriltags.camera.getWhiteBalanceControl().getWhiteBalanceTemperature());
-            tel.addData("pose", poseEstimate);
-            tel.addData("lift: ", robot.lift.leftLift.getCurrentPosition());
+            tel.addData("Drive", Config.fieldCentric);
+            tel.addData("Pose", poseEstimate);
+            tel.addData("Lift: ", robot.lift.leftLift.getCurrentPosition());
+            tel.addData("SlowMode: ", slowMode);
+            tel.addData("Time: ", timer.seconds());
             tel.update();
-
-            telemetry.addData("SlowMode: ", slowMode);
-            telemetry.addData("lift owo: ", robot.lift.leftLift.getCurrentPosition());
-
-//            telemetry.addData("top claw", robot.claw.timer.milliseconds());
-
-            telemetry.update();
         }
     }
 }

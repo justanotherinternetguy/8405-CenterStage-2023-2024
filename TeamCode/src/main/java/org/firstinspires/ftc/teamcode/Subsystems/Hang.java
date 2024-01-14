@@ -25,10 +25,10 @@ public class Hang {
         hangMotor = hardwareMap.get(DcMotorEx.class, "hangMotor");
     }
 
-
-    public void input(Gamepad gamepad1, Supplier<Boolean> opMode, Supplier<Boolean> stop) {
+    public void input(Gamepad gamepad1, Supplier<Boolean> opMode, Supplier<Boolean> stop, ElapsedTime timer) {
+        if (timer.seconds() < 2 * 60) return; // not endgame yet
         if (gamepad1.dpad_up) {
-            timer.reset();
+            this.timer.reset();
             setHangMotorPower(0.7);
         } else if (gamepad1.dpad_down) {
             timer.reset();
@@ -38,7 +38,6 @@ public class Hang {
         {
             setHangMotorPower(0);
         }
-
     }
     public void setHangMotorPower(double power) {
         hangMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

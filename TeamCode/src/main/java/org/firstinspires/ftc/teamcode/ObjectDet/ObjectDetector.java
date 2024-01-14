@@ -139,4 +139,16 @@ public class ObjectDetector {
         }
 
     }
+
+    public int getDir() {
+        int[] detection = this.search();
+        int third = 1920 / 3;
+        if (detection[0] < third) {
+            return 0; // left
+        }
+        if (detection[0] > 2 * third) {
+            return 2; // right
+        }
+        return 1; // center
+    }
 }
