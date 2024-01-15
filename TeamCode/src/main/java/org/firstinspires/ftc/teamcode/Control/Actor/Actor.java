@@ -1,15 +1,12 @@
 package org.firstinspires.ftc.teamcode.Control.Actor;
 
-import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.firstinspires.ftc.teamcode.Control.Movement;
-import org.firstinspires.ftc.teamcode.Controllers.PID;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 import java.util.ArrayList;
@@ -25,6 +22,10 @@ public class Actor {
 
     private final double defaultTimeout;
 
+    private double prevTilt = 0;
+
+    private final ClawAction.ClawStates[] prevClaw = new ClawAction.ClawStates[2];
+
     public Actor(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement, double defaultTimeout) {
         this.hw = hw;
         this.tm = tm;
@@ -38,7 +39,12 @@ public class Actor {
 
     public Actor add(Action action, Double timeout, boolean parallel, boolean perpetual) {
         action.perpetual = perpetual; // this way both are in the add params not the action params
-        action.timeout = timeout != null ? timeout : defaultTimeout;
+//        action.timeout = timeout != null ? timeout : defaultTimeout;
+        if (timeout != null) {
+            action.timeout = timeout;
+        } else {
+            action.timeout = Double.NEGATIVE_INFINITY; // set at runttime to globaldefault or actiondefault
+        }
         if (parallel) {
             actions.get(actions.size() - 1).add(action);
         } else {
@@ -81,7 +87,28 @@ public class Actor {
         boolean stepDone = true;
         boolean hasHadLift = false;
         for (Action action : step) {
-            if (action.timeout != null && timer.milliseconds() > action.timeout) {
+            if (action.timeout == Double.NEGATIVE_INFINITY) {
+                // assign timeout at runtime
+                double actionDefault = action.defaultTimeout(this.rrDrive.getPose(), robot.lift.leftLift.getCurrentPosition(), this.prevTilt, this.prevClaw);
+                if (actionDefault != -1) {
+                    action.timeout = actionDefault;
+                }
+            }
+            if (action instanceof ClawAction) {
+                if (((ClawAction) action).states != null) {
+                    for (ClawAction.ClawStates state : ((ClawAction) action).states) {
+                        if (state == ClawAction.ClawStates.topOpen || state == ClawAction.ClawStates.topClosed) {
+                            this.prevClaw[0] = state;
+                        } else {
+                            this.prevClaw[1] = state;
+                        }
+                    }
+                } else {
+                    this.prevTilt = ((ClawAction) action).tilt;
+                }
+            }
+
+            if (action.timeout != null && timer.milliseconds() > action.timeout || (action.timeout == Double.NEGATIVE_INFINITY && timer.milliseconds() > this.defaultTimeout)) {
                 continue; // per action timeout(null is no timeout)
             }
 //             if the action is not done we run it and set stepDone to false so we don't move onto the next step until all actions are completed

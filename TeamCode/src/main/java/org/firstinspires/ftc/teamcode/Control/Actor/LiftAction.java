@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Control.Actor;
 
+import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -31,5 +32,12 @@ public class LiftAction extends Action {
     @Override
     public boolean isDone(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         return Math.abs(height - robot.lift.leftLift.getCurrentPosition()) < Config.liftTolerance;
+    }
+
+    @Override
+    public double defaultTimeout(Pose2d pose, int lift, Double prevTilt, ClawAction.ClawStates[] prevClaw) {
+        int distance = this.height - lift;
+        double distanceTimed = distance * this.power;
+        return distanceTimed * 0.75;
     }
 }

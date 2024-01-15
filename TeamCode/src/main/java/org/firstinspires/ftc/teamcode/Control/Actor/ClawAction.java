@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Control.Actor;
 
+import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -8,36 +9,42 @@ import org.firstinspires.ftc.teamcode.Control.Movement;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
+import java.util.Arrays;
+import java.util.function.Predicate;
+
 public class ClawAction extends Action {
-    public enum ClawStates {
+
+    public enum ClawStates implements Predicate<ClawStates> {
         topOpen,
         topClosed,
         bottomOpen,
-        bottomClosed
+        bottomClosed;
+
+        @Override
+        public boolean test(ClawStates clawStates) {
+            return clawStates == this;
+        }
     }
 
-    boolean isBackboard = false;
+    double tilt = 0;
 
-    private ClawStates[] states = null;
+    public ClawStates[] states = null;
 
     public ClawAction(ClawStates... states) {
         this.states = states;
     }
 
+    public ClawAction(double tilt) { this.tilt = tilt; }
+
     public ClawAction(boolean isBackboard) {
-        this.isBackboard = isBackboard;
+        this(isBackboard ? 1.0 : 0);
     }
 
     @Override
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         if (states == null) {
-            if (isBackboard) {
-                robot.claw.clawServo.getController().pwmEnable();
-                robot.claw.clawServo.setPosition(Config.clawServoBackboard);
-            } else {
-//            clawServo.setPosition(Config.clawServoFloor);
-                robot.claw.clawServo.getController().pwmDisable();
-            }
+            double newPos = this.getNewTilt();
+            robot.claw.clawServo.setPosition(newPos);
 //            if (isBackboard) {
 //                robot.claw.clawServo.setPosition(Config.clawServoBackboard);
 //            } else {
@@ -63,9 +70,41 @@ public class ClawAction extends Action {
         }
     }
 
+    public double getNewTilt() {
+        double range = Config.clawServoBackboard - Config.clawServoFloor;
+        double offset = range * this.tilt;
+        return Config.clawServoFloor + this.tilt;
+    }
+
     @Override
     public boolean isDone(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         // use timeout to determine(servo cannot teleport instantly)
         return false;
+    }
+
+    @Override
+    public double defaultTimeout(Pose2d pose, int lift, Double prevTilt, ClawStates[] prevClaw) {
+        if (states == null) {
+            double distance = prevTilt - tilt;
+            return distance * 2000;
+        }
+        double maxTime = 0;
+        for (ClawStates state : prevClaw) {
+            switch (state) {
+                case topOpen:
+                    if (Arrays.stream(states).anyMatch(ClawStates.topClosed)) maxTime = Math.max(maxTime, 750);
+                    break;
+                case topClosed:
+                    if (Arrays.stream(states).anyMatch(ClawStates.topOpen)) maxTime = Math.max(maxTime, 750);
+                    break;
+                case bottomOpen:
+                    if (Arrays.stream(states).anyMatch(ClawStates.bottomClosed)) maxTime = 1500;
+                    break;
+                case bottomClosed:
+                    if (Arrays.stream(states).anyMatch(ClawStates.bottomOpen)) maxTime = 1500;
+                    break;
+            }
+        }
+        return maxTime;
     }
 }

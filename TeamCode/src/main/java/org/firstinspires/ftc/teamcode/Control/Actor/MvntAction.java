@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.firstinspires.ftc.teamcode.Control.Movement;
+import org.firstinspires.ftc.teamcode.Controllers.PID;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -48,5 +49,16 @@ public class MvntAction extends Action {
         rrDrive.updatePoseEstimate();
         Pose2d pose = rrDrive.getPose();
         return !movement.move(pose, target, new Double[]{maxPower, maxPower, maxPower}, tm);
+    }
+
+    @Override
+    public double defaultTimeout(Pose2d pose, int lift, Double prevTilt, ClawAction.ClawStates[] prevClaw) {
+        double headingDiff = Math.abs(PID.rotationGetError(pose.getRotation().getDegrees(), target.getRotation().getDegrees()));
+        double xDiff = pose.getX() - target.getX();
+        double yDiff = pose.getY() - target.getY();
+        double euclideanDistance = Math.hypot(xDiff, yDiff);
+        double translationTime = euclideanDistance * 125;
+        double headingTime = headingDiff * 20;
+        return translationTime + headingTime;
     }
 }
