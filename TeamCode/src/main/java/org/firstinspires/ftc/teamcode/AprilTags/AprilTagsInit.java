@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBalanceControl;
 import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.openftc.apriltag.AprilTagDetection;
+import org.openftc.apriltag.AprilTagPose;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -100,5 +101,18 @@ public class AprilTagsInit {
         return null;
     }
 
-
+    public AprilTagPose searchForPose(int id) {
+        ArrayList<AprilTagDetection> currentDetections = aprilTagDetect.getLatestDetections();
+        if (currentDetections.size() != 0)
+        {
+            for(AprilTagDetection tag : currentDetections)
+            {
+                if(tag.id == id)
+                {
+                    return tag.pose;
+                }
+            }
+        }
+        return null;
+    }
 }
