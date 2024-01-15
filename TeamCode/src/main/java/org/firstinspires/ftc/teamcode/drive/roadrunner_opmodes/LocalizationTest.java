@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -26,14 +27,9 @@ public class LocalizationTest extends LinearOpMode {
 
         waitForStart();
 
+        robot.claw.clawServo.setPosition(Config.clawServoBackboard);
+
         while (!isStopRequested()) {
-//            drive.setWeightedDrivePower(
-//                    new Pose2d(
-//                            -gamepad1.left_stick_y,
-//                            gamepad1.left_stick_x,
-//                            gamepad1.right_stick_x
-//                    )
-//            );
             double power = -gamepad1.left_stick_y; // remember this is reversed
             double strafe = gamepad1.left_stick_x * 1.1; // counteract imperfect strafing
             double turn = gamepad1.right_stick_x;

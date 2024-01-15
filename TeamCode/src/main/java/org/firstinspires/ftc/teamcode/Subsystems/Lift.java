@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -69,10 +65,6 @@ public class Lift {
                 currentMode = LIFT_MODE.MANUAL;
                 holdingPos = -1;
                 liftManual(gamepad, tel);
-            } else if (gamepad.a || currentMode == LIFT_MODE.MACRO) {
-                currentMode = LIFT_MODE.MACRO;
-                holdingPos = -1;
-                liftMacro(gamepad);
             } else if (gamepad.b || currentMode == LIFT_MODE.POWEROFF) {
                 currentMode = LIFT_MODE.POWEROFF;
                 holdingPos = -1;
@@ -111,7 +103,7 @@ public class Lift {
     }
 
     public double liftToPos(int target, double power) {
-        double p = Range.clip(pid.getValue(target-encoder.getCurrentPosition()), -power, power);
+        double p = Range.clip(pid.getPower(target, encoder.getCurrentPosition()), -power, power);
         setLiftPower(p);
         return encoder.getCurrentPosition() - target;
     }
@@ -125,31 +117,10 @@ public class Lift {
             setLiftPower(-gamepad.left_trigger);
             tel.addData("lp", gamepad.left_trigger);
         }
-//        else
-//        {
-//            setLiftPower(0);
-//            currentMode = LIFT_MODE.NONE;
-//        }
         tel.addData("left", leftLift.getCurrentPosition());
         tel.addData("right", rightLift.getCurrentPosition());
         tel.addData("enc", encoder.getCurrentPosition());
 
-    }
-
-    private void liftMacro(Gamepad gamepad) {
-
-        if (gamepad.a) {
-            last_key_pressed = LAST_KEY_PRESSED.A;
-            liftToBase();
-        }
-//        else if(gamepad.b)
-//        {
-//            last_key_pressed = LAST_KEY_PRESSED.B;
-//            this.currentMode = LIFT_MODE.KILL;
-//        }
-        else if (last_key_pressed == LAST_KEY_PRESSED.A) {
-            liftToBase();
-        }
     }
 
     public void setLiftPower(double power) {
@@ -157,10 +128,5 @@ public class Lift {
         rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftLift.setPower(power * Config.liftMotorPowerMultTeleOp * -1);
         rightLift.setPower(power * Config.liftMotorPowerMultTeleOp * -1);
-    }
-
-    public void liftToBase() {
-        currentMode = LIFT_MODE.MACRO;
-        liftToPos(400, (Config.liftMotorPowerMacro));// * 1.1) + Config.gravity);
     }
 }

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -55,6 +57,7 @@ public class LynxModuleUtil {
             }
         }
 
+        @NonNull
         @Override
         public String toString() {
             return Misc.formatInvariant("%d.%d.%d", major, minor, eng);

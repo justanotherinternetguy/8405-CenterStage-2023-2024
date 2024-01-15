@@ -1,17 +1,11 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.ImuOrientationOnRobot;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Auton.Config;
 
 public class Drive {
@@ -57,15 +51,41 @@ public class Drive {
         setDrivePowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
     }
 
+    public static DrivePowers absoluteMovement(double x, double y, double rx, double botHeading) {
+        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+        rotX = rotX * Config.XMULTI;
+        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+        double frontLeft = (rotY + rotX + rx) / denominator;
+        double backLeft = (rotY - rotX + rx) / denominator;
+        double frontRight = (rotY - rotX - rx) / denominator;
+        double backRight = (rotY + rotX - rx) / denominator;
+
+        return new DrivePowers(frontLeft, frontRight, backLeft, backRight);
+    }
+
+    public void setDrivePowers(DrivePowers drivePowers) {
+        this.setDrivePowers(drivePowers.frontLeft, drivePowers.frontRight, drivePowers.backLeft, drivePowers.backRight);
+    }
+
     public void setDrivePowers(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
         frontLeft.setPower(frontLeftPower);
-        backLeft.setPower(backLeftPower);
         frontRight.setPower(frontRightPower);
+        backLeft.setPower(backLeftPower);
         backRight.setPower(backRightPower);
     }
 
-    // TEMP
-    public double getIMU() {
-        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+    public static class DrivePowers {
+        public double frontLeft;
+        public double frontRight;
+        public double backLeft;
+        public double backRight;
+
+        public DrivePowers(double frontLeft, double frontRight, double backLeft, double backRight) {
+            this.frontLeft = frontLeft;
+            this.frontRight = frontRight;
+            this.backLeft = backLeft;
+            this.backRight = backRight;
+        }
     }
 }

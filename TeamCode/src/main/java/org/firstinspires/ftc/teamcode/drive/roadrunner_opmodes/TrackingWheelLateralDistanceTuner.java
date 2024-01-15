@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
  * 3. Although not entirely necessary, having the bot's pose being drawn in dashbooard does help
  * identify discrepancies in the LATERAL_DISTANCE value. To access the dashboard,
  * connect your computer to the RC's WiFi network. In your browser, navigate to
- * https://192.168.49.1:8080/dash if you're using the RC phone or https://192.168.43.1:8080/dash
+ * <a href="https://192.168.49.1:8080/dash">...</a> if you're usin<a href="g">the RC phone or https://192.</a>168.43.1:8080/dash
  * if you are using the Control Hub.
  * Ensure the field is showing (select the field view in top right of the page).
  *

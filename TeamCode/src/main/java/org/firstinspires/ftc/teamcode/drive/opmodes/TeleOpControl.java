@@ -8,19 +8,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.AprilTags.AprilTagsDetectionPipeline;
-import org.firstinspires.ftc.teamcode.AprilTags.AprilTagsInit;
 import org.firstinspires.ftc.teamcode.Auton.Config;
-import org.firstinspires.ftc.teamcode.Controllers.MotionProfile;
-import org.firstinspires.ftc.teamcode.Subsystems.*;
+import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
-
 
 @TeleOp(name = "Mecanum Drive", group = "Linear Opmode")
 public class TeleOpControl extends LinearOpMode {
-    public static boolean slowMode = false;
+    public boolean slowMode = false;
 
     @Override
     public void runOpMode() {
@@ -37,31 +31,30 @@ public class TeleOpControl extends LinearOpMode {
 
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
 
+//        ObjectDetector objectDetector = new ObjectDetector(hardwareMap, tel);
+
         boolean lastX = false;
 
         waitForStart();
-        robot.odom.reset();
         robot.drive.imu.resetYaw();
         timer.reset();
 
         while (opModeIsActive()) {
+//            int[] results = objectDetector.search();
+
+//            for (int i = 0; i < results.length; i++) {
+//                tel.addData("Results " + i, results[i]);
+//            }
+
             drive.updatePoseEstimate();
             Pose2d poseEstimate = drive.getPose();
 
-//            telemetry.addData("left x: ", gamepad1.left_stick_x);
-//            telemetry.addData("left y: ", gamepad1.left_stick_y);
-//            telemetry.addData("right x: ", gamepad1.right_stick_x);
-//            telemetry.addData("right y: ", gamepad1.right_stick_y);
+            robot.lift.liftTeleOp(gamepad1, tel);
 
-            robot.lift.liftTeleOp(gamepad1, tel); // LIFT
-//            telemetry.addData("kill time", robot.lift.timer.milliseconds());
-//            telemetry.addData("hasReset", robot.lift.hasResetKill);
-//            telemetry.addData("macro", robot.lift.currentMode);
-//            telemetry.addData("hold", robot.lift.holdingPos);
-//            telemetry.addData("kill", robot.lift.startedKill);
             robot.claw.input(gamepad1);
-            robot.hang.input(gamepad1);
-//            robot.claw.setPower(-1, -1);
+            robot.hang.input(gamepad1, this::opModeIsActive, this::opModeIsActive, timer);
+            robot.drone.input(gamepad1, timer);
+
             if (gamepad1.x && !lastX) {
                 slowMode = !slowMode;
             }
@@ -73,22 +66,14 @@ public class TeleOpControl extends LinearOpMode {
                 double turn = gamepad1.right_stick_x;
                 double multiplier = slowMode ? 0.3 : 1;
                 robot.drive.mecanumDrive(power * multiplier, strafe * multiplier, turn * multiplier);
-//                robot.drive.mecanumDrive(power, strafe, turn);
-//                telemetry.addData("drive: ", "robotCentric");
             } else {
-                double elapsed = timer.seconds();
-
                 double y = -gamepad1.left_stick_y;
                 double x = gamepad1.left_stick_x;
-                double h = gamepad1.right_stick_x;
-
-                double profileY = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, y, elapsed);
-                double profileX = MotionProfile.motion_profile(Odometry.MAX_ACCEL, Odometry.MAX_VELOCITY, x, elapsed);
-                double rx = MotionProfile.motion_profile(Odometry.MAX_ACCEL * 4, Odometry.MAX_VELOCITY * 4, h, elapsed);
+                double rx = gamepad1.right_stick_x;
 
                 double botHeading = -poseEstimate.getHeading();
-                double rotX = profileX * Math.cos(-botHeading) - profileY * Math.sin(-botHeading);
-                double rotY = profileX * Math.sin(-botHeading) + profileY * Math.cos(-botHeading);
+                double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+                double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
                 rotX = rotX * 1.1;
 
@@ -100,27 +85,14 @@ public class TeleOpControl extends LinearOpMode {
 
                 double multiplier = slowMode ? 0.3 : 1;
                 robot.drive.setDrivePowers(frontLeftPower * multiplier, frontRightPower * multiplier, backLeftPower * multiplier, backRightPower * multiplier);
-                telemetry.addData("drive: ", "fieldCentric");
 
             }
-            tel.addData("drive", Config.fieldCentric);
-//            tel.addData("TEMP", apriltags.camera.getWhiteBalanceControl().getWhiteBalanceTemperature());
-            tel.addData("pose", poseEstimate);
-            tel.addData("!LEFT ENCODER: ", robot.odom.getEncoders()[0]);
-            tel.addData("!RIGHT ENCODER: ", robot.odom.getEncoders()[1]);
-            tel.addData("!CENTER ENCODER: ", robot.odom.getEncoders()[2]);
-            tel.addData("lift owo: ", robot.lift.leftLift.getCurrentPosition());
-
+            tel.addData("Drive", Config.fieldCentric);
+            tel.addData("Pose", poseEstimate);
+            tel.addData("Lift: ", robot.lift.leftLift.getCurrentPosition());
+            tel.addData("SlowMode: ", slowMode);
+            tel.addData("Time: ", timer.seconds());
             tel.update();
-
-//            telemetry.addData("maxfps", apriltags.camera.getCurrentPipelineMaxFps());
-//            telemetry.addData("fps", apriltags.camera.getFps());
-            telemetry.addData("SlowMode: ", slowMode);
-            telemetry.addData("lift owo: ", robot.lift.leftLift.getCurrentPosition());
-
-//            telemetry.addData("top claw", robot.claw.timer.milliseconds());
-
-            telemetry.update();
         }
     }
 }
