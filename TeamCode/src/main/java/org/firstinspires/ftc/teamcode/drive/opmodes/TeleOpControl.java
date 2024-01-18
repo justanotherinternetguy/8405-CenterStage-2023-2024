@@ -51,7 +51,7 @@ public class TeleOpControl extends LinearOpMode {
 
             robot.lift.liftTeleOp(gamepad1, tel);
 
-            robot.claw.input(gamepad1);
+            robot.claw.input(gamepad1, tel);
             robot.hang.input(gamepad1, this::opModeIsActive, this::opModeIsActive, timer);
             robot.drone.input(gamepad1, timer);
 
