@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Auton;
 
 @com.acmerobotics.dashboard.config.Config
 public class Config {
+    public static boolean instantEndGame = false; // testing purposes
     public static int boardBase = 425;
     public static int stack = 200;
     public static double hangPower = -0.85;
