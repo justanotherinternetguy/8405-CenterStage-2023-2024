@@ -14,6 +14,8 @@ import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibra
 import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -24,6 +26,7 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
 import java.util.ArrayList;
+import java.util.List;
 
 class TeamPropProcessor implements VisionProcessor {
     private double width;
@@ -121,11 +124,11 @@ public class VisionPortalTeleop extends LinearOpMode {
         TeamPropProcessor teamPropProcessor = new TeamPropProcessor();
 
         VisionPortal visionPortal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 2"))
-//                .addProcessor(aprilTagProcessor)
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .addProcessor(aprilTagProcessor)
 //                .addProcessor(teamPropProcessor)
-//                .setCameraResolution(new Size(800, 600)) <-- supported for webcam 1
-                .setCameraResolution(new Size(960, 540))
+                .setCameraResolution(new Size(800, 600))
+//                .setCameraResolution(new Size(960, 540))
 
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .enableLiveView(true)
@@ -141,15 +144,22 @@ public class VisionPortalTeleop extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            if (timer.seconds() > framecount) {
-                framecount++;
-                visionPortal.saveNextFrameRaw("Frame " + framecount);
+//            if (timer.seconds() > framecount) {
+//                framecount++;
+//                visionPortal.saveNextFrameRaw("Frame " + framecount);
+//            }
+////            tel.addData("latest x", teamPropProcessor.latest_x);
+////            tel.addData("latest y", teamPropProcessor.latest_y);
+////            tel.addData("side", teamPropProcessor.side);
+//            tel.addData("seconds", timer.seconds());
+//            tel.addData("framecount", framecount);
+//            tel.update();
+
+            List<AprilTagDetection> detectionList = aprilTagProcessor.getDetections();
+            for (AprilTagDetection detection : detectionList) {
+                AprilTagPoseFtc pos = detection.ftcPose;
+                tel.addData(String.valueOf(detection.id), "x: " + pos.x + ", y: " + pos.y + ", z:" + pos.z + ", bearing: " + pos.bearing + ", elevation:" + pos.elevation + ", pitch: " + pos.pitch + ", range: " + pos.range + ", roll: " + pos.roll + ", yaw: " + pos.yaw);
             }
-//            tel.addData("latest x", teamPropProcessor.latest_x);
-//            tel.addData("latest y", teamPropProcessor.latest_y);
-//            tel.addData("side", teamPropProcessor.side);
-            tel.addData("seconds", timer.seconds());
-            tel.addData("framecount", framecount);
             tel.update();
         }
     }
