@@ -121,10 +121,12 @@ public class VisionPortalTeleop extends LinearOpMode {
         TeamPropProcessor teamPropProcessor = new TeamPropProcessor();
 
         VisionPortal visionPortal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 2"))
 //                .addProcessor(aprilTagProcessor)
 //                .addProcessor(teamPropProcessor)
-                .setCameraResolution(new Size(800, 600))
+//                .setCameraResolution(new Size(800, 600)) <-- supported for webcam 1
+                .setCameraResolution(new Size(960, 540))
+
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .enableLiveView(true)
                 .setAutoStopLiveView(true)
