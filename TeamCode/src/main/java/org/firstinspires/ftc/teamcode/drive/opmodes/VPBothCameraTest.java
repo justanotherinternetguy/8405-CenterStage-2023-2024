@@ -41,12 +41,14 @@ public class VPBothCameraTest extends LinearOpMode {
 
         VisionPortal visionPortal2 = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 2"))
-                .addProcessor(aprilTagProcessor)
+//                .addProcessor(aprilTagProcessor)
                 .setCameraResolution(new Size(800, 600))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .enableLiveView(true)
                 .setAutoStopLiveView(true)
                 .setLiveViewContainerId(vp2Id)
                 .build();
+
+        waitForStart();
     }
 }
