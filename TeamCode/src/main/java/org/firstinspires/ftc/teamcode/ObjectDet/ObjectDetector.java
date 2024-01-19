@@ -81,7 +81,8 @@ public class ObjectDetector {
 
 
         @Override
-        public Mat processFrame(Mat input) {Mat temp = new Mat();
+        public Mat processFrame(Mat input) {
+            Mat temp = new Mat();
             Mat mask = new Mat();
             Mat mask2 = new Mat();
             Mat res = new Mat();
