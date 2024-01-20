@@ -26,12 +26,12 @@ public class Hang {
     }
 
     public void input(Gamepad gamepad1, Supplier<Boolean> opMode, Supplier<Boolean> stop, ElapsedTime timer) {
-        if (timer.seconds() < 2 * 60) return; // not endgame yet
+        if (timer.seconds() < 1.5 * 60 && !Config.instantEndGame) return; // not endgame yet
         if (gamepad1.dpad_up) {
             this.timer.reset();
             setHangMotorPower(0.7);
         } else if (gamepad1.dpad_down) {
-            timer.reset();
+            this.timer.reset();
             hangNow(opMode, stop);
         }
         else if(timer.milliseconds() > 50)
