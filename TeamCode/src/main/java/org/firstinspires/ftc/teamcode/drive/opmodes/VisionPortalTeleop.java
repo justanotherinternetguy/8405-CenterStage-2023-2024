@@ -207,19 +207,40 @@ public class VisionPortalTeleop extends LinearOpMode {
                 tel.addData("yaw: ", pos.yaw);
 
                 // turn relative into absolute positions for movement
-                double newHeading = pose.getRotation().getDegrees() - pos.yaw;
-                tel.addData("new heading:", newHeading);
-                double newX = pose.getX() + pos.x;
-                tel.addData("new x:", newX);
-
-                double yoffset = 14 + 1;
-                double yError = pos.y - yoffset;
-                double newY = pose.getY() + yError;
-                tel.addData("new y:", newY);
-
-//                newHeading = pose.getRotation().getDegrees();
-
+//                double newHeading = pose.getRotation().getDegrees() - pos.yaw;
+//                tel.addData("new heading:", newHeading);
+//                double newX = pose.getX() + pos.x;
+//                tel.addData("new x:", newX);
+//
+//                double yoffset = 14 + 1;
+//                double yError = pos.y - yoffset;
+//                double newY = pose.getY() + yError;
+//                tel.addData("new y:", newY);
+//
+////                newHeading = pose.getRotation().getDegrees();
+//
+////                lastAprilTagPos = new Pose2d(newX, newY, new Rotation2d(Math.toRadians(newHeading)));
 //                lastAprilTagPos = new Pose2d(newX, newY, new Rotation2d(Math.toRadians(newHeading)));
+
+                //b=90-yaw-bearing
+                //fr=sqrt(range^2-z^2)
+                //sin(b)\*fr=absY
+                //cos(b)\*fr=absX
+
+                double cornerAngle = 90 - Math.abs(pos.yaw + pos.bearing);
+//                double cornerAngle = 90 - pos.yaw - pos.bearing; // abs x might already be negative from cosine i'll check like later today or smt
+                double flatRange = Math.sqrt(Math.pow(pos.range, 2) - Math.pow(pos.z, 2));
+                double absoluteX = Math.cos(Math.toRadians(cornerAngle)) * flatRange;
+                double absoluteY = Math.sin(Math.toRadians(cornerAngle)) * flatRange;
+
+                // calculate if x is positive or negative
+                // if(90+bearing+yaw > 90) + else -
+                if (cornerAngle < 90) absoluteX = absoluteX * -1;
+
+                double newX = pose.getX() + absoluteX;
+                double newY = pose.getY() + absoluteY;
+                double newHeading = pose.getRotation().getDegrees() - pos.yaw;
+
                 lastAprilTagPos = new Pose2d(newX, newY, new Rotation2d(Math.toRadians(newHeading)));
             }
             if (!movement.move(pose, lastAprilTagPos, tel)) {
