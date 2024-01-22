@@ -4,6 +4,8 @@ import android.graphics.Canvas;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -12,6 +14,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.teamcode.Auton.Config;
+import org.firstinspires.ftc.teamcode.Control.Movement;
+import org.firstinspires.ftc.teamcode.Controllers.PID;
+import org.firstinspires.ftc.teamcode.Subsystems.Robot;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -114,6 +120,10 @@ class TeamPropProcessor implements VisionProcessor {
 public class VisionPortalTeleop extends LinearOpMode {
     @Override
     public void runOpMode() {
+        Robot robot = new Robot(hardwareMap, gamepad1);
+        SampleMecanumDrive rrDrive = new SampleMecanumDrive(hardwareMap);
+        Movement movement = new Movement(robot.drive, new PID.Config(Config.translationP, Config.translationI, Config.translationD), new PID.Config(0.02, 0.2, 0));
+
         AprilTagProcessor aprilTagProcessor = new AprilTagProcessor.Builder()
                 .setDrawTagID(true)
                 .setDrawTagOutline(true)
@@ -141,7 +151,29 @@ public class VisionPortalTeleop extends LinearOpMode {
 
         int framecount = 0;
 
+        robot.lift.setLiftPower(Config.gravity);
+
+        tel.addData("ID: ", 0);
+        tel.addData("x: ", 0);
+        tel.addData("y: ", 0);
+        tel.addData("z: ", 0);
+        tel.addData("bearing: ", 0);
+        tel.addData("elevation: ", 0);
+        tel.addData("range: ", 0);
+        tel.addData("pitch: ", 0);
+        tel.addData("roll: ", 0);
+        tel.addData("yaw: ", 0);
+        tel.addData("new heading:", 0);
+        tel.addData("new x:", 0);
+        tel.addData("new y:", 0);
+        tel.addData("pX: ", 0);
+        tel.addData("pY: ", 0);
+        tel.addData("pH: ", 0);
+        tel.update();
+
         waitForStart();
+
+        Pose2d lastAprilTagPos = new Pose2d();
 
         while (opModeIsActive() && !isStopRequested()) {
 //            if (timer.seconds() > framecount) {
@@ -155,11 +187,49 @@ public class VisionPortalTeleop extends LinearOpMode {
 //            tel.addData("framecount", framecount);
 //            tel.update();
 
+            rrDrive.updatePoseEstimate();
+            Pose2d pose = rrDrive.getPose();
+
             List<AprilTagDetection> detectionList = aprilTagProcessor.getDetections();
             for (AprilTagDetection detection : detectionList) {
+                if (detection.id != 5) continue;
                 AprilTagPoseFtc pos = detection.ftcPose;
-                tel.addData(String.valueOf(detection.id), "x: " + pos.x + ", y: " + pos.y + ", z:" + pos.z + ", bearing: " + pos.bearing + ", elevation:" + pos.elevation + ", pitch: " + pos.pitch + ", range: " + pos.range + ", roll: " + pos.roll + ", yaw: " + pos.yaw);
+//                tel.addData(String.valueOf(detection.id), "x: " + pos.x + ", y: " + pos.y + ", z:" + pos.z + ", bearing: " + pos.bearing + ", elevation:" + pos.elevation + ", pitch: " + pos.pitch + ", range: " + pos.range + ", roll: " + pos.roll + ", yaw: " + pos.yaw);
+                tel.addData("ID: ", String.valueOf(detection.id));
+                tel.addData("x: ", pos.x);
+                tel.addData("y: ", pos.y);
+                tel.addData("z: ", pos.z);
+                tel.addData("bearing: ", pos.bearing);
+                tel.addData("elevation: ", pos.elevation);
+                tel.addData("range: ", pos.range);
+                tel.addData("pitch: ", pos.pitch);
+                tel.addData("roll: ", pos.roll);
+                tel.addData("yaw: ", pos.yaw);
+
+                // turn relative into absolute positions for movement
+                double newHeading = pose.getRotation().getDegrees() - pos.yaw;
+                tel.addData("new heading:", newHeading);
+                double newX = pose.getX() + pos.x;
+                tel.addData("new x:", newX);
+
+                double yoffset = 14 + 1;
+                double yError = pos.y - yoffset;
+                double newY = pose.getY() + yError;
+                tel.addData("new y:", newY);
+
+//                newHeading = pose.getRotation().getDegrees();
+
+//                lastAprilTagPos = new Pose2d(newX, newY, new Rotation2d(Math.toRadians(newHeading)));
+                lastAprilTagPos = new Pose2d(newX, newY, new Rotation2d(Math.toRadians(newHeading)));
             }
+            if (!movement.move(pose, lastAprilTagPos, tel)) {
+                tel.addData("Done", true);
+            } else {
+                tel.addData("Done", false);
+            }
+            tel.addData("pX: ", pose.getX());
+            tel.addData("pY: ", pose.getY());
+            tel.addData("pH: ", pose.getRotation().getDegrees());
             tel.update();
         }
     }
