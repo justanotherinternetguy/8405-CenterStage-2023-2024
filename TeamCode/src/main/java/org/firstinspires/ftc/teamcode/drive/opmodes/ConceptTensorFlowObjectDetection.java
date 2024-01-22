@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode.drive.opmodes;
 
 import android.util.Size;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -57,7 +56,9 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
     private static final String TFOD_MODEL_ASSET = "trained_model.tflite";
     private static final String[] LABELS = {
-            "team-prop"
+            "team-prop-red",
+            "team-prop-blue",
+            "pixel-stack"
     };
 
     /**
