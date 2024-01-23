@@ -56,6 +56,7 @@ public class Config {
     public static double bottomServoOpen = 0.425;
     public static double clawServoFloor = 0.34;
     public static double clawServoBackboard = 0.5;
+    public static double AAAA = 0.5;
 
 
     public static int burstDelay = 1000;

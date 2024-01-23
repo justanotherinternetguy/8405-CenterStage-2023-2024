@@ -50,12 +50,12 @@ public class VPBothCameraTest extends LinearOpMode {
                 .setDrawCubeProjection(true)
                 .build();
 
-        AprilTagProcessor aprilTagProcessor2 = new AprilTagProcessor.Builder()
-                .setDrawTagID(true)
-                .setDrawTagOutline(true)
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .build();
+//        AprilTagProcessor aprilTagProcessor2 = new AprilTagProcessor.Builder()
+//                .setDrawTagID(true)
+//                .setDrawTagOutline(true)
+//                .setDrawAxes(true)
+//                .setDrawCubeProjection(true)
+//                .build();
 
         VisionPortal visionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
@@ -67,21 +67,20 @@ public class VPBothCameraTest extends LinearOpMode {
                 .setLiveViewContainerId(vp1Id)
                 .build();
 
-        VisionPortal visionPortal2 = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 2"))
-//                .addProcessor(new rotateCamera())
-                .addProcessor(aprilTagProcessor2)
-                .setCameraResolution(new Size(960, 540))
-                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
-                .enableLiveView(true)
-                .setAutoStopLiveView(true)
-                .setLiveViewContainerId(vp2Id)
-                .build();
+//        VisionPortal visionPortal2 = new VisionPortal.Builder()
+//                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 2"))
+////                .addProcessor(new newrotateCamera())
+//                .addProcessor(aprilTagProcessor2)
+//                .setCameraResolution(new Size(640, 480))
+//                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+//                .enableLiveView(true)
+//                .setAutoStopLiveView(true)
+//                .setLiveViewContainerId(vp2Id)
+//                .build();
 
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();;
         tel.addData("id1", vp1Id);
         tel.addData("id2", vp2Id);
-
-//        waitForStart();
+        waitForStart();
     }
 }
