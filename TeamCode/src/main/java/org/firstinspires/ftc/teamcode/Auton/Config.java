@@ -21,6 +21,13 @@ public class Config {
     public static double rotationP = 0.01;
     public static double rotationI = 0.0;
     public static double rotationD = 0.0;
+
+    public static double translationPOther = 0.2;
+    public static double translationIOther = 0.1;
+    public static double translationDOther = 0.025;
+    public static double rotationPOther = 0.01;
+    public static double rotationIOther = 0.0;
+    public static double rotationDOther = 0.0;
     public static double tolerance = 0.75;
     public static double toleranceH = 1.5;
     public static double powerMultiplier = 0.8;
