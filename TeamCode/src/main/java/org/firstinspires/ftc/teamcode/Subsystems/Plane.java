@@ -19,7 +19,7 @@ public class Plane {
     }
 
     public void input(Gamepad gamepad1, ElapsedTime timer) {
-        if (timer.seconds() < 2 * 60 && !Config.instantEndGame) return; // not endgame yet
+//        if (timer.seconds() < 2 * 60 && !Config.instantEndGame) return; // not endgame yet
         if (gamepad1.left_bumper) {
             droneServo.setPosition(0);
         }

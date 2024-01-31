@@ -67,11 +67,11 @@ public class Claw {
             topServo.setPosition(Config.topServoOpen);
         }
         if (isBackboard) {
-            clawServo.getController().pwmEnable();
+//            clawServo.getController().pwmEnable();
             clawServo.setPosition(Config.clawServoBackboard);
         } else {
-//            clawServo.setPosition(Config.clawServoFloor);
-            clawServo.getController().pwmDisable();
+            clawServo.setPosition(Config.clawServoFloor);
+//            clawServo.getController().pwmDisable();
         }
     }
 }
