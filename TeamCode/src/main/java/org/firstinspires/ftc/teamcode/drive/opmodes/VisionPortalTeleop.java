@@ -138,8 +138,6 @@ public class VisionPortalTeleop extends LinearOpMode {
                 .addProcessor(aprilTagProcessor)
 //                .addProcessor(teamPropProcessor)
                 .setCameraResolution(new Size(800, 600))
-//                .setCameraResolution(new Size(960, 540))
-
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .enableLiveView(true)
                 .setAutoStopLiveView(true)
@@ -157,13 +155,13 @@ public class VisionPortalTeleop extends LinearOpMode {
         tel.addData("x: ", 0);
         tel.addData("y: ", 0);
         tel.addData("z: ", 0);
-        tel.addData("bearing: ", 0);
-        tel.addData("elevation: ", 0);
-        tel.addData("range: ", 0);
-        tel.addData("pitch: ", 0);
-        tel.addData("roll: ", 0);
-        tel.addData("yaw: ", 0);
-        tel.addData("new heading:", 0);
+//        tel.addData("bearing: ", 0);
+//        tel.addData("elevation: ", 0);
+//        tel.addData("range: ", 0);
+//        tel.addData("pitch: ", 0);
+//        tel.addData("roll: ", 0);
+//        tel.addData("yaw: ", 0);
+        tel.addData("new h:", 0);
         tel.addData("new x:", 0);
         tel.addData("new y:", 0);
         tel.addData("pX: ", 0);
@@ -180,9 +178,9 @@ public class VisionPortalTeleop extends LinearOpMode {
 //                framecount++;
 //                visionPortal.saveNextFrameRaw("Frame " + framecount);
 //            }
-////            tel.addData("latest x", teamPropProcessor.latest_x);
-////            tel.addData("latest y", teamPropProcessor.latest_y);
-////            tel.addData("side", teamPropProcessor.side);
+            tel.addData("latest x", teamPropProcessor.latest_x);
+            tel.addData("latest y", teamPropProcessor.latest_y);
+            tel.addData("side", teamPropProcessor.side);
 //            tel.addData("seconds", timer.seconds());
 //            tel.addData("framecount", framecount);
 //            tel.update();
@@ -192,56 +190,41 @@ public class VisionPortalTeleop extends LinearOpMode {
 
             List<AprilTagDetection> detectionList = aprilTagProcessor.getDetections();
             for (AprilTagDetection detection : detectionList) {
-                if (detection.id != 5) continue;
+                if (detection.id != 5 && detection.id != 2) continue;
                 AprilTagPoseFtc pos = detection.ftcPose;
 //                tel.addData(String.valueOf(detection.id), "x: " + pos.x + ", y: " + pos.y + ", z:" + pos.z + ", bearing: " + pos.bearing + ", elevation:" + pos.elevation + ", pitch: " + pos.pitch + ", range: " + pos.range + ", roll: " + pos.roll + ", yaw: " + pos.yaw);
                 tel.addData("ID: ", String.valueOf(detection.id));
                 tel.addData("x: ", pos.x);
                 tel.addData("y: ", pos.y);
                 tel.addData("z: ", pos.z);
-                tel.addData("bearing: ", pos.bearing);
-                tel.addData("elevation: ", pos.elevation);
-                tel.addData("range: ", pos.range);
-                tel.addData("pitch: ", pos.pitch);
-                tel.addData("roll: ", pos.roll);
-                tel.addData("yaw: ", pos.yaw);
-
-                // turn relative into absolute positions for movement
-//                double newHeading = pose.getRotation().getDegrees() - pos.yaw;
-//                tel.addData("new heading:", newHeading);
-//                double newX = pose.getX() + pos.x;
-//                tel.addData("new x:", newX);
-//
-//                double yoffset = 14 + 1;
-//                double yError = pos.y - yoffset;
-//                double newY = pose.getY() + yError;
-//                tel.addData("new y:", newY);
-//
-////                newHeading = pose.getRotation().getDegrees();
-//
-////                lastAprilTagPos = new Pose2d(newX, newY, new Rotation2d(Math.toRadians(newHeading)));
-//                lastAprilTagPos = new Pose2d(newX, newY, new Rotation2d(Math.toRadians(newHeading)));
 
                 //b=90-yaw-bearing
                 //fr=sqrt(range^2-z^2)
                 //sin(b)\*fr=absY
                 //cos(b)\*fr=absX
 
-                double cornerAngle = 90 - Math.abs(pos.yaw + pos.bearing);
-//                double cornerAngle = 90 - pos.yaw - pos.bearing; // abs x might already be negative from cosine i'll check like later today or smt
+//                double cornerAngle = 90 - Math.abs(pos.yaw + pos.bearing);
+                double cornerAngle = 90 - pos.yaw - pos.bearing; // abs x might already be negative from cosine i'll check like later today or smt
                 double flatRange = Math.sqrt(Math.pow(pos.range, 2) - Math.pow(pos.z, 2));
                 double absoluteX = Math.cos(Math.toRadians(cornerAngle)) * flatRange;
                 double absoluteY = Math.sin(Math.toRadians(cornerAngle)) * flatRange;
 
                 // calculate if x is positive or negative
                 // if(90+bearing+yaw > 90) + else -
-                if (cornerAngle < 90) absoluteX = absoluteX * -1;
+//                if (cornerAngle < 90) absoluteX = absoluteX * -1;
 
-                double newX = pose.getX() + absoluteX;
-                double newY = pose.getY() + absoluteY;
+                double newX = pose.getX() - (absoluteX * 0.8);
+                double newY = pose.getY() + ((absoluteY - 20) * 0.8);
                 double newHeading = pose.getRotation().getDegrees() - pos.yaw;
 
                 lastAprilTagPos = new Pose2d(newX, newY, new Rotation2d(Math.toRadians(newHeading)));
+
+                tel.addData("new x:", newX);
+                tel.addData("new y:", newY);
+                tel.addData("new h:", newHeading);
+                tel.addData("abs x:", absoluteX);
+                tel.addData("abs y:", absoluteY);
+                tel.addData("abs h:", pos.yaw);
             }
             if (!movement.move(pose, lastAprilTagPos, tel)) {
                 tel.addData("Done", true);
