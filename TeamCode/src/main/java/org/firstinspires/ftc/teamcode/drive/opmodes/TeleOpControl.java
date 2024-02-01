@@ -70,170 +70,40 @@ public class TeleOpControl extends LinearOpMode {
             Pose2d poseEstimate = drive.getPose();
 
             List<AprilTagDetection> detectionList = aprilTagProcessor.getDetections();
-//            for (AprilTagDetection detection : detectionList) {
-//                if (detection.id == 5 && gamepad1.dpad_left) {
-//                    pos = detection.ftcPose;
-//
-////                tel.addData(String.valueOf(detection.id), "x: " + pos.x + ", y: " + pos.y + ", z:" + pos.z + ", bearing: " + pos.bearing + ", elevation:" + pos.elevation + ", pitch: " + pos.pitch + ", range: " + pos.range + ", roll: " + pos.roll + ", yaw: " + pos.yaw);
-//                    tel.addData("ID: ", String.valueOf(detection.id));
-//                    tel.addData("x: ", pos.x);
-//                    tel.addData("y: ", pos.y);
-//                    tel.addData("z: ", pos.z);
-//                    tel.addData("bearing: ", pos.bearing);
-//                    tel.addData("elevation: ", pos.elevation);
-//                    tel.addData("range: ", pos.range);
-//                    tel.addData("pitch: ", pos.pitch);
-//                    tel.addData("roll: ", pos.roll);
-//                    tel.addData("yaw: ", pos.yaw);
-//                    tel.addData("det center x", detection.center.x);
-//                    tel.addData("det center y", detection.center.y);
-//                    double cornerAngle = 90 - Math.abs(pos.yaw + pos.bearing);
-////                double cornerAngle = 90 - pos.yaw - pos.bearing; // abs x might already be negative from cosine i'll check like later today or smt
-//                    double flatRange = Math.sqrt(Math.pow(pos.range, 2) - Math.pow(pos.z, 2));
-//                    double absoluteX = Math.cos(Math.toRadians(cornerAngle)) * flatRange;
-//                    double absoluteY = Math.sin(Math.toRadians(cornerAngle)) * flatRange;
-//
-//                    // calculate if x is positive or negative
-//                    // if(90+bearing+yaw > 90) + else -
-//                    if (cornerAngle < 90) absoluteX = absoluteX * -1;
-//
-//                    double newX = poseEstimate.getX() + absoluteX;
-//                    double newY = poseEstimate.getY() + absoluteY;
-//                    double newHeading = poseEstimate.getRotation().getDegrees() - pos.yaw;
 
-//                    double required_yaw = -pos.yaw;
-//                    double required_pitch = pos.pitch;
-//                    double newHeading = poseEstimate.getHeading();
-//                    double move_x_relative = pos.x;
-//                    double move_y_relative = pos.y;
-//
-//                    double delta_x = pos.x - poseEstimate.getX();
-//                    double delta_y = pos.y - poseEstimate.getY();
-//                    required_yaw = Math.atan2(delta_y, delta_x) - poseEstimate.getHeading();
-//
-//                    if (required_yaw > Math.toRadians(180)) {
-//                        required_yaw -= Math.toRadians(360);
-//                    }
-//                    else if (required_yaw < -Math.toRadians(180)) {
-//                        required_yaw += Math.toRadians(360);
-//                    }
-//
-//                    newHeading += required_yaw;
-//
-//                    double move_x = move_x_relative * Math.cos(poseEstimate.getHeading()) - move_y_relative * Math.cos(poseEstimate.getHeading());
-//                    double move_y = move_x_relative * Math.sin(poseEstimate.getHeading()) + move_y_relative * Math.sin(poseEstimate.getHeading());
-//
-//                    double final_robot_x = poseEstimate.getX() + move_x;
-//                    double final_robot_y = poseEstimate.getY() + move_y;
-//                    double final_robot_heading = newHeading;
 
-//                    if ()
+            if (detectionList.size() == 3 && gamepad1.dpad_left) {
+                AprilTagDetection det4 = detectionList.get(0);
+                AprilTagPoseFtc pos4 = det4.ftcPose;
+                AprilTagDetection det5 = detectionList.get(1);
+                AprilTagPoseFtc pos5 = det5.ftcPose;
+                AprilTagDetection det6 = detectionList.get(2);
+                AprilTagPoseFtc pos6 = det6.ftcPose;
 
-//                    lastAprilTagPos = new Pose2d(final_robot_x, poseEstimate.getY(), new Rotation2d((poseEstimate.getHeading()));
-//                    break;
+                double deltaX = poseEstimate.getX() - pos5.x;
+                tel.addData("x", pos5.x);
+                tel.addData("delta x", deltaX);
+                double deltaY = poseEstimate.getY() - pos5.y;
+                tel.addData("delta y", deltaY);
+
+                double newX = poseEstimate.getX() + pos5.x;
+                tel.addData("new X", newX);
+
+//                lastAprilTagPos = new Pose2d(newX, poseEstimate.getY(), new Rotation2d(poseEstimate.getHeading()));
+//                lastAprilTagPos = new Pose2d(2, poseEstimate.getY(), new Rotation2d(poseEstimate.getHeading()));
+                path = new Pose2d[]{
+                        new Pose2d(2, 0, new Rotation2d(0))
+                };
+//                Drive.DrivePowers powers = Drive.absoluteMovement(newX, poseEstimate.getY(), h, -pose.getHeading());
+//                drive.setDrivePowers(powers);
+
+//                if (deltaX > 1) { //right
+//                    lastAprilTagPos = new Pose2d(deltaX, poseEstimate.getY(), new Rotation2d(poseEstimate.getHeading()));
 //                }
-//            }
-
-//            if (detectionList.size() == 3 && gamepad1.dpad_left) {
-//                AprilTagDetection det4 = detectionList.get(0);
-//                AprilTagPoseFtc pos4 = det4.ftcPose;
-//                AprilTagDetection det5 = detectionList.get(1);
-//                AprilTagPoseFtc pos5 = det5.ftcPose;
-//                AprilTagDetection det6 = detectionList.get(2);
-//                AprilTagPoseFtc pos6 = det6.ftcPose;
-//
-////                double move_x = pos5.x * Math.cos(poseEstimate.getHeading()) - pos5.y * Math.cos(poseEstimate.getHeading());
-////                double move_y = pos5.x * Math.sin(poseEstimate.getHeading()) + pos5.y * Math.sin(poseEstimate.getHeading());
-////                double final_robot_x = poseEstimate.getX() + move_x;
-////                double final_robot_y = poseEstimate.getY() + move_y;
-////
-////                double flatRange = Math.sqrt(Math.pow(pos5.range, 2) - Math.pow(pos5.z, 2));
-//                double cornerAngle = 90 - Math.abs(pos5.yaw + pos5.bearing);
-////                double cornerAngle = 90 - pos.yaw - pos.bearing; // abs x might already be negative from cosine i'll check like later today or smt
-//                double flatRange = Math.sqrt(Math.pow(pos5.range, 2) - Math.pow(pos5.z, 2));
-//                double absoluteX = Math.cos(Math.toRadians(cornerAngle)) * flatRange;
-//                double absoluteY = Math.sin(Math.toRadians(cornerAngle)) * flatRange;
-//
-//                // calculate if x is positive or negative
-//                // if(90+bearing+yaw > 90) + else -
-//                if (cornerAngle < 90) absoluteX = absoluteX * -1;
-//
-//                double newX = poseEstimate.getX() + absoluteX;
-//                double newY = poseEstimate.getY() + absoluteY;
-//                double newHeading = poseEstimate.getRotation().getDegrees() - (pos5.yaw + pos5.bearing);
-//
-//                tel.addData("cornerangle", cornerAngle);
-//                tel.addData("flatrange", flatRange);
-//                tel.addData("absx", absoluteX);
-//                tel.addData("absy", absoluteY);
-//                tel.addData("newX", newX);
-//                tel.addData("newY", newY);
-//                tel.addData("newheading", newHeading);
-
-//                lastAprilTagPos = new Pose2d(poseEstimate.getX(), poseEstimate.getY(), new Rotation2d(Math.toRadians(newHeading - 180)));
-
-
-//                pos = detection.ftcPose;
-//                tel.addData("ID: ", String.valueOf(detection.id));
-//                tel.addData("x: ", pos.x);
-//                tel.addData("y: ", pos.y);
-//                tel.addData("z: ", pos.z);
-//                tel.addData("bearing: ", pos.bearing);
-//                tel.addData("elevation: ", pos.elevation);
-//                tel.addData("range: ", pos.range);
-//                tel.addData("pitch: ", pos.pitch);
-//                tel.addData("roll: ", pos.roll);
-//                tel.addData("yaw: ", pos.yaw);
-//                double cornerAngle = 90 - Math.abs(pos.yaw + pos.bearing);
-////                double cornerAngle = 90 - pos.yaw - pos.bearing; // abs x might already be negative from cosine i'll check like later today or smt
-//                double flatRange = Math.sqrt(Math.pow(pos.range, 2) - Math.pow(pos.z, 2));
-//                double absoluteX = Math.cos(Math.toRadians(cornerAngle)) * flatRange;
-//                double absoluteY = Math.sin(Math.toRadians(cornerAngle)) * flatRange;
-//
-//                // calculate if x is positive or negative
-//                // if(90+bearing+yaw > 90) + else -
-//                if (cornerAngle < 90) absoluteX = absoluteX * -1;
-//
-//                double newX = poseEstimate.getX() + absoluteX;
-//                double newY = poseEstimate.getY() + absoluteY;
-//                double newHeading = poseEstimate.getRotation().getDegrees() - pos.yaw;
-//
-//                lastAprilTagPos = new Pose2d(final_robot_x, final_robot_y, new Rotation2d(poseEstimate.getHeading()));
-//            }
-
-
-//            if (detectionList.size() == 3 && gamepad1.dpad_left) {
-//                AprilTagDetection det4 = detectionList.get(0);
-//                AprilTagPoseFtc pos4 = det4.ftcPose;
-//                AprilTagDetection det5 = detectionList.get(1);
-//                AprilTagPoseFtc pos5 = det5.ftcPose;
-//                AprilTagDetection det6 = detectionList.get(2);
-//                AprilTagPoseFtc pos6 = det6.ftcPose;
-//
-//                double deltaX = poseEstimate.getX() - pos5.x;
-//                tel.addData("x", pos5.x);
-//                tel.addData("delta x", deltaX);
-//                double deltaY = poseEstimate.getY() - pos5.y;
-//                tel.addData("delta y", deltaY);
-//
-//                double newX = poseEstimate.getX() + pos5.x;
-//                tel.addData("new X", newX);
-//
-////                lastAprilTagPos = new Pose2d(newX, poseEstimate.getY(), new Rotation2d(poseEstimate.getHeading()));
-////                lastAprilTagPos = new Pose2d(2, poseEstimate.getY(), new Rotation2d(poseEstimate.getHeading()));
-//                path = new Pose2d[]{
-//                        new Pose2d(2, 0, new Rotation2d(0))
-//                };
-////                Drive.DrivePowers powers = Drive.absoluteMovement(newX, poseEstimate.getY(), h, -pose.getHeading());
-////                drive.setDrivePowers(powers);
-//
-////                if (deltaX > 1) { //right
-////                    lastAprilTagPos = new Pose2d(deltaX, poseEstimate.getY(), new Rotation2d(poseEstimate.getHeading()));
-////                }
-////                if (deltaX < 1) { //right
-////                    lastAprilTagPos = new Pose2d(deltaX, poseEstimate.getY(), new Rotation2d(poseEstimate.getHeading()));
-////                }
-//            }
+//                if (deltaX < 1) { //right
+//                    lastAprilTagPos = new Pose2d(deltaX, poseEstimate.getY(), new Rotation2d(poseEstimate.getHeading()));
+//                }
+            }
 
             robot.lift.liftTeleOp(gamepad1, tel);
 
