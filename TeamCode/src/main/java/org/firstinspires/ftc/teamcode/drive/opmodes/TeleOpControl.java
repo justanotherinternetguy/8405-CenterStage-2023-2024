@@ -91,18 +91,18 @@ public class TeleOpControl extends LinearOpMode {
 
 //                lastAprilTagPos = new Pose2d(newX, poseEstimate.getY(), new Rotation2d(poseEstimate.getHeading()));
 //                lastAprilTagPos = new Pose2d(2, poseEstimate.getY(), new Rotation2d(poseEstimate.getHeading()));
-                path = new Pose2d[]{
-                        new Pose2d(2, 0, new Rotation2d(0))
-                };
+//                path = new Pose2d[]{
+//                        new Pose2d(2, 0, new Rotation2d(0))
+//                };
 //                Drive.DrivePowers powers = Drive.absoluteMovement(newX, poseEstimate.getY(), h, -pose.getHeading());
 //                drive.setDrivePowers(powers);
 
-//                if (deltaX > 1) { //right
-//                    lastAprilTagPos = new Pose2d(deltaX, poseEstimate.getY(), new Rotation2d(poseEstimate.getHeading()));
-//                }
-//                if (deltaX < 1) { //right
-//                    lastAprilTagPos = new Pose2d(deltaX, poseEstimate.getY(), new Rotation2d(poseEstimate.getHeading()));
-//                }
+                if (deltaX > 1) { //right
+                    lastAprilTagPos = new Pose2d(deltaX, poseEstimate.getY(), new Rotation2d(poseEstimate.getHeading()));
+                }
+                if (deltaX < 1) { //right
+                    lastAprilTagPos = new Pose2d(deltaX, poseEstimate.getY(), new Rotation2d(poseEstimate.getHeading()));
+                }
             }
 
             robot.lift.liftTeleOp(gamepad1, tel);
@@ -162,14 +162,14 @@ public class TeleOpControl extends LinearOpMode {
 //                robot.drive.setDrivePowers(0, 0, 0, 0);
 //            }
 
-//            if (path != null) {
-//                if (!movement.move(poseEstimate, path[0], tel)) {
-//                    robot.drive.setDrivePowers(0, 0, 0, 0);
-//                    telemetry.addData("Done", "done");
-//                    telemetry.update();
-//                    path = null;
-//                }
-//            }
+            if (path != null) {
+                if (!movement.move(poseEstimate, path[0], tel)) {
+                    robot.drive.setDrivePowers(0, 0, 0, 0);
+                    telemetry.addData("Done", "done");
+                    telemetry.update();
+                    path = null;
+                }
+            }
             telemetry.update();
             drive.updatePoseEstimate();
 
