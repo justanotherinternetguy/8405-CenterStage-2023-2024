@@ -149,38 +149,59 @@ public class VisionPortalTeleop extends LinearOpMode {
 
         int framecount = 0;
 
+//        robot.lift.setLiftPower(Config.gravity);
+
+        robot.claw.clawServo.setPosition(Config.clawServoFloor);
+
+        sleep(1000);
+
+        robot.claw.topServo.setPosition(Config.topServoClose);
+        robot.claw.bottomServo.setPosition(Config.bottomServoClose);
+
+        sleep(1000);
+
+        while (!isStarted() && Math.abs(Config.FLOOR - robot.lift.leftLift.getCurrentPosition()) > Config.liftTolerance) {
+            robot.lift.liftToPos(Config.FLOOR, Config.liftMotorPowerMacro);
+        }
         robot.lift.setLiftPower(Config.gravity);
 
-        tel.addData("ID: ", 0);
-        tel.addData("x: ", 0);
-        tel.addData("y: ", 0);
-        tel.addData("z: ", 0);
+//        tel.addData("ID: ", 0);
+//        tel.addData("x: ", 0);
+//        tel.addData("y: ", 0);
+//        tel.addData("z: ", 0);
 //        tel.addData("bearing: ", 0);
 //        tel.addData("elevation: ", 0);
 //        tel.addData("range: ", 0);
 //        tel.addData("pitch: ", 0);
 //        tel.addData("roll: ", 0);
 //        tel.addData("yaw: ", 0);
-        tel.addData("new h:", 0);
-        tel.addData("new x:", 0);
-        tel.addData("new y:", 0);
-        tel.addData("pX: ", 0);
-        tel.addData("pY: ", 0);
-        tel.addData("pH: ", 0);
+//        tel.addData("new h:", 0);
+//        tel.addData("new x:", 0);
+//        tel.addData("new y:", 0);
+//        tel.addData("pX: ", 0);
+//        tel.addData("pY: ", 0);
+//        tel.addData("pH: ", 0);
+        tel.addData("tf", 0);
         tel.update();
 
         waitForStart();
 
         Pose2d lastAprilTagPos = new Pose2d();
 
+        boolean yawHasBeenCorrected = true;
+        double newYaw = Double.MAX_VALUE;
+        boolean translationHasbeenCorrected = false;
+        Pose2d newPose = null;
+        Pose2d start = null;
+
         while (opModeIsActive() && !isStopRequested()) {
 //            if (timer.seconds() > framecount) {
 //                framecount++;
 //                visionPortal.saveNextFrameRaw("Frame " + framecount);
 //            }
-            tel.addData("latest x", teamPropProcessor.latest_x);
-            tel.addData("latest y", teamPropProcessor.latest_y);
-            tel.addData("side", teamPropProcessor.side);
+//            tel.addData("latest x", teamPropProcessor.latest_x);
+//            tel.addData("latest y", teamPropProcessor.latest_y);
+//            tel.addData("side", teamPropProcessor.side);
 //            tel.addData("seconds", timer.seconds());
 //            tel.addData("framecount", framecount);
 //            tel.update();
@@ -193,43 +214,98 @@ public class VisionPortalTeleop extends LinearOpMode {
                 if (detection.id != 5 && detection.id != 2) continue;
                 AprilTagPoseFtc pos = detection.ftcPose;
 //                tel.addData(String.valueOf(detection.id), "x: " + pos.x + ", y: " + pos.y + ", z:" + pos.z + ", bearing: " + pos.bearing + ", elevation:" + pos.elevation + ", pitch: " + pos.pitch + ", range: " + pos.range + ", roll: " + pos.roll + ", yaw: " + pos.yaw);
-                tel.addData("ID: ", String.valueOf(detection.id));
-                tel.addData("x: ", pos.x);
-                tel.addData("y: ", pos.y);
-                tel.addData("z: ", pos.z);
+//                tel.addData("ID: ", String.valueOf(detection.id));
+//                tel.addData("x: ", pos.x);
+//                tel.addData("y: ", pos.y);
+//                tel.addData("z: ", pos.z);
 
                 //b=90-yaw-bearing
                 //fr=sqrt(range^2-z^2)
                 //sin(b)\*fr=absY
                 //cos(b)\*fr=absX
 
-//                double cornerAngle = 90 - Math.abs(pos.yaw + pos.bearing);
-                double cornerAngle = 90 - pos.yaw - pos.bearing; // abs x might already be negative from cosine i'll check like later today or smt
-                double flatRange = Math.sqrt(Math.pow(pos.range, 2) - Math.pow(pos.z, 2));
-                double absoluteX = Math.cos(Math.toRadians(cornerAngle)) * flatRange;
-                double absoluteY = Math.sin(Math.toRadians(cornerAngle)) * flatRange;
-
-                // calculate if x is positive or negative
-                // if(90+bearing+yaw > 90) + else -
-//                if (cornerAngle < 90) absoluteX = absoluteX * -1;
-
-                double newX = pose.getX() - (absoluteX * 0.8);
-                double newY = pose.getY() + ((absoluteY - 20) * 0.8);
-                double newHeading = pose.getRotation().getDegrees() - pos.yaw;
-
-                lastAprilTagPos = new Pose2d(newX, newY, new Rotation2d(Math.toRadians(newHeading)));
-
-                tel.addData("new x:", newX);
-                tel.addData("new y:", newY);
-                tel.addData("new h:", newHeading);
-                tel.addData("abs x:", absoluteX);
-                tel.addData("abs y:", absoluteY);
-                tel.addData("abs h:", pos.yaw);
+                if (!yawHasBeenCorrected) {
+                    if (newYaw == Double.MAX_VALUE) {
+                        start = pose;
+                    }
+                    newYaw = pose.getRotation().getDegrees() - pos.yaw;
+                } else if (!translationHasbeenCorrected & newPose == null) {
+                    newPose = new Pose2d(pose.getX() + pos.x,  pose.getY() + pos.y - Config.backBoardOffset, new Rotation2d(0));
+                    tel.addData("rx", pos.x);
+                    tel.addData("ry", pos.y);
+                    tel.addData("nx", newPose.getX());
+                    tel.addData("ny", newPose.getY());
+                }
             }
-            if (!movement.move(pose, lastAprilTagPos, tel)) {
-                tel.addData("Done", true);
-            } else {
-                tel.addData("Done", false);
+//            if (!movement.move(pose, lastAprilTagPos, tel)) {
+//                tel.addData("Done", true);
+//            } else {
+//                tel.addData("Done", false);
+//            }
+            boolean dropped = false;
+
+            if (!yawHasBeenCorrected & newYaw != Double.MAX_VALUE) {
+                boolean tf = !movement.move(pose, new Pose2d(start.getX(), start.getY(), new Rotation2d(Math.toRadians(newYaw))), tel);
+                tel.addData("state", "heading");
+                tel.addData("heading", newYaw);
+                tel.addData("tf", tf);
+                if (!tf) {
+                    robot.drive.setDrivePowers(0,0,0,0);
+                    sleep(1000);
+                    robot.drive.imu.resetYaw();
+                    rrDrive.setPoseEstimate(new com.acmerobotics.roadrunner.geometry.Pose2d(0,0,0));
+                    yawHasBeenCorrected = true;
+                }
+            } else if (!translationHasbeenCorrected & newPose != null) {
+                translationHasbeenCorrected = !movement.move(pose, newPose, telemetry);
+                tel.addData("state", "translation");
+            } else if (!dropped) {
+                tel.addData("state", "lift1");
+                tel.update();
+                robot.drive.setDrivePowers(0,0,0,0);
+                while (opModeIsActive() && !isStopRequested() && Math.abs(Config.liftBackBoard - robot.lift.leftLift.getCurrentPosition()) > Config.liftTolerance) {
+                    robot.lift.liftToPos(Config.liftBackBoard, Config.liftMotorPowerMacro * 1.5);
+                }
+                robot.lift.setLiftPower(Config.gravity);
+                tel.addData("state", "tilt");
+                tel.update();
+                robot.claw.clawServo.setPosition(Config.clawServoBackboard);
+                sleep(1000);
+                tel.addData("state", "move1");
+                tel.update();
+                robot.drive.setDrivePowers(Config.boardPower,Config.boardPower,Config.boardPower,Config.boardPower);
+                sleep(3000);
+                robot.drive.setDrivePowers(0,0,0,0);
+                tel.addData("state", "claw1");
+                tel.update();
+                robot.claw.bottomServo.setPosition(Config.bottomServoOpen);
+                sleep(1000);
+                tel.addData("state", "moveb1");
+                tel.update();
+                robot.drive.setDrivePowers(-Config.boardPower*0.5,-Config.boardPower*0.5,-Config.boardPower*0.5,-Config.boardPower*0.5);
+                sleep(1000);
+                tel.addData("state", "lift2");
+                tel.update();
+                while (opModeIsActive() && !isStopRequested() && Math.abs(Config.liftBackBoard + Config.secondOffset - robot.lift.leftLift.getCurrentPosition()) > Config.liftTolerance) {
+                    robot.lift.liftToPos(Config.liftBackBoard + Config.secondOffset, Config.liftMotorPowerMacro * 1.5);
+                }
+                robot.lift.setLiftPower(Config.gravity);
+                tel.addData("state", "move2");
+                tel.update();
+                robot.drive.setDrivePowers(Config.boardPower,Config.boardPower,Config.boardPower,Config.boardPower);
+                sleep(1000);
+                tel.addData("state", "claw2");
+                tel.update();
+                robot.claw.topServo.setPosition(Config.topServoOpen);
+                sleep(1000);
+
+                tel.addData("state", "bailing");
+                tel.update();
+                robot.drive.setDrivePowers(-Config.boardPower,-Config.boardPower,-Config.boardPower,-Config.boardPower);
+                sleep(1500);
+                robot.drive.setDrivePowers(0,0,0,0);
+                tel.addData("state", "finished");
+                dropped = true;
             }
             tel.addData("pX: ", pose.getX());
             tel.addData("pY: ", pose.getY());

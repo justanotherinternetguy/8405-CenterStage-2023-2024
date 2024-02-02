@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.Auton;
 
 @com.acmerobotics.dashboard.config.Config
 public class Config {
-    public static double backBoardOffset = 5;
+    public static int secondOffset = 125;
+    public static double boardPower = 0.35;
+    public static double backBoardOffset = 12;
     public static boolean instantEndGame = false; // testing purposes
     public static int boardBase = 425;
     public static int stack = 200;
@@ -16,9 +18,9 @@ public class Config {
     public static double XMULTI = 1.5;
     public static boolean manualWhite = false;
     public static int temp = 3334;
-    public static double translationP = 0.2;
-    public static double translationI = 0.1;
-    public static double translationD = 0.025;
+    public static double translationP = 0.15;
+    public static double translationI = 0.05;
+    public static double translationD = 0.03;
     public static double rotationP = 0.01;
     public static double rotationI = 0.0;
     public static double rotationD = 0.0;
@@ -36,9 +38,10 @@ public class Config {
     public static int dir = 1;
 
     public static double liftMotorPowerMultTeleOp = 1;
-    public static double liftMotorPowerMacro = 0.3;
+    public static double liftMotorPowerMacro = 0.45;
     public static double liftMotorPowerAuton = 0.8;
     public static double liftMotorPowerDown = 0.42;
+    public static int liftBackBoard = 550;
     public static int LIFT_MAX = Integer.MAX_VALUE;
     public static int FLOOR = 150;
     public static double KILLTIME = 1000;
@@ -63,7 +66,7 @@ public class Config {
     public static double bottomServoClose = 0.25;
     public static double bottomServoOpen = 0.425;
     public static double clawServoFloor = 0.45;
-    public static double clawServoBackboard = 0.1;
+    public static double clawServoBackboard = 0.0;
     public static double AAAA = 0.5;
 
 
