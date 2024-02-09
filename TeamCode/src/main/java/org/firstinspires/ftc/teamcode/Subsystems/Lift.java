@@ -108,6 +108,11 @@ public class Lift {
         return encoder.getCurrentPosition() - target;
     }
 
+    public boolean lifToPosBoolean(int target, double power) {
+        this.liftToPos(target, power);
+        return Math.abs(target - this.leftLift.getCurrentPosition()) <= Config.liftTolerance;
+    }
+
 
     public void liftManual(Gamepad gamepad, Telemetry tel) {
         if (gamepad.right_trigger > 0.2 && encoder.getCurrentPosition() < Config.LIFT_MAX) {
