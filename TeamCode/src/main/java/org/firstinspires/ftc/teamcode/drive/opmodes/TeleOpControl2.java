@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Auton.Config;
-import org.firstinspires.ftc.teamcode.ObjectDet.ObjectDetector;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -32,7 +31,7 @@ public class TeleOpControl2 extends LinearOpMode {
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
 
 
-        ObjectDetector objectDetector = new ObjectDetector(hardwareMap, tel);
+//        ObjectDetector objectDetector = new ObjectDetector(hardwareMap, tel);
 
         boolean lastX = false;
 

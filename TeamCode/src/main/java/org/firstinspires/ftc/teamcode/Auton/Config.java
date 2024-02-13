@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Auton;
 
 @com.acmerobotics.dashboard.config.Config
 public class Config {
+    public static double boardDistance = 10;
+    public static int boardColumn = 0;
     public static int secondOffset = 125;
     public static double boardPower = 0.35;
     public static double backBoardOffset = 12;
