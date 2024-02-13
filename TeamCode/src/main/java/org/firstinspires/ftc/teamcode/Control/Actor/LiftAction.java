@@ -25,8 +25,6 @@ public class LiftAction extends Action {
     public void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement) {
         // not gonna use liftToPos so this way we can allow for custom pid per section in the future
         System.out.println(robot.lift.liftToPos(height, power));
-
-
     }
 
     @Override
@@ -36,8 +34,9 @@ public class LiftAction extends Action {
 
     @Override
     public double defaultTimeout(Pose2d pose, int lift, Double prevTilt, ClawAction.ClawStates[] prevClaw) {
-        int distance = this.height - lift;
-        double distanceTimed = distance * this.power;
-        return distanceTimed * 0.75;
+//        int distance = this.height - lift;
+//        double distanceTimed = distance * this.power;
+//        return distanceTimed * 0.75;
+        return 3000;
     }
 }

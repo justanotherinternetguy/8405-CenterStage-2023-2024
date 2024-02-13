@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Control.Actor.Actor;
 import org.firstinspires.ftc.teamcode.Control.Actor.ClawAction;
+import org.firstinspires.ftc.teamcode.Control.Actor.LiftAction;
 import org.firstinspires.ftc.teamcode.Control.Actor.MvntAction;
 import org.firstinspires.ftc.teamcode.Control.Movement;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
@@ -26,9 +27,23 @@ public class RedAutonClose extends LinearOpMode {
 
         rrDrive.setPoseEstimate(new Pose2d(0, 0, 0));
 
-        actor.add(new MvntAction(createPose(0, 5, 0)))
+        actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed))
                 .add(new ClawAction(0.5))
-                .add(new MvntAction(createPose(0, 0, 0)));
+                .add(new MvntAction(createPose(0, 27, 0)))
+                .add(new ClawAction(0))
+                .add(new ClawAction(ClawAction.ClawStates.bottomOpen))
+                .add(new ClawAction(0.5))
+                .add(new MvntAction(createPose(0, 24, 0)))
+                .add(new MvntAction(createPose(-24, 24, -90)))
+                .add(new ClawAction(1))
+                .add(new LiftAction(Config.boardBase, Config.liftMotorPowerAuton))
+                .add(new MvntAction(-0.25, 0.0, 0.0))
+                .add(new ClawAction(ClawAction.ClawStates.topOpen))
+                .add(new MvntAction(createPose(-24, 24, -90)))
+                .add(new ClawAction(0))
+                .add(new LiftAction(Config.boardBase/2, Config.liftMotorPowerAuton))
+                .add(new MvntAction(createPose(-24, 3, -90)))
+                .add(new MvntAction(createPose(-44, 3, -90)));
 
         boolean pathDone = false;
 
