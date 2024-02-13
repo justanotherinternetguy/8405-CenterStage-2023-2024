@@ -56,10 +56,11 @@ public class AprilTagTrigonometry extends LinearOpMode {
 
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
 
-        rrDrive.setPoseEstimate(new Pose2d(0, 0, 0));
+        rrDrive.setPoseEstimate(new com.acmerobotics.roadrunner.geometry.Pose2d(0, 0, 0));
 
         while (!isStarted() && robot.lift.lifToPosBoolean(Config.FLOOR, Config.liftMotorPowerMacro)) {
         }
+
         robot.lift.setLiftPower(Config.gravity);
 
         Pose2d target = new Pose2d();
