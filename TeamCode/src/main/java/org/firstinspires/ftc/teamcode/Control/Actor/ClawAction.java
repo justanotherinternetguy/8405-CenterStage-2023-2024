@@ -45,6 +45,7 @@ public class ClawAction extends Action {
         if (states == null) {
             double newPos = this.getNewTilt();
             robot.claw.clawServo.setPosition(newPos);
+            tm.addData("tiltpos", newPos);
 //            if (isBackboard) {
 //                robot.claw.clawServo.setPosition(Config.clawServoBackboard);
 //            } else {
@@ -73,7 +74,7 @@ public class ClawAction extends Action {
     public double getNewTilt() {
         double range = Config.clawServoBackboard - Config.clawServoFloor;
         double offset = range * this.tilt;
-        return Config.clawServoFloor + this.tilt;
+        return Config.clawServoFloor + offset;
     }
 
     @Override
@@ -85,8 +86,9 @@ public class ClawAction extends Action {
     @Override
     public double defaultTimeout(Pose2d pose, int lift, Double prevTilt, ClawStates[] prevClaw) {
         if (states == null) {
-            double distance = prevTilt - tilt;
-            return distance * 2000;
+//            double distance = prevTilt - tilt;
+//            return distance * 2000;
+            return 2000;
         }
         double maxTime = 0;
         for (ClawStates state : prevClaw) {

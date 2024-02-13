@@ -12,12 +12,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.firstinspires.ftc.teamcode.Control.Movement;
 import org.firstinspires.ftc.teamcode.Controllers.PID;
-import org.firstinspires.ftc.teamcode.Subsystems.Drive;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
@@ -36,6 +37,9 @@ public class TeleOpControl extends LinearOpMode {
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         ElapsedTime timer = new ElapsedTime();
         Movement movement = new Movement(robot.drive, new PID.Config(Config.translationP, Config.translationI, Config.translationD + 0.3), new PID.Config(0.02, 0.2, 0));
+
+        robot.drive.imu.resetYaw();
+        drive.setPoseEstimate(new com.acmerobotics.roadrunner.geometry.Pose2d(0, 0, 0));
 
         Telemetry tel = FtcDashboard.getInstance().getTelemetry();
 
@@ -143,15 +147,18 @@ public class TeleOpControl extends LinearOpMode {
                 robot.drive.setDrivePowers(frontLeftPower * multiplier, frontRightPower * multiplier, backLeftPower * multiplier, backRightPower * multiplier);
 
             }
-            tel.addData("Drive", Config.fieldCentric);
+//            tel.addData("Drive", Config.fieldCentric);
             tel.addData("Pose", poseEstimate);
-            tel.addData("Lift: ", robot.lift.leftLift.getCurrentPosition());
-            tel.addData("SlowMode: ", slowMode);
-            tel.addData("Time: ", timer.seconds());
+//            tel.addData("Lift: ", robot.lift.leftLift.getCurrentPosition());
+//            tel.addData("SlowMode: ", slowMode);
+//            tel.addData("Time: ", timer.seconds());
 
             tel.addData("pX: ", poseEstimate.getX());
             tel.addData("pY: ", poseEstimate.getY());
             tel.addData("pH: ", poseEstimate.getRotation().getDegrees());
+            tel.addData("right enc", ((TwoWheelTrackingLocalizer) drive.getLocalizer()).parallelEncoder.getCurrentPosition());
+            tel.addData("center enc", ((TwoWheelTrackingLocalizer) drive.getLocalizer()).perpendicularEncoder.getCurrentPosition());
+            tel.addData("heading imu", robot.drive.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
             telemetry.addData("pose", drive.getPose().toString());
 //            if (lastAprilTagPos != null) {
 //                timer.reset();

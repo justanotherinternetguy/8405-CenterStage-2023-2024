@@ -95,7 +95,7 @@ public class Movement {
             tel.addData("fr", powers.frontRight);
             tel.addData("bl", powers.backLeft);
             tel.addData("br", powers.backRight);
-            tel.update();
+//            tel.update();
         }
 
         if (atX < this.tolX && atY < this.tolY && atH < this.tolH) {
@@ -108,7 +108,7 @@ public class Movement {
             settling = false;
         }
 
-//        return !(atX < this.tolX) || !(atY < this.tolY) || !(atH < this.tolH);
-        return true;
+        return !(atX < this.tolX) || !(atY < this.tolY) || !(atH < this.tolH);
+//        return true;
     }
 }

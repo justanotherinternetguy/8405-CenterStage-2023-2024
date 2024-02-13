@@ -83,15 +83,17 @@ public class Actor {
         if (actions == null || actions.size() == 0) {
             return 0;
         }
-        ArrayList<Action> step = actions.get(0);
-        boolean stepDone = true;
-        boolean hasHadLift = false;
+        ArrayList<Action> step = actions.get(0); // [mnvt]
+        boolean stepDone = true; // stepDone = true
+        boolean hasHadLift = false; // hasHadLift = false
         for (Action action : step) {
+            // action = mvnt
             if (action.timeout == Double.NEGATIVE_INFINITY) {
                 // assign timeout at runtime
                 double actionDefault = action.defaultTimeout(this.rrDrive.getPose(), robot.lift.leftLift.getCurrentPosition(), this.prevTilt, this.prevClaw);
+                // actionDefault = 3000;
                 if (actionDefault != -1) {
-                    action.timeout = actionDefault;
+                    action.timeout = actionDefault; // action.timeout = 3000
                 }
             }
             if (action instanceof ClawAction) {
@@ -119,6 +121,7 @@ public class Actor {
                 }
                 continue; // if its perpetual we don't need to check if its done or have to override stepDone
             }
+            //
             if (!action.isDone(hw, tm, robot, rrDrive, movement)) {
                 stepDone = false;
                 if (action.getClass().getName().equals(LiftAction.class.getName())) {

@@ -18,19 +18,12 @@ public class Config {
     public static double XMULTI = 1.5;
     public static boolean manualWhite = false;
     public static int temp = 3334;
-    public static double translationP = 0.15;
-    public static double translationI = 0.05;
-    public static double translationD = 0.03;
-    public static double rotationP = 0.01;
-    public static double rotationI = 0.0;
-    public static double rotationD = 0.0;
-
-    public static double translationPOther = 0.2;
-    public static double translationIOther = 0.1;
-    public static double translationDOther = 0.025;
-    public static double rotationPOther = 0.01;
-    public static double rotationIOther = 0.0;
-    public static double rotationDOther = 0.0;
+    public static double translationP = 0.16;
+    public static double translationI = 0.31;
+    public static double translationD = 0.02112;
+    public static double rotationP = 0.034;
+    public static double rotationI = 0.068;
+    public static double rotationD = 0.002244;
     public static double tolerance = 0.75;
     public static double toleranceH = 1.5;
     public static double powerMultiplier = 0.8;
@@ -61,16 +54,12 @@ public class Config {
     public static int mask2US = 255;
     public static int mask2UV = 255;
 
-    public static double topServoClose = 0.25;
-    public static double topServoOpen = 0.4;
+    public static double topServoClose = 0.53;
+    public static double topServoOpen = 0.59;
     public static double bottomServoClose = 0.25;
     public static double bottomServoOpen = 0.425;
-    public static double clawServoFloor = 0.45;
-    public static double clawServoBackboard = 0.0;
-    public static double AAAA = 0.5;
-
-
+    public static double clawServoFloor = 0.7;
+    public static double clawServoBackboard = 1.0;
     public static int burstDelay = 1000;
-
     public static double frontMulti = 1;
 }
