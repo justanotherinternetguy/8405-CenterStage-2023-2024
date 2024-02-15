@@ -26,17 +26,25 @@ public class Hang {
     }
 
     public void input(Gamepad gamepad1, Supplier<Boolean> opMode, Supplier<Boolean> stop, ElapsedTime timer) {
-        if (timer.seconds() < 1.5 * 60 && !Config.instantEndGame) return; // not endgame yet
-        if (gamepad1.dpad_up) {
-            this.timer.reset();
-            setHangMotorPower(0.7);
-        } else if (gamepad1.dpad_down) {
-            this.timer.reset();
-            hangNow(opMode, stop);
-        }
-        else if(timer.milliseconds() > 50)
-        {
-            setHangMotorPower(0);
+//        if (timer.seconds() < 1.5 * 60 && !Config.instantEndGame) return; // not endgame yet
+//        if (gamepad1.dpad_up) {
+//            this.timer.reset();
+//            setHangMotorPower(0.7);
+//        } else if (gamepad1.dpad_down) {
+//            this.timer.reset();
+//            hangNow(opMode, stop);
+//        }
+//        else if(timer.milliseconds() > 50)
+//        {
+//            setHangMotorPower(0);
+//        }
+
+        if (gamepad1.dpad_down) {
+            hangMotor.setPower(Config.hangPower);
+        } else if (gamepad1.dpad_up) {
+            hangMotor.setPower(-Config.hangPower);
+        } else {
+            hangMotor.setPower(0);
         }
     }
     public void setHangMotorPower(double power) {

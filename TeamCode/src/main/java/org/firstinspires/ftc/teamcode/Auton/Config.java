@@ -38,7 +38,7 @@ public class Config {
     public static double liftMotorPowerDown = 0.42;
     public static int liftBackBoard = 550;
     public static int LIFT_MAX = Integer.MAX_VALUE;
-    public static int FLOOR = 150;
+    public static int FLOOR = 75;
     public static double KILLTIME = 1000;
 
 

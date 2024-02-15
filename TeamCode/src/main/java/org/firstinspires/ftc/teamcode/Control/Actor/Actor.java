@@ -131,7 +131,7 @@ public class Actor {
             }
         }
         if (!hasHadLift) {
-            robot.lift.setLiftPower(-Config.gravity);
+            robot.lift.setLiftPower(Config.gravity);
         }
         tm.addData("actions", step.size());
         tm.addData("steps", actions.size());
