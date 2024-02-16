@@ -108,7 +108,9 @@ public class Movement {
             settling = false;
         }
 
-        return !(atX < this.tolX) || !(atY < this.tolY) || !(atH < this.tolH);
+        System.out.println(!(atX < this.tolX && atY < this.tolY && atH < this.tolH));
+        System.out.println(powers);
+        return !(atX < this.tolX && atY < this.tolY && atH < this.tolH);
 //        return true;
     }
 }

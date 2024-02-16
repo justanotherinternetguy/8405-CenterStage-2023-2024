@@ -73,7 +73,7 @@ public class VisionPortalTriple extends LinearOpMode {
         Double avgYaw = null;
 
         while (opModeIsActive() && !isStopRequested()) {
-            rrDrive.updatePoseEstimate();
+            rrDrive.update();
             Pose2d pose = rrDrive.getPose();
 
             ArrayList<AprilTagDetection> detections;

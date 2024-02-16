@@ -27,7 +27,7 @@ public class LocalizationTest extends LinearOpMode {
 
         waitForStart();
 
-        robot.claw.clawServo.setPosition(Config.clawServoBackboard);
+        robot.claw.clawServo.setPosition(Config.clawServoFloor);
 
         while (!isStopRequested()) {
             double power = -gamepad1.left_stick_y; // remember this is reversed

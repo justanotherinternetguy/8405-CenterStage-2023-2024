@@ -7,15 +7,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Auton.Config;
+import org.firstinspires.ftc.teamcode.Control.Actor.Actor;
+import org.firstinspires.ftc.teamcode.Control.Actor.MvntAction;
 import org.firstinspires.ftc.teamcode.Control.Movement;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @TeleOp(name = "PIDTuning", group = "Linear Opmode")
 public class PIDTuning extends LinearOpMode {
-    public static boolean fieldCentric = false;
-    public static boolean slowMode = false;
-
     @Override
     public void runOpMode() {
         Robot robot = new Robot(hardwareMap, gamepad1);
@@ -23,49 +23,46 @@ public class PIDTuning extends LinearOpMode {
         Movement movement = new Movement(robot.drive);
         Pose2d[] path = null;
         Telemetry dashTel = FtcDashboard.getInstance().getTelemetry();
+        Actor actor = new Actor(hardwareMap, telemetry, robot, rrDrive, movement, 3000);
+
+        rrDrive.setPoseEstimate(new com.acmerobotics.roadrunner.geometry.Pose2d(0, 0, 0));
+
         waitForStart();
         while (opModeIsActive() && !isStopRequested()) {
-//            robot.lift.liftToBase();
-            if (path == null) {
-                if (gamepad1.y) {
-                    path = new Pose2d[] {
-                            createPose(0, 24, 0)
-                    };
-                } else if (gamepad1.x) {
-                    path = new Pose2d[] {
-                            createPose(24, 0, 0)
-                    };
-                } else if (gamepad1.b) {
-                    path = new Pose2d[] {
-                            createPose(-24, 0, 0)
-                    };
-                } else if (gamepad1.a) {
-                    path = new Pose2d[] {
-                            createPose(0, -24, 0)
-                    };
-                } else if (gamepad1.right_bumper) {
-                    path = new Pose2d[] {
-                            createPose(0, 0, 0)
-                    };
-                }
-                continue;
-            }
-            rrDrive.updatePoseEstimate();
+            robot.lift.liftToPos(Config.FLOOR, Config.liftMotorPowerAuton);
+            rrDrive.update();
             Pose2d pose = rrDrive.getPose();
+            dashTel.addData("pose x", pose.getX());
+            dashTel.addData("pose y", pose.getY());
+            dashTel.addData("heading", pose.getRotation().getDegrees());
+            if (gamepad1.y) {
+                actor.add(new MvntAction(createPose(0, 24, 0)), Double.POSITIVE_INFINITY);
+            } else if (gamepad1.x) {
+                actor.add(new MvntAction(createPose(-24, 0, 0)), Double.POSITIVE_INFINITY);
+            } else if (gamepad1.b) {
+                actor.add(new MvntAction(createPose(24, 0, 0)), Double.POSITIVE_INFINITY);
+            } else if (gamepad1.a) {
+                actor.add(new MvntAction(createPose(0, -24, 0)), Double.POSITIVE_INFINITY);
+            } else if (gamepad1.dpad_right) {
+                actor.add(new MvntAction(createPose(0, 0, 90)), Double.POSITIVE_INFINITY);
+            } else if (gamepad1.dpad_down) {
+                actor.add(new MvntAction(createPose(0, 0, 180)), Double.POSITIVE_INFINITY);
+            } else if (gamepad1.dpad_left) {
+                actor.add(new MvntAction(createPose(0, 0, -90)), Double.POSITIVE_INFINITY);
+            } else if (gamepad1.right_bumper) {
+                actor.add(new MvntAction(createPose(0, 0, 0)), Double.POSITIVE_INFINITY);
+            }
             dashTel.addData("pose", pose);
-            if (!movement.move(pose, path[0], dashTel)) {
-                robot.drive.setDrivePowers(0, 0, 0, 0);
-                dashTel.addData("Done", "done");
-                path = null;
+            int remaining = actor.run();
+            if (remaining == 0) {
+                dashTel.addData("status", "done");
+                robot.drive.setDrivePowers(0,0,0,0);
             } else {
-                dashTel.addData("pose x", pose.getX());
-                dashTel.addData("pose y", pose.getY());
-                dashTel.addData("heading", pose.getRotation().getDegrees());
+                dashTel.addData("status", "moving");
             }
             dashTel.update();
         }
     }
-
 
 
     public Pose2d createPose(double x, double y, double heading) {

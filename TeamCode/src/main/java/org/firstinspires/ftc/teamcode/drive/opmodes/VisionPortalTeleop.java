@@ -114,7 +114,7 @@ public class VisionPortalTeleop extends LinearOpMode {
 //            tel.addData("framecount", framecount);
 //            tel.update();
 
-            rrDrive.updatePoseEstimate();
+            rrDrive.update();
             Pose2d pose = rrDrive.getPose();
 
             List<AprilTagDetection> detectionList = aprilTagProcessor.getDetections();

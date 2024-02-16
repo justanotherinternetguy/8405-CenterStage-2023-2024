@@ -70,7 +70,7 @@ public class TeleOpControl extends LinearOpMode {
         Pose2d[] path = null;
 
         while (opModeIsActive()) {
-            drive.updatePoseEstimate();
+            drive.update();
             Pose2d poseEstimate = drive.getPose();
 
             List<AprilTagDetection> detectionList = aprilTagProcessor.getDetections();
@@ -178,7 +178,7 @@ public class TeleOpControl extends LinearOpMode {
                 }
             }
             telemetry.update();
-            drive.updatePoseEstimate();
+            drive.update();
 
             tel.update();
             tel.update();

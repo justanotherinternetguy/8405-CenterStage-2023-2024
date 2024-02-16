@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@TeleOp(name = "Motor Drive", group = "Linear Opmode")
-public class TeleOpControl2 extends LinearOpMode {
+@TeleOp(name = "Motor Test", group = "Linear Opmode")
+public class MotorTest extends LinearOpMode {
     public static boolean slowMode = false;
 
     @Override

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -36,7 +38,7 @@ public class Drive {
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
-                RevHubOrientationOnRobot.UsbFacingDirection.UP
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
         ));
         imu.initialize(parameters);
     }
@@ -86,6 +88,12 @@ public class Drive {
             this.frontRight = frontRight;
             this.backLeft = backLeft;
             this.backRight = backRight;
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "(fl: " + frontLeft + ", fr: " + frontRight + ", bl: " + backLeft + ", br: "+ backRight + ")";
         }
     }
 }

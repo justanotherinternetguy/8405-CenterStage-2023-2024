@@ -99,7 +99,7 @@ public class AprilTagTrigonometry extends LinearOpMode {
                 // y, -x, -h
                 rrDrive.setPoseEstimate(new com.acmerobotics.roadrunner.geometry.Pose2d(avgPose.getY(), -avgPose.getX(), -avgPose.getHeading()));
             } else {
-                rrDrive.updatePoseEstimate();
+                rrDrive.update();
             }
 
             if (redBoard != null) {
