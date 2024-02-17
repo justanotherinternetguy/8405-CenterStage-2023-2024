@@ -18,11 +18,10 @@ public class Claw {
     public boolean bottomClaw = false; // is closed?
     public boolean topClaw = false; // is closed?
     public boolean isBackboard = false; // is angled?
-    public boolean lastLeftBumper = false;
-    public boolean lastRightBumper = false;
-    public boolean lastBurstButton = false;
+    public boolean lastB = false;
+    public boolean lastY = false;
+    public boolean lastRB = false;
     public ElapsedTime timer = new ElapsedTime();
-    public boolean inBurst = false;
 
     public Claw(HardwareMap hardwareMap, Gamepad gamepad) {
         this.gamepad = gamepad;
@@ -34,37 +33,35 @@ public class Claw {
     public void input(Gamepad gamepad1, Telemetry tel) {
         tel.addData("topClaw", topClaw);
         tel.addData("bottomClaw", bottomClaw);
-        //true = closed
-        if (gamepad1.right_bumper && !lastRightBumper) {
-            isBackboard = !isBackboard;
-        }
-        if (gamepad1.y && !lastBurstButton) {
-            if (topClaw && bottomClaw) {
-                bottomClaw = false;
-                timer.reset();
-                inBurst = true;
-            } else if (!topClaw && !bottomClaw) {
+
+        if (gamepad1.y && !lastY) {
+            if (bottomClaw) {
+                bottomClaw = false; // if bottom is closed, open it
+            } else {
+                bottomClaw = true; // if bottom is open then close both
                 topClaw = true;
-                bottomClaw = true;
-                inBurst = false;
             }
         }
-        if (inBurst && timer.milliseconds() > Config.burstDelay && topClaw && !bottomClaw) {
-            topClaw = false;
-            inBurst = false;
+
+        if (gamepad1.b && !lastB) {
+            if (!bottomClaw) {
+                topClaw = false; // if bottom claw is open, open top
+            }
         }
-        lastRightBumper = gamepad1.right_bumper;
-        lastLeftBumper = gamepad1.left_bumper;
-        lastBurstButton = gamepad1.y;
-        if (bottomClaw) {
-            bottomServo.setPosition(Config.bottomServoClose);
-        } else {
-            bottomServo.setPosition(Config.bottomServoOpen);
+
+        //true = closed
+        if (gamepad1.right_bumper && !lastRB) {
+            isBackboard = !isBackboard;
         }
         if (topClaw) {
             topServo.setPosition(Config.topServoClose);
         } else {
             topServo.setPosition(Config.topServoOpen);
+        }
+        if (bottomClaw) {
+            bottomServo.setPosition(Config.bottomServoClose);
+        } else {
+            bottomServo.setPosition(Config.bottomServoOpen);
         }
         if (isBackboard) {
 //            clawServo.getController().pwmEnable();
@@ -73,5 +70,9 @@ public class Claw {
             clawServo.setPosition(Config.clawServoFloor);
 //            clawServo.getController().pwmDisable();
         }
+
+        lastB = gamepad1.b;
+        lastY = gamepad1.y;
+        lastRB = gamepad1.right_bumper;
     }
 }

@@ -71,7 +71,7 @@ public class Movement {
         if (power != null) y *= power[1];
         if (power != null) h *= power[2];
 
-        Drive.DrivePowers powers = Drive.absoluteMovement(x, y, h, -pose.getHeading());
+        Drive.DrivePowers powers = Drive.absoluteMovement(x, y, h, pose.getHeading());
         drive.setDrivePowers(powers);
 
         double atX = Math.abs(PID.defaultGetError(target.getX(), pose.getX()));
@@ -98,15 +98,15 @@ public class Movement {
 //            tel.update();
         }
 
-        if (atX < this.tolX && atY < this.tolY && atH < this.tolH) {
-            if (!settling) {
-                settlingTime.reset();
-            }
-            settling = true;
-            return !(settlingTime.milliseconds() > 500);
-        } else {
-            settling = false;
-        }
+//        if (atX < this.tolX && atY < this.tolY && atH < this.tolH) {
+//            if (!settling) {
+//                settlingTime.reset();
+//            }
+//            settling = true;
+//            return !(settlingTime.milliseconds() > 500);
+//        } else {
+//            settling = false;
+//        }
 
         System.out.println(!(atX < this.tolX && atY < this.tolY && atH < this.tolH));
         System.out.println(powers);

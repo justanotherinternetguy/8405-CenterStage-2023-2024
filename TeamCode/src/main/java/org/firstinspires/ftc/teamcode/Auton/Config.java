@@ -56,12 +56,12 @@ public class Config {
     public static int mask2US = 255;
     public static int mask2UV = 255;
 
+    public static double bottomServoClose = 0.3625;
+    public static double bottomServoOpen = 0.43;
     public static double topServoClose = 0.53;
     public static double topServoOpen = 0.59;
-    public static double bottomServoClose = 0.25;
-    public static double bottomServoOpen = 0.425;
-    public static double clawServoFloor = 0.7;
-    public static double clawServoBackboard = 1.0;
+    public static double clawServoFloor = 0.8;
+    public static double clawServoBackboard = 0.5125;
     public static int burstDelay = 1000;
     public static double frontMulti = 1;
 }

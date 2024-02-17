@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 public abstract class Action {
     public boolean perpetual = false;
-    public Double timeout = null;
+    public double timeout = Double.NEGATIVE_INFINITY;
 
     public abstract void run(HardwareMap hw, Telemetry tm, Robot robot, SampleMecanumDrive rrDrive, Movement movement);
 

@@ -42,9 +42,7 @@ public class Actor {
 //        action.timeout = timeout != null ? timeout : defaultTimeout;
         if (timeout != null) {
             action.timeout = timeout;
-        } else {
-            action.timeout = Double.NEGATIVE_INFINITY; // set at runttime to globaldefault or actiondefault
-        }
+        } // otherwise action.timeout will be Double.NEGATIVE_INFINITY and set at runtime to globalDefault or actionDefault
         if (parallel) {
             actions.get(actions.size() - 1).add(action);
         } else {
@@ -88,6 +86,8 @@ public class Actor {
         boolean hasHadLift = false; // hasHadLift = false
         for (Action action : step) {
             // action = mvnt
+
+            // we can remove this check every time we run later
             if (action.timeout == Double.NEGATIVE_INFINITY) {
                 // assign timeout at runtime
                 double actionDefault = action.defaultTimeout(this.rrDrive.getPose(), robot.lift.leftLift.getCurrentPosition(), this.prevTilt, this.prevClaw);
@@ -110,7 +110,7 @@ public class Actor {
                 }
             }
 
-            if (action.timeout != null && timer.milliseconds() > action.timeout || (action.timeout == Double.NEGATIVE_INFINITY && timer.milliseconds() > this.defaultTimeout)) {
+            if (timer.milliseconds() > action.timeout || (action.timeout == Double.NEGATIVE_INFINITY && timer.milliseconds() > this.defaultTimeout)) {
                 continue; // per action timeout(null is no timeout)
             }
 //             if the action is not done we run it and set stepDone to false so we don't move onto the next step until all actions are completed

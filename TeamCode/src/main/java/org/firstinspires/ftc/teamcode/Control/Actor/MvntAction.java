@@ -35,7 +35,7 @@ public class MvntAction extends Action {
         if (target == null) {
             rrDrive.update();
             Pose2d pose = rrDrive.getPose();
-            robot.drive.setDrivePowers(Drive.absoluteMovement(direction[0], direction[1], direction[2], -pose.getHeading()));
+            robot.drive.setDrivePowers(Drive.absoluteMovement(direction[0], direction[1], direction[2], pose.getHeading()));
         }
     }
 
@@ -45,7 +45,7 @@ public class MvntAction extends Action {
             return false;
         }
         // same as in movement.move, just inverted to be isDone instead of continueNextLoop
-        rrDrive.update();
+//        rrDrive.update();
         Pose2d pose = rrDrive.getPose();
         return !movement.move(pose, target, new Double[]{maxPower, maxPower, maxPower}, tm);
     }

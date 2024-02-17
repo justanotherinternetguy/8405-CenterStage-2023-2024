@@ -53,16 +53,16 @@ public class MotorTest extends LinearOpMode {
                 robot.drive.setDrivePowers(0, 0, 1, 0);
             }
             if (gamepad1.left_bumper) {
-                robot.claw.topServo.setPosition(Config.bottomServoOpen);
+                robot.claw.topServo.setPosition(Config.topServoOpen);
             }
             if (gamepad1.right_bumper) {
-                robot.claw.topServo.setPosition(Config.bottomServoClose);
+                robot.claw.topServo.setPosition(Config.topServoClose);
             }
             if (gamepad1.left_trigger > 0.5) {
-                robot.claw.bottomServo.setPosition(Config.topServoOpen);
+                robot.claw.bottomServo.setPosition(Config.bottomServoOpen);
             }
             if (gamepad1.right_trigger > 0.5) {
-                robot.claw.bottomServo.setPosition(Config.topServoClose);
+                robot.claw.bottomServo.setPosition(Config.bottomServoClose);
             }
         }
     }

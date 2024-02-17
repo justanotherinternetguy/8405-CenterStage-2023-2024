@@ -54,8 +54,8 @@ public class Drive {
     }
 
     public static DrivePowers absoluteMovement(double x, double y, double rx, double botHeading) {
-        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+        double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
+        double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
         rotX = rotX * Config.XMULTI;
         double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
         double frontLeft = (rotY + rotX + rx) / denominator;

@@ -65,7 +65,7 @@ public class Lift {
                 currentMode = LIFT_MODE.MANUAL;
                 holdingPos = -1;
                 liftManual(gamepad, tel);
-            } else if (gamepad.b || currentMode == LIFT_MODE.POWEROFF) {
+            } else if (gamepad.a || currentMode == LIFT_MODE.POWEROFF) {
                 currentMode = LIFT_MODE.POWEROFF;
                 holdingPos = -1;
                 leftLift.setPower(0);
