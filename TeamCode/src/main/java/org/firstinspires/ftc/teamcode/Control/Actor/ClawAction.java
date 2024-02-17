@@ -46,11 +46,6 @@ public class ClawAction extends Action {
             double newPos = this.getNewTilt();
             robot.claw.clawServo.setPosition(newPos);
             tm.addData("tiltpos", newPos);
-//            if (isBackboard) {
-//                robot.claw.clawServo.setPosition(Config.clawServoBackboard);
-//            } else {
-//                robot.claw.clawServo.setPosition(Config.clawServoFloor);
-//            }
             return;
         }
         for (ClawStates state : states) {

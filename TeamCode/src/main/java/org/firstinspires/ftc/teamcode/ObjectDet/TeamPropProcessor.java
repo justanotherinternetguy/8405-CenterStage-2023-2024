@@ -21,6 +21,7 @@ public class TeamPropProcessor implements VisionProcessor {
     public double latest_x = 0;
     public double latest_y = 0;
     public int side = 0;
+    public int dir = -1;
 
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
@@ -79,6 +80,16 @@ public class TeamPropProcessor implements VisionProcessor {
                 if (latest_x < i * width / 3) side = i;
             }
             Imgproc.circle(input, new Point(centerX, centerY), 25, new Scalar(255, 0, 255), -1);
+
+            if (latest_x < 80) {
+                dir = 1;
+            }
+            else if (latest_x > 80 && latest_x < 660) {
+                dir = 2;
+            }
+            else if (latest_x > 660) {
+                dir = 3;
+            }
         }
 
         mask.release();
