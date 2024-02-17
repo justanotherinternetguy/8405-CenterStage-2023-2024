@@ -10,7 +10,6 @@ public class Config {
     public static double backBoardOffset = 12;
     public static boolean instantEndGame = false; // testing purposes
     public static int boardBase = 425;
-    public static int stack = 200;
     public static double hangPower = -0.85;
     public static double liftP = 0.02;
     public static double liftI = 0;
@@ -22,22 +21,17 @@ public class Config {
     public static boolean manualWhite = false;
     public static int temp = 3334;
     public static double translationP = 0.1;
-    public static double translationI = 0.31;
-    public static double translationD = 0.02112;
+    public static double translationI = 0.325;
+    public static double translationD = 0.03112;
     public static double rotationP = 0.038;
     public static double rotationI = 0.076;
     public static double rotationD = 0.002508;
     public static double tolerance = 0.75;
     public static double toleranceH = 1.5;
     public static double powerMultiplier = 0.8;
-
-    public static int dir = 1;
-
     public static double liftMotorPowerMultTeleOp = 1;
     public static double liftMotorPowerMacro = 0.45;
-    public static double liftMotorPowerAuton = 0.8;
-    public static double liftConst = 0.07;
-    public static double liftMotorPowerDown = 0.42;
+    public static double liftMotorPowerAuton = 0.6;
     public static int liftBackBoard = 550;
     public static int LIFT_MAX = Integer.MAX_VALUE;
     public static int FLOOR = 100;
@@ -60,10 +54,9 @@ public class Config {
 
     public static double bottomServoClose = 0.35;
     public static double bottomServoOpen = 0.43;
-    public static double topServoClose = 0.52;
+    public static double topServoClose = 0.515;
     public static double topServoOpen = 0.59;
     public static double clawServoFloor = 0.8;
     public static double clawServoBackboard = 0.5125;
-    public static int burstDelay = 1000;
     public static double frontMulti = 1;
 }

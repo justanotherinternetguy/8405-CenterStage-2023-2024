@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Autonomous
-public class RedAutonClose extends LinearOpMode {
+public class BlueAutonClose extends LinearOpMode {
     @Override
     public void runOpMode() {
         Robot robot = new Robot(hardwareMap, gamepad1);
@@ -58,21 +58,23 @@ public class RedAutonClose extends LinearOpMode {
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2500.0)
                     .add(new ClawAction(0), 1000.0)
                     .add(new LiftAction(Config.FLOOR, Config.liftMotorPowerAuton / 1.5))
-                    .add(new MvntAction(createPose(-18.5, 27, 90)))
+                    .add(new MvntAction(createPose(0, 27.5, 0)))
+                    .add(new MvntAction(createPose(0, 27.5, -90)))
+                    .add(new MvntAction(createPose(-6.75, 27.5, -90)))
 //                    .add(new LiftAction(Config.FLOOR / 2, Config.liftMotorPowerAuton / 1.5))
                     .add(new ClawAction(ClawAction.ClawStates.bottomOpen))
-//                    .add(new LiftAction(Config.FLOOR, Config.liftMotorPowerAuton / 1.5))
-                    .add(new MvntAction(createPose(-25, 27, 90)))
-                    .add(new MvntAction(createPose(-36, 21, -90)))
-                    .add(new LiftAction(Config.boardBase, Config.liftMotorPowerAuton))
-                    .add(new ClawAction(1))
-                    .add(new MvntAction(-0.25, 0.0, 0.0), 2000.0)
+                    .add(new MvntAction(createPose(0, 27.5, -90)))
+//                    .add(new LiftAction(Config.FLOOR, Config.liftMotorPowerAuton / 1.5), true)
+                    .add(new MvntAction(createPose(36, 29.5, 94)))
+                    .add(new LiftAction(Config.boardBase, Config.liftMotorPowerAuton), true)
+                    .add(new MvntAction(0.25, 0.0, 0.0), 2000.0)
+                    .add(new ClawAction(1), true)
                     .add(new ClawAction(ClawAction.ClawStates.topOpen))
-                    .add(new MvntAction(createPose(-36, 21, -90)))
-                    .add(new ClawAction(0))
-                    .add(new LiftAction(Config.FLOOR, Config.liftMotorPowerAuton / 1.5))
-                    .add(new MvntAction(createPose(-36, 3, -90)))
-                    .add(new MvntAction(createPose(-44, 3, -90)));
+                    .add(new MvntAction(createPose(36, 29.5, 94)))
+                    .add(new MvntAction(createPose(36, 2, 94)))
+                    .add(new ClawAction(0), true)
+                    .add(new LiftAction(Config.FLOOR, Config.liftMotorPowerAuton / 1.5), true)
+                    .add(new MvntAction(createPose(44, 1.5, 94)));
         }
         if (teamPropProcessor.side == 1) { // center
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2500.0)
@@ -83,38 +85,36 @@ public class RedAutonClose extends LinearOpMode {
                     .add(new ClawAction(ClawAction.ClawStates.bottomOpen))
 //                    .add(new LiftAction(Config.FLOOR, Config.liftMotorPowerAuton / 1.5))
                     .add(new MvntAction(createPose(0, 24, 0)))
-                    .add(new MvntAction(createPose(-36, 24, -90)))
+                    .add(new MvntAction(createPose(36, 24, 90)))
                     .add(new LiftAction(Config.boardBase, Config.liftMotorPowerAuton), true)
-                    .add(new MvntAction(createPose(-36, 28.5, -90)))
+                    .add(new MvntAction(createPose(36, 28.5, 90)))
                     .add(new ClawAction(1), true)
-                    .add(new MvntAction(-0.25, 0.0, 0.0), 2000.0)
+                    .add(new MvntAction(0.25, 0.0, 0.0), 2000.0)
                     .add(new ClawAction(ClawAction.ClawStates.topOpen))
-                    .add(new MvntAction(createPose(-36, 28.5, -90)))
+                    .add(new MvntAction(createPose(36, 28.5, 90)))
                     .add(new ClawAction(0), true)
-                    .add(new MvntAction(createPose(-36, 3, -90)))
+                    .add(new MvntAction(createPose(36, 3, 90)))
                     .add(new LiftAction(Config.FLOOR, Config.liftMotorPowerAuton / 1.5), true)
-                    .add(new MvntAction(createPose(-44, 3, -90)));
+                    .add(new MvntAction(createPose(44, 3, 90)));
         } else if (teamPropProcessor.side == 2) { // right
             actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 2500.0)
                     .add(new ClawAction(0), 1000.0)
                     .add(new LiftAction(Config.FLOOR, Config.liftMotorPowerAuton / 1.5))
-                    .add(new MvntAction(createPose(0, 27.5, 0)))
-                    .add(new MvntAction(createPose(0, 27.5, 90)))
-                    .add(new MvntAction(createPose(4, 27.5, 90)))
+                    .add(new MvntAction(createPose(18.5, 27, -90)))
 //                    .add(new LiftAction(Config.FLOOR / 2, Config.liftMotorPowerAuton / 1.5))
                     .add(new ClawAction(ClawAction.ClawStates.bottomOpen))
-                    .add(new MvntAction(createPose(0, 27.5, 90)))
-//                    .add(new LiftAction(Config.FLOOR, Config.liftMotorPowerAuton / 1.5), true)
-                    .add(new MvntAction(createPose(-36, 29.5, -94)))
-                    .add(new LiftAction(Config.boardBase, Config.liftMotorPowerAuton), true)
-                    .add(new MvntAction(-0.25, 0.0, 0.0), 2000.0)
-                    .add(new ClawAction(1), true)
+//                    .add(new LiftAction(Config.FLOOR, Config.liftMotorPowerAuton / 1.5))
+                    .add(new MvntAction(createPose(25, 27, -90)))
+                    .add(new MvntAction(createPose(36, 21, 90)))
+                    .add(new LiftAction(Config.boardBase, Config.liftMotorPowerAuton))
+                    .add(new ClawAction(1))
+                    .add(new MvntAction(0.25, 0.0, 0.0), 2000.0)
                     .add(new ClawAction(ClawAction.ClawStates.topOpen))
-                    .add(new MvntAction(createPose(-36, 29.5, -94)))
-                    .add(new MvntAction(createPose(-36, 2, -94)))
-                    .add(new ClawAction(0), true)
-                    .add(new LiftAction(Config.FLOOR, Config.liftMotorPowerAuton / 1.5), true)
-                    .add(new MvntAction(createPose(-44, 1.5, -94)));
+                    .add(new MvntAction(createPose(36, 21, 90)))
+                    .add(new ClawAction(0))
+                    .add(new LiftAction(Config.FLOOR, Config.liftMotorPowerAuton / 1.5))
+                    .add(new MvntAction(createPose(36, 3, 90)))
+                    .add(new MvntAction(createPose(44, 3, 90)));
         }
 
         boolean pathDone = false;
