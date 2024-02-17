@@ -29,13 +29,13 @@ import java.util.ArrayList;
 
 @TeleOp(name = "AT Trig", group = "Linear Opmode")
 public class AprilTagTrigonometry extends LinearOpMode {
-    Robot robot = new Robot(hardwareMap, gamepad1);
-    SampleMecanumDrive rrDrive = new SampleMecanumDrive(hardwareMap);
-    Movement movement = new Movement(robot.drive, new PID.Config(Config.translationP, Config.translationI, Config.translationD), new PID.Config(0.02, 0.2, 0));
-    AprilTagLibrary tagLibrary = AprilTagGameDatabase.getCurrentGameTagLibrary();
-
     @Override
     public void runOpMode() {
+        Robot robot = new Robot(hardwareMap, gamepad1);
+        SampleMecanumDrive rrDrive = new SampleMecanumDrive(hardwareMap);
+        Movement movement = new Movement(robot.drive, new PID.Config(Config.translationP, Config.translationI, Config.translationD), new PID.Config(0.02, 0.2, 0));
+        AprilTagLibrary tagLibrary = AprilTagGameDatabase.getCurrentGameTagLibrary();
+
         // AprilTagProcessor is actually just an abstract class, AprilTagProcessorImpl is the real behind the scenes class
         AprilTagProcessorImpl aprilTagProcessor = (AprilTagProcessorImpl) new AprilTagProcessor.Builder()
                 .setDrawTagID(true)

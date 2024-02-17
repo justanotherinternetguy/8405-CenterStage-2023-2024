@@ -70,11 +70,11 @@ public class Drive {
         this.setDrivePowers(drivePowers.frontLeft, drivePowers.frontRight, drivePowers.backLeft, drivePowers.backRight);
     }
 
-    public void setDrivePowers(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
-        frontLeft.setPower(frontLeftPower);
-        frontRight.setPower(frontRightPower);
-        backLeft.setPower(backLeftPower);
-        backRight.setPower(backRightPower);
+    public void setDrivePowers(double frontLeft, double frontRight, double backLeft, double backRight) {
+        this.frontLeft.setPower(frontLeft);
+        this.frontRight.setPower(frontRight);
+        this.backLeft.setPower(backLeft);
+        this.backRight.setPower(backRight);
     }
 
     public static class DrivePowers {

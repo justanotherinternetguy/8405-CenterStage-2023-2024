@@ -103,7 +103,7 @@ public class Movement {
                 settlingTime.reset();
             }
             settling = true;
-            return !(settlingTime.milliseconds() > 500);
+            return !(settlingTime.milliseconds() > Config.settlingTime);
         } else {
             settling = false;
         }

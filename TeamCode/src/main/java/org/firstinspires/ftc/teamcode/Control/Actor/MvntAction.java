@@ -59,6 +59,6 @@ public class MvntAction extends Action {
 //        double translationTime = euclideanDistance * 125;
 //        double headingTime = headingDiff * 20;
 //        return translationTime + headingTime;
-        return 3000;
+        return 4000;
     }
 }

@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.Control.Movement;
 import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-import java.util.Arrays;
 import java.util.function.Predicate;
 
 public class ClawAction extends Action {
@@ -80,28 +79,29 @@ public class ClawAction extends Action {
 
     @Override
     public double defaultTimeout(Pose2d pose, int lift, Double prevTilt, ClawStates[] prevClaw) {
-        if (states == null) {
-//            double distance = prevTilt - tilt;
-//            return distance * 2000;
-            return 2000;
-        }
-        double maxTime = 0;
-        for (ClawStates state : prevClaw) {
-            switch (state) {
-                case topOpen:
-                    if (Arrays.stream(states).anyMatch(ClawStates.topClosed)) maxTime = Math.max(maxTime, 750);
-                    break;
-                case topClosed:
-                    if (Arrays.stream(states).anyMatch(ClawStates.topOpen)) maxTime = Math.max(maxTime, 750);
-                    break;
-                case bottomOpen:
-                    if (Arrays.stream(states).anyMatch(ClawStates.bottomClosed)) maxTime = 1500;
-                    break;
-                case bottomClosed:
-                    if (Arrays.stream(states).anyMatch(ClawStates.bottomOpen)) maxTime = 1500;
-                    break;
-            }
-        }
-        return maxTime;
+        return 2000;
+//        if (states == null) {
+////            double distance = prevTilt - tilt;
+////            return distance * 2000;
+//            return 2000;
+//        }
+//        double maxTime = 0;
+//        for (ClawStates state : prevClaw) {
+//            switch (state) {
+//                case topOpen:
+//                    if (Arrays.stream(states).anyMatch(ClawStates.topClosed)) maxTime = Math.max(maxTime, 750);
+//                    break;
+//                case topClosed:
+//                    if (Arrays.stream(states).anyMatch(ClawStates.topOpen)) maxTime = Math.max(maxTime, 750);
+//                    break;
+//                case bottomOpen:
+//                    if (Arrays.stream(states).anyMatch(ClawStates.bottomClosed)) maxTime = 1500;
+//                    break;
+//                case bottomClosed:
+//                    if (Arrays.stream(states).anyMatch(ClawStates.bottomOpen)) maxTime = 1500;
+//                    break;
+//            }
+//        }
+//        return maxTime;
     }
 }

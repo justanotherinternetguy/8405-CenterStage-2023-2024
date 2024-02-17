@@ -20,6 +20,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 
+import java.util.ArrayList;
+
 @Autonomous
 public class REDAUTONNEAR extends LinearOpMode {
     @Override
@@ -42,24 +44,28 @@ public class REDAUTONNEAR extends LinearOpMode {
                 .build();
 
 
+        while (!isStarted()) {
+            tel.addData("x", teamPropProcessor.latest_x);
+            tel.addData("y", teamPropProcessor.latest_y);
+            tel.addData("dir", teamPropProcessor.side);
+            if (teamPropProcessor.side == 2) {
+                actor.actions = new ArrayList<>();
+                actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 1000.0)
+                        .add(new LiftAction(Config.FLOOR, Config.gravity))
+                        .add(new MvntAction(new Pose2d(0, 32, new Rotation2d(0))))
+                        .add(new ClawAction(ClawAction.ClawStates.bottomOpen, ClawAction.ClawStates.topClosed), 1000.0)
+                        .add(new MvntAction(new Pose2d(0, 24, new Rotation2d(0))))
+                        .add(new MvntAction(new Pose2d(0, 24, new Rotation2d(Math.toRadians(-90)))));
+            }
+        }
 
         waitForStart();
+
         actor.resetTimer();
 
         robot.drive.imu.resetYaw();
 
         while (opModeIsActive() && !isStopRequested()) {
-            tel.addData("x", teamPropProcessor.latest_x);
-            tel.addData("y", teamPropProcessor.latest_y);
-            tel.addData("dir", teamPropProcessor.dir);
-            if (teamPropProcessor.dir == 2) {
-                actor.add(new ClawAction(ClawAction.ClawStates.bottomClosed, ClawAction.ClawStates.topClosed), 1000.0)
-                        .add(new LiftAction(Config.FLOOR, Config.gravity))
-                        .add(new MvntAction(new Pose2d(0, 32, new Rotation2d(0))))
-                        .add(new ClawAction(ClawAction.ClawStates.bottomOpen, ClawAction.ClawStates.topClosed), 1000.0)
-                        .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(0))))
-                        .add(new MvntAction(new Pose2d(0, 27, new Rotation2d(90))));
-            }
             rrDrive.update();
             if (actor.run() == 0) {
                 rrDrive.update();

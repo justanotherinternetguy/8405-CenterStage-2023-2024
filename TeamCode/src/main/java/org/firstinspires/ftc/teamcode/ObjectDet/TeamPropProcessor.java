@@ -1,10 +1,15 @@
 package org.firstinspires.ftc.teamcode.ObjectDet;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import org.firstinspires.ftc.robotcore.external.function.Consumer;
+import org.firstinspires.ftc.robotcore.external.function.Continuation;
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.teamcode.Auton.Config;
 import org.firstinspires.ftc.vision.VisionProcessor;
+import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -14,19 +19,23 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
-public class TeamPropProcessor implements VisionProcessor {
+public class TeamPropProcessor implements VisionProcessor, CameraStreamSource {
     private double width;
     private double height;
     public double latest_x = 0;
     public double latest_y = 0;
-    public int side = 0;
-    public int dir = -1;
+    public int side = -1;
+
+    // FTCDashboard Stream
+    private final AtomicReference<Bitmap> lastFrame = new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
 
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
         this.width = width;
         this.height = height;
+        lastFrame.set(Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565));
     }
 
     @Override
@@ -77,20 +86,19 @@ public class TeamPropProcessor implements VisionProcessor {
             this.latest_x = centerX;
             this.latest_y = centerY;
             for (int i = 0; i < 3; i++) {
-                if (latest_x < i * width / 3) side = i;
+                if (latest_x < (i + 1) * width / 3) {
+                    side = i;
+                    break;
+                }
+                System.out.println(latest_x + " | " + i + " | " + width / 3 + " : " + i * width / 3);
             }
             Imgproc.circle(input, new Point(centerX, centerY), 25, new Scalar(255, 0, 255), -1);
-
-            if (latest_x < 80) {
-                dir = 1;
-            }
-            else if (latest_x > 80 && latest_x < 660) {
-                dir = 2;
-            }
-            else if (latest_x > 660) {
-                dir = 3;
-            }
         }
+
+        // FTCDashboard camera stream
+        Bitmap b = Bitmap.createBitmap(input.width(), input.height(), Bitmap.Config.RGB_565);
+        Utils.matToBitmap(input, b);
+        lastFrame.set(b);
 
         mask.release();
         mask2.release();
@@ -105,5 +113,10 @@ public class TeamPropProcessor implements VisionProcessor {
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
 
+    }
+
+    @Override
+    public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {
+        continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
     }
 }

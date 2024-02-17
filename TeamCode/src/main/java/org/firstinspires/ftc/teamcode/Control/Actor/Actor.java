@@ -83,7 +83,8 @@ public class Actor {
         }
         ArrayList<Action> step = actions.get(0); // [mnvt]
         boolean stepDone = true; // stepDone = true
-        boolean hasHadLift = false; // hasHadLift = false
+        boolean hasHadLift = false; // hasHadLift = false, if no lift, set gravity
+        boolean hasHadMovement = false; // if no movement, set motors to 0(no weird residual power)
         for (Action action : step) {
             // action = mvnt
 
@@ -126,12 +127,17 @@ public class Actor {
                 stepDone = false;
                 if (action.getClass().getName().equals(LiftAction.class.getName())) {
                     hasHadLift = true;
+                } else if (action.getClass().getName().equals(MvntAction.class.getName())) {
+                    hasHadMovement = true;
                 }
                 action.run(hw, tm, robot, rrDrive, movement);
             }
         }
         if (!hasHadLift) {
             robot.lift.setLiftPower(Config.gravity);
+        }
+        if (!hasHadMovement) {
+            robot.drive.setDrivePowers(0,0,0,0);
         }
         tm.addData("actions", step.size());
         tm.addData("steps", actions.size());

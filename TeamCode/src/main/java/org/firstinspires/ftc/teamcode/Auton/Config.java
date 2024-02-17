@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Auton;
 
 @com.acmerobotics.dashboard.config.Config
 public class Config {
+    public static double settlingTime = 250;
     public static double boardDistance = 10;
     public static int boardColumn = 0;
     public static int secondOffset = 125;
@@ -57,9 +58,9 @@ public class Config {
     public static int mask2US = 255;
     public static int mask2UV = 255;
 
-    public static double bottomServoClose = 0.3625;
+    public static double bottomServoClose = 0.35;
     public static double bottomServoOpen = 0.43;
-    public static double topServoClose = 0.53;
+    public static double topServoClose = 0.52;
     public static double topServoOpen = 0.59;
     public static double clawServoFloor = 0.8;
     public static double clawServoBackboard = 0.5125;
