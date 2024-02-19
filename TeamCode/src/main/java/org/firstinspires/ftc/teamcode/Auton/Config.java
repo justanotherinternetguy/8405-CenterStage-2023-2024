@@ -9,7 +9,7 @@ public class Config {
     public static double boardPower = 0.35;
     public static double backBoardOffset = 12;
     public static boolean instantEndGame = false; // testing purposes
-    public static int boardBase = 425;
+    public static int boardBase = 435;
     public static double hangPower = -0.85;
     public static double liftP = 0.02;
     public static double liftI = 0;
